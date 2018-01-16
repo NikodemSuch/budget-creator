@@ -31,9 +31,13 @@
           <button type="submit" class="btn btn-default">Submit</button>
         </form>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">Link</a></li>
-          <li><a href="#">Link</a></li>
-          <li><a href="#">Link</a></li>
+          <li class="active"><a href="{{ path('homepage') }}">Home</a></li>
+          {% if app.user %}
+            <li><a href="{{ path('logout') }}">{{ app.user.username }}</a></li>
+          {% else %}
+            <li><a href="{{ path('login') }}">Login</a></li>
+            <li><a href="{{ path('user_registration') }}">Register</a></li>
+          {% endif %}
         </ul>
       </div>
     </div>
