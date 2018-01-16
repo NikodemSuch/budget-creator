@@ -1,0 +1,15 @@
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
+$fa-font-path: "~font-awesome/fonts";
+
+body, html {
+  height: 100%;
+  padding: 70px;
+}
+
+h2 {
+  font-weight: bold;
+}
+
+section {
+  padding: 4.25rem 0;
+}
