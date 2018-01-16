@@ -15,7 +15,7 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
       return new Response (
-         '<html><body>Hello world</body></html>'
+        '<html><body>Hello world</body></html>'
        );
     }
 }
