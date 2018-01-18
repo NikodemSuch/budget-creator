@@ -5,7 +5,8 @@ Encore
     .setOutputPath('web/build/')
     .setPublicPath('/build')
 
-    .addEntry('app', './assets/js/app.js')
+    .addEntry('app', './assets/js/bootstrap+jquery.js')
+    .addStyleEntry('global', './assets/css/boostrap+fa.scss')
     .addStyleEntry('global', './assets/css/global.scss')
 
     // allow sass/scss files to be processed
