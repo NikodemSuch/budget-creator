@@ -1,94 +1,90 @@
 <!DOCTYPE html>
 <html>
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1"/>
-      <title>{% block title %} Welcome! {% endblock %}</title>
-      {% block stylesheets %}
-      <link rel="stylesheet" href="{{ asset('build/cssDependencies.css') }}">
-      <link rel="stylesheet" href="{{ asset('build/global.css') }}">
-      {% endblock %}
-    </head>
-    <body>
-      {% block body %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{% block title %} Nbudget {% endblock %}</title>
+  {% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('build/cssDependencies.css') }}">
+  <link rel="stylesheet" href="{{ asset('build/global.css') }}">
+  {% endblock %}
+</head>
+<body>
+  {% block body %}
 
-      <!-- NAVBAR -->
+  <!-- NAVBAR -->
 
-      <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
 
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation-bar" aria-expanded="false">
-              <span class="icon-bar"></span>
-            </button>
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation-bar" aria-expanded="false">
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+
+      <div class="collapse navbar-collapse" id="navigation-bar">
+        <form class="navbar-form navbar-left">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
           </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">Link</a></li>
+          <li><a href="#">Link</a></li>
+          <li><a href="#">Link</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-          <div class="collapse navbar-collapse" id="navigation-bar">
-            <form class="navbar-form navbar-left">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search">
-              </div>
-              <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-            </ul>
-          </div>
+  <!-- END NAVBAR -->
+
+  <!-- HEADER -->
+
+  <section id="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla iaculis eleifend erat, id commodo lectus eleifend molestie. Curabitur ullamcorper, ligula quis auctor elementum, quam eros sagittis lectus, ac vestibulum nulla turpis eget ex. In scelerisque eleifend quam sed ultrices. Fusce dignissim orci quis lorem dapibus, a scelerisque ex aliquet. Phasellus nec felis enim. Proin faucibus facilisis dolor, vitae dapibus nisl vulputate sed. Curabitur neque elit, ullamcorper in turpis sed, feugiat eleifend nunc. Curabitur non vestibulum lacus. Vestibulum vel varius erat.</p>
         </div>
-      </nav>
 
-      <!-- END NAVBAR -->
-
-      <!-- HEADER -->
-
-      <section id="header">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla iaculis eleifend erat, id commodo lectus eleifend molestie. Curabitur ullamcorper, ligula quis auctor elementum, quam eros sagittis lectus, ac vestibulum nulla turpis eget ex. In scelerisque eleifend quam sed ultrices. Fusce dignissim orci quis lorem dapibus, a scelerisque ex aliquet. Phasellus nec felis enim. Proin faucibus facilisis dolor, vitae dapibus nisl vulputate sed. Curabitur neque elit, ullamcorper in turpis sed, feugiat eleifend nunc. Curabitur non vestibulum lacus. Vestibulum vel varius erat.</p>
-            </div>
-
-            <div class="col-md-6">
-              <p>Pellentesque in massa eros. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean est diam, lobortis ut pellentesque eu, euismod id ipsum. Proin sit amet quam semper, auctor lectus in, ullamcorper sem. Suspendisse lobortis a eros at pretium. Nulla interdum ullamcorper nisi sit amet tempor. Aenean ac purus at risus ultricies placerat ut vel metus. Aliquam pharetra turpis eget risus malesuada porta. Integer aliquam enim dictum felis ornare fermentum id non neque. Nunc vulputate in velit ut dictum. In tellus nibh, pulvinar ac tincidunt sed, commodo at sapien. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </div>
-          </div>
+        <div class="col-md-6">
+          <p>Pellentesque in massa eros. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean est diam, lobortis ut pellentesque eu, euismod id ipsum. Proin sit amet quam semper, auctor lectus in, ullamcorper sem. Suspendisse lobortis a eros at pretium. Nulla interdum ullamcorper nisi sit amet tempor. Aenean ac purus at risus ultricies placerat ut vel metus. Aliquam pharetra turpis eget risus malesuada porta. Integer aliquam enim dictum felis ornare fermentum id non neque. Nunc vulputate in velit ut dictum. In tellus nibh, pulvinar ac tincidunt sed, commodo at sapien. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
         </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
-      <!-- END HEADER -->
+  <!-- END HEADER -->
 
-      <!-- SOCIAL -->
+  <!-- SOCIAL -->
 
-      <section id="social">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6">
-              <h2>Connect with us:</h2>
-              <hr align="left" width="70%"/>
-              <p>Quisque ullamcorper condimentum ligula, quis suscipit urna porta id. Vivamus id hendrerit nisl. Pellentesque a elit non odio pellentesque finibus.</p>
-            </div>
-            <div class="col-md-6">
-              <ul class="list-inline">
-                <li class="list-inline-item"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                <li class="list-inline-item"><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                <li class="list-inline-item"><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
-                <li class="list-inline-item"><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
-                <li class="list-inline-item"><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
-                <li class="list-inline-item"><a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a></li>
-              </ul>
-            </div>
-          </div>
+  <section id="social">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a></li>
+          </ul>
         </div>
-      </section>
+        <div class="col-md-6"></div>
+      </div>
+    </div>
+  </section>
 
-      <!-- END SOCIAL -->
+  <!-- END SOCIAL -->
 
-      {% endblock %}
+  {% endblock %}
 
-      {% block javascripts %}
-        <script src="{{ asset('build/jsDependencies.js') }}"></script>
-      {% endblock %}
-    </body>
+  {% block javascripts %}
+  <script src="{{ asset('build/jsDependencies.js') }}"></script>
+  {% endblock %}
+</body>
 </html>
