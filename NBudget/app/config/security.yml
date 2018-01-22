@@ -7,8 +7,6 @@ security:
 
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
-        in_memory:
-            memory: ~
         our_db_provider:
             entity:
                 class: AppBundle:User

@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\UserType;
 use AppBundle\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,6 +12,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegistrationController extends Controller
 {
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+      $this->em = $em;
+    }
+
     /**
      * @Route("/register", name="user_registration")
      */
@@ -25,12 +33,8 @@ class RegistrationController extends Controller
             $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            // ... do any other work - like sending them an email, etc
-            // maybe set a "flash" success message for the user
+            $this->em->persist($user);
+            $this->em->flush();
 
             return $this->redirectToRoute('homepage');
         }
@@ -40,4 +44,5 @@ class RegistrationController extends Controller
             array('form' => $form->createView())
         );
     }
+
 }
