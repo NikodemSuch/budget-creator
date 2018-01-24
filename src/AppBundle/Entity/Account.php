@@ -6,7 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="account")
  */
 class Account
 {
@@ -19,21 +18,14 @@ class Account
 
     /**
      * @ORM\ManyToOne(targetEntity="UserGroup")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
     private $owner;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(type="string", length=200)
      * @Assert\NotBlank()
      */
     private $name;
-
-    /**
-     * @ORM\Column(type="decimal", precision=8, scale=2)
-     * @Assert\NotBlank()
-     */
-    private $balance;
 
     /**
      * @ORM\Column(type="string", length=20)
@@ -59,16 +51,6 @@ class Account
     public function getName()
     {
         return $this->name;
-    }
-
-    public function setBalance($balance)
-    {
-        $this->balance = $balance;
-    }
-
-    public function getBalance()
-    {
-        return $this->balance;
     }
 
     public function setCurrency($currency)

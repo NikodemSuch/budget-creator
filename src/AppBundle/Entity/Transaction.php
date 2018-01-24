@@ -6,7 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="transaction")
  */
 class Transaction
 {
@@ -19,35 +18,31 @@ class Transaction
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
      */
     private $creator;
 
     /**
      * @ORM\ManyToOne(targetEntity="Account")
-     * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
      */
     private $account;
 
     /**
      * @ORM\ManyToOne(targetEntity="Budget")
-     * @ORM\JoinColumn(name="budget", referencedColumnName="id")
      */
     private $budget;
 
     /**
      * @ORM\ManyToOne(targetEntity="Category")
-     * @ORM\JoinColumn(name="category", referencedColumnName="id")
      */
     private $category;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(type="string", length=200, nullable=true)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="decimal", precision=8, scale=2)
+     * @ORM\Column(type="decimal", precision=12, scale=2)
      * @Assert\NotBlank()
      */
     private $amount;
@@ -59,13 +54,12 @@ class Transaction
     private $dateTime;
 
     /**
-     * @ORM\Column(name="slave_id", type="integer")
+     * @ORM\OneToOne(targetEntity="Transaction")
      */
-    private $slaveId;
+    private $transferSlave;
 
     /**
      * @ORM\Column(name="is_transfer_half", type="boolean")
-     * @Assert\NotBlank()
      */
     private $isTransferHalf;
 
@@ -129,14 +123,14 @@ class Transaction
         return $this->dateTime;
     }
 
-    public function setSlaveId($slaveId)
+    public function setTransferSlave($transferSlave)
     {
-        $this->slaveId = $slaveId;
+        $this->transferSlave = $transferSlave;
     }
 
-    public function getSlaveId()
+    public function getTransferSlave()
     {
-        return $this->slaveId;
+        return $this->transferSlave;
     }
 
     public function setIsTransferHalf($isTransferHalf)

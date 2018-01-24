@@ -6,7 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="transfer")
  */
 class Transfer
 {
@@ -19,7 +18,6 @@ class Transfer
 
     /**
      * @ORM\OneToOne(targetEntity="transaction")
-     * @ORM\JoinColumn(name="transaction_master_id", referencedColumnName="id")
      */
     private $transactionMaster;
 

@@ -8,7 +8,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
 class User implements AdvancedUserInterface, \Serializable
@@ -18,26 +17,23 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="UserGroup")
-     * @ORM\JoinTable(name="user_membership",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="usergroup_id", referencedColumnName="id")}
-     *      )
+     * @ORM\ManyToMany(targetEntity="UserGroup", inversedBy="users")
+     * @ORM\JoinTable(name="user_membership")
      */
-    private $userGroup;
+    private $userGroups;
 
     /**
-     * @ORM\Column(type="string", length=45, unique=true)
+     * @ORM\Column(type="string", length=60, unique=true)
      * @Assert\Email()
      * @Assert\NotBlank()
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=45, unique=true)
+     * @ORM\Column(type="string", length=60, unique=true)
      * @Assert\NotBlank()
      */
     private $username;
@@ -49,7 +45,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $plainPassword;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=60)
      */
     private $password;
 
@@ -61,17 +57,17 @@ class User implements AdvancedUserInterface, \Serializable
     public function __construct()
     {
         $this->isActive = true;
-        $this->userGroup = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
     }
 
-    public function getUserGroup()
+    public function getUserGroups()
     {
-        return $this->userGroup;
+        return $this->userGroups;
     }
 
-    public function setUserGroup($userGroup)
+    public function setUserGroups($userGroups)
     {
-        $this->userGroup = $userGroup;
+        $this->userGroups = $userGroups;
     }
 
     public function getEmail()

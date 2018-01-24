@@ -6,7 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="category_group")
  */
 class CategoryGroup
 {
@@ -19,12 +18,11 @@ class CategoryGroup
 
     /**
      * @ORM\OneToOne(targetEntity="Category")
-     * @ORM\JoinColumn(name="default_category_id", referencedColumnName="id")
      */
     private $defaultCategory;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
      */
     private $name;

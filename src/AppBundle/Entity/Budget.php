@@ -7,7 +7,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="budget")
  */
 class Budget
 {
@@ -20,12 +19,11 @@ class Budget
 
     /**
      * @ORM\ManyToOne(targetEntity="UserGroup")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
     private $owner;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(type="string", length=200)
      * @Assert\NotBlank()
      */
     private $name;

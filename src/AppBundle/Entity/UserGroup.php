@@ -2,11 +2,11 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_group")
  */
 class UserGroup
 {
@@ -18,7 +18,12 @@ class UserGroup
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="userGroups")
+     */
+    private $users;
+
+    /**
+     * @ORM\Column(type="string", length=200)
      * @Assert\NotBlank()
      */
     private $name;
@@ -26,7 +31,22 @@ class UserGroup
     /**
      * @ORM\Column(name="is_default_group", type="boolean")
      */
-    private $is_default_group;
+    private $isDefaultGroup;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
+
+    public function setUsers($users)
+    {
+        $this->users = $users;
+    }
+
+    public function getUsers()
+    {
+        return $this->users;
+    }
 
     public function setName($name)
     {
@@ -38,14 +58,14 @@ class UserGroup
         return $this->name;
     }
 
-    public function setIsDefaultGroup($is_default_group)
+    public function setIsDefaultGroup($isDefaultGroup)
     {
-        $this->is_default_group = $is_default_group;
+        $this->isDefaultGroup = $isDefaultGroup;
     }
 
     public function getIsDefaultGroup()
     {
-        return $this->is_default_group;
+        return $this->isDefaultGroup;
     }
 
 }
