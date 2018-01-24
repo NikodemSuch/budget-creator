@@ -28,7 +28,8 @@ security:
                 default_target_path: homepage
             logout:
                 path:       logout
-                target:     homepage
+                target:     homepage    
+            logout_on_user_change: true
 
             # activate different ways to authenticate
 

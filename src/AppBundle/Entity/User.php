@@ -2,12 +2,13 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * @ORM\Table(name="app_users")
+ * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
 class User implements AdvancedUserInterface, \Serializable
@@ -20,14 +21,23 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
+     * @ORM\ManyToMany(targetEntity="UserGroup")
+     * @ORM\JoinTable(name="user_membership",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="usergroup_id", referencedColumnName="id")}
+     *      )
+     */
+    private $userGroup;
+
+    /**
+     * @ORM\Column(type="string", length=45, unique=true)
      * @Assert\Email()
      * @Assert\NotBlank()
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(type="string", length=45, unique=true)
      * @Assert\NotBlank()
      */
     private $username;
@@ -51,6 +61,17 @@ class User implements AdvancedUserInterface, \Serializable
     public function __construct()
     {
         $this->isActive = true;
+        $this->userGroup = new ArrayCollection();
+    }
+
+    public function getUserGroup()
+    {
+        return $this->userGroup;
+    }
+
+    public function setUserGroup($userGroup)
+    {
+        $this->userGroup = $userGroup;
     }
 
     public function getEmail()
