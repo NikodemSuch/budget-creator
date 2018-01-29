@@ -3,7 +3,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
@@ -28,12 +27,12 @@ class Budget
      */
     private $name;
 
-    public function setOwner($owner)
+    public function setOwner(UserGroup $owner)
     {
         $this->owner = $owner;
     }
 
-    public function getOwner()
+    public function getOwner(): UserGroup
     {
         return $this->owner;
     }

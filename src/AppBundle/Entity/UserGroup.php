@@ -38,12 +38,12 @@ class UserGroup
         $this->users = new ArrayCollection();
     }
 
-    public function setUsers($users)
+    public function setUsers(User $users)
     {
         $this->users = $users;
     }
 
-    public function getUsers()
+    public function getUsers(): User
     {
         return $this->users;
     }

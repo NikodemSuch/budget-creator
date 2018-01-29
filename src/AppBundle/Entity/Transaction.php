@@ -42,7 +42,7 @@ class Transaction
     private $title;
 
     /**
-     * @ORM\Column(type="decimal", precision=12, scale=2)
+     * @ORM\Column(type="money")
      * @Assert\NotBlank()
      */
     private $amount;
@@ -63,32 +63,37 @@ class Transaction
      */
     private $isTransferHalf;
 
-    public function setCreator($creator)
+    public function __construct()
+    {
+        $this->isTransferHalf = false;
+    }
+
+    public function setCreator(User $creator)
     {
         $this->creator = $creator;
     }
 
-    public function getCreator()
+    public function getCreator(): User
     {
         return $this->creator;
     }
 
-    public function setAccount($account)
+    public function setAccount(Account $account)
     {
         $this->account = $account;
     }
 
-    public function getAccount()
+    public function getAccount(): Account
     {
         return $this->account;
     }
 
-    public function setCategory($category)
+    public function setCategory(Category $category)
     {
         $this->category = $category;
     }
 
-    public function getCategory()
+    public function getCategory(): Category
     {
         return $this->category;
     }
@@ -123,12 +128,12 @@ class Transaction
         return $this->dateTime;
     }
 
-    public function setTransferSlave($transferSlave)
+    public function setTransferSlave(Transaction $transferSlave)
     {
         $this->transferSlave = $transferSlave;
     }
 
-    public function getTransferSlave()
+    public function getTransferSlave(): Transaction
     {
         return $this->transferSlave;
     }

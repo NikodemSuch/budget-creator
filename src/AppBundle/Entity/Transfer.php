@@ -2,7 +2,11 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Acelaya\Doctrine\Type\PhpEnumType;
+use AppBundle\Type\TransferType;
 use Symfony\Component\Validator\Constraints as Assert;
+
+PhpEnumType::registerEnumType(TransferType::class);
 
 /**
  * @ORM\Entity
@@ -22,27 +26,32 @@ class Transfer
     private $transactionMaster;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(type=TransferType::class)
      * @Assert\NotBlank()
      */
     private $transferType;
 
-    public function setTransactionMaster($transactionMaster)
+    public function __construct()
+    {
+        $this->transferType = TransferType::OTHER();
+    }
+
+    public function setTransactionMaster(Transaction $transactionMaster)
     {
         $this->transactionMaster = $transactionMaster;
     }
 
-    public function getTransactionMaster()
+    public function getTransactionMaster(): Transaction
     {
         return $this->transactionMaster;
     }
 
-    public function setTransferType($transferType)
+    public function setTransferType(TransferType $transferType)
     {
         $this->transferType = $transferType;
     }
 
-    public function getTransferType()
+    public function getTransferType(): TransferType
     {
         return $this->transferType;
     }

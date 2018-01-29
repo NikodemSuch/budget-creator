@@ -27,12 +27,12 @@ class CategoryGroup
      */
     private $name;
 
-    public function setDefaultCategory($defaultCategory)
+    public function setDefaultCategory(Category $defaultCategory)
     {
         $this->defaultCategory = $defaultCategory;
     }
 
-    public function getDefaultCategory()
+    public function getDefaultCategory(): Category
     {
         return $this->defaultCategory;
     }

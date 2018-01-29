@@ -27,12 +27,12 @@ class Category
      */
     private $name;
 
-    public function setGroup($group)
+    public function setGroup(CategoryGroup $group)
     {
         $this->group = $group;
     }
 
-    public function getGroup()
+    public function getGroup(): CategoryGroup
     {
         return $this->group;
     }
