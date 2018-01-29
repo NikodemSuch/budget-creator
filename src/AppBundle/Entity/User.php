@@ -17,7 +17,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-     private $id;
+    private $id;
 
     /**
      * @ORM\ManyToMany(targetEntity="UserGroup", inversedBy="users")
@@ -60,52 +60,52 @@ class User implements AdvancedUserInterface, \Serializable
         $this->userGroups = new ArrayCollection();
     }
 
-    public function getUserGroups(): UserGroup
-    {
-        return $this->userGroups;
-    }
-
     public function setUserGroups(UserGroup $userGroups)
     {
         $this->userGroups = $userGroups;
     }
 
-    public function getEmail()
+    public function getUserGroups(): UserGroup
+    {
+        return $this->userGroups;
+    }
+
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail($email)
+    public function setEmail(string $email)
     {
         $this->email = $email;
     }
 
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    public function setUsername($username)
+    public function setUsername(string $username)
     {
         $this->username = $username;
     }
 
-    public function getPlainPassword()
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
 
-    public function setPlainPassword($password)
+    public function setPlainPassword(string $password)
     {
         $this->plainPassword = $password;
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function setPassword($password)
+    public function setPassword(string $password)
     {
         $this->password = $password;
     }

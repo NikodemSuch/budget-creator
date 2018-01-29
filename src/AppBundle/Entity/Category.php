@@ -37,12 +37,12 @@ class Category
         return $this->group;
     }
 
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }

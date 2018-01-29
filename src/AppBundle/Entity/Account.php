@@ -43,22 +43,22 @@ class Account
         return $this->owner;
     }
 
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setCurrency($currency)
+    public function setCurrency(string $currency)
     {
         $this->currency = $currency;
     }
 
-    public function getCurrency()
+    public function getCurrency(): ?string
     {
         return $this->currency;
     }

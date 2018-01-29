@@ -98,32 +98,32 @@ class Transaction
         return $this->category;
     }
 
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
         $this->title = $title;
     }
 
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function setAmount($amount)
+    public function setAmount(int $amount)
     {
         $this->amount = $amount;
     }
 
-    public function getAmount()
+    public function getAmount(): int
     {
         return $this->amount;
     }
 
-    public function setDateTime($dateTime)
+    public function setDateTime($dateTime): DateTime
     {
         $this->dateTime = $dateTime;
     }
 
-    public function getDateTime()
+    public function getDateTime(): DateTime
     {
         return $this->dateTime;
     }
@@ -138,12 +138,12 @@ class Transaction
         return $this->transferSlave;
     }
 
-    public function setIsTransferHalf($isTransferHalf)
+    public function setIsTransferHalf(boolean $isTransferHalf)
     {
         $this->isTransferHalf = $isTransferHalf;
     }
 
-    public function getIsTransferHalf()
+    public function getIsTransferHalf(): boolean
     {
         return $this->isTransferHalf;
     }

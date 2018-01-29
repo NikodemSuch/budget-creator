@@ -48,22 +48,22 @@ class UserGroup
         return $this->users;
     }
 
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setIsDefaultGroup($isDefaultGroup)
+    public function setIsDefaultGroup(boolean $isDefaultGroup)
     {
         $this->isDefaultGroup = $isDefaultGroup;
     }
 
-    public function getIsDefaultGroup()
+    public function getIsDefaultGroup(): boolean
     {
         return $this->isDefaultGroup;
     }
