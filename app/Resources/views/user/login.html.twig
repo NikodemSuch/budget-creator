@@ -1,0 +1,32 @@
+{% extends "user/base.html.twig" %}
+
+{% block form %}
+
+<div class="form-header">
+  <h2 class="form-title">Log in</h2>
+  <p>or <a href="{{ path('user_registration') }}">create an account</a></p>
+</div>
+
+{% if error %}
+    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
+
+<form action="{{ path('login') }}" method="post">
+  <fieldset class="form-group">
+    <label class="form-control-label required" for="username">Email (or username)</label>
+    <input class="form-control form-control-sm" type="text" id="username" name="_username" value="{{ last_username }}" />
+  </fieldset>
+
+  <fieldset class="form-group">
+    <label class="form-control-label required" for="password">Password</label>
+    <input class="form-control form-control-sm" type="password" id="password" name="_password" />
+  </fieldset>
+
+  <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Log in</button>
+</form>
+
+<div class="form-footer">
+  <p>or <a href="#">Forgot your password?</a></p>
+</div>
+
+{% endblock %}
