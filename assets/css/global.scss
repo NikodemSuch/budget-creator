@@ -1,6 +1,12 @@
 // NAVBAR
 
-.navbar-collapse {
+.navbar-toggle {
+  float: none;
+  padding: 15px 40px;
+  margin: 8px 15px;
+}
+
+.navbar-collapse, .navbar-header {
   text-align: center;
 }
 
@@ -87,8 +93,12 @@ section {
   padding: 10px 0 6px 0;
 }
 
-#footer .list-inline a {
+#footer .list-inline {
   text-align: left;
+  color: #fff;
+}
+ 
+#footer .list-inline a {
   color: #fff;
 }
 
@@ -108,7 +118,7 @@ section {
     padding: 20px;
   }
 
-  #footer .list-inline a, #copyright {
+  #footer .list-inline, #copyright {
     text-align: center;
   }
 
@@ -116,18 +126,20 @@ section {
     margin: 0;
   }
 
-  .nav-button {
-    box-shadow: none;
+  .navbar-nav li .nav-button {
     margin: 0;
-    border-radius: 0;
+    border: none;
   }
 
-  #nav-homepage {
-    margin-left: inherit;
+  .navbar-nav li .nav-button:hover {
+    border: none;
   }
 
-  #nav-register {
-    margin-right: inherit;
-    font-weight: 400;
+  .navbar-nav li .nav-last {
+    margin-right: 0;
+  }
+
+  .navbar-nav li #nav-homepage {
+    margin-left: 0;
   }
 }
