@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\UserType;
 use AppBundle\Entity\User;
+use AppBundle\Entity\UserGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,10 +31,17 @@ class RegistrationController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $userGroup = new UserGroup();
+            $userGroup->setName($user->getUsername());
+            $userGroup->setIsDefaultGroup(true);
+            $userGroup->setUsers([$user]);
+
             $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
+            $user->setUserGroups([$userGroup]);
 
             $this->em->persist($user);
+            $this->em->persist($userGroup);
             $this->em->flush();
 
             return $this->redirectToRoute('homepage');
@@ -44,5 +52,4 @@ class RegistrationController extends Controller
             array('form' => $form->createView())
         );
     }
-
 }

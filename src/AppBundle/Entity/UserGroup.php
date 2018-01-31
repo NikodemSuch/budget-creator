@@ -38,12 +38,12 @@ class UserGroup
         $this->users = new ArrayCollection();
     }
 
-    public function setUsers(User $users)
+    public function setUsers($users)
     {
         $this->users = $users;
     }
 
-    public function getUsers(): User
+    public function getUsers()
     {
         return $this->users;
     }
@@ -58,12 +58,12 @@ class UserGroup
         return $this->name;
     }
 
-    public function setIsDefaultGroup(boolean $isDefaultGroup)
+    public function setIsDefaultGroup(bool $isDefaultGroup)
     {
         $this->isDefaultGroup = $isDefaultGroup;
     }
 
-    public function getIsDefaultGroup(): boolean
+    public function getIsDefaultGroup(): bool
     {
         return $this->isDefaultGroup;
     }
