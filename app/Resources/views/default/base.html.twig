@@ -1,0 +1,50 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+
+  {% block navbar %}
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation-bar" aria-expanded="false">
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="navigation-bar">
+        <ul class="nav navbar-nav navbar-left">
+          <li><a class="nav-button" id="nav-homepage" href="{{ path('homepage') }}">Home</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if app.user %}
+            <li><a class="nav-button nav-last" href="{{ path('logout') }}">{{ app.user.username }} <i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
+          {% else %}
+            <li><a class="nav-button" href="{{ path('login') }}">Log in</a></li>
+            <li><a class="nav-button nav-last" href="{{ path('user_registration') }}">Sign up</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  {% endblock %}
+
+  {% block page %}
+  {% endblock %}
+
+  {% block footer %}
+    <footer id="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6">
+            <p id="copyright">&copy; Copyright 2018. All rights reserved.</p>
+          </div>
+          <div class="col-sm-6">
+            <ul class="footer-links list-inline">
+              <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+              <li class="list-inline-item"><a href="#">Terms of Service</a></li>
+              <li class="list-inline-item"><a href="#">Contact us</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  {% endblock %}
+
+{% endblock %}
