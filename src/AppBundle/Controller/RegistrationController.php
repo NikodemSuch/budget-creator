@@ -30,7 +30,7 @@ class RegistrationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->userManager->createUser($user);
+            $this->userManager->persistUserWithCredentials($user);
             return $this->redirectToRoute('homepage');
         }
 

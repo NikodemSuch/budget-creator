@@ -18,17 +18,16 @@ class UserManager
       $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function newUserSetup(string $username, string $email, string $plainPassword)
+    public function createUser(string $username, string $email, string $plainPassword)
     {
       $user = new User();
       $user->setUsername($username);
       $user->setEmail($email);
       $user->setPlainPassword($plainPassword);
-
-      $this->createUser($user);
+      $this->persistUserWithCredentials($user);
     }
 
-    public function createUser(User $user)
+    public function persistUserWithCredentials(User $user)
     {
       $userGroup = new UserGroup();
       $userGroup->setName($user->getUsername());

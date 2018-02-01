@@ -11,7 +11,6 @@ use AppBundle\Service\UserManager;
 
 class CreateUserCommand extends Command
 {
-    use LockableTrait;
     private $userManager;
     protected static $defaultName = 'app:create-user';
 
@@ -26,7 +25,6 @@ class CreateUserCommand extends Command
         $this
           ->setName('app:create-user')
           ->setDescription('Creates a new user.')
-          ->setHelp('This command allows you to create a user.')
           ->addArgument('username', InputArgument::REQUIRED, 'The username of the user.')
           ->addArgument('email', InputArgument::REQUIRED, 'Email of the user.')
           ->addArgument('password', InputArgument::REQUIRED, 'Password for your account.')
@@ -35,17 +33,11 @@ class CreateUserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$this->lock()) {
-            $output->writeln('The command is already running in another process.');
-
-            return 0;
-        }
-
         $username = $input->getArgument('username');
         $email = $input->getArgument('email');
         $plainPassword = $input->getArgument('password');
 
-        $this->userManager->newUserSetup($username, $email, $plainPassword);
+        $this->userManager->createUser($username, $email, $plainPassword);
 
         $output->writeln([
           'Following User has been created:',

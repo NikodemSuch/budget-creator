@@ -11,7 +11,6 @@ use AppBundle\Service\UserManager;
 
 class ChangeUserPasswordCommand extends Command
 {
-    use LockableTrait;
     private $userManager;
     protected static $defaultName = 'app:change-password';
 
@@ -26,7 +25,6 @@ class ChangeUserPasswordCommand extends Command
         $this
           ->setName('app:change-password')
           ->setDescription('Changes password of user.')
-          ->setHelp('This command allows you to change a password of some user.')
           ->addArgument('username', InputArgument::REQUIRED, 'The username or email of the user.')
           ->addArgument('newPassword', InputArgument::REQUIRED, 'New password for account.')
         ;
@@ -34,12 +32,6 @@ class ChangeUserPasswordCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$this->lock()) {
-            $output->writeln('The command is already running in another process.');
-
-            return 0;
-        }
-
         $username = $input->getArgument('username');
         $newPlainPassword = $input->getArgument('newPassword');
 
