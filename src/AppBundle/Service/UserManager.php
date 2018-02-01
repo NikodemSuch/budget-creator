@@ -18,13 +18,18 @@ class UserManager
       $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function create(string $username, string $email, string $plainPassword)
+    public function newUserSetup(string $username, string $email, string $plainPassword)
     {
       $user = new User();
       $user->setUsername($username);
       $user->setEmail($email);
       $user->setPlainPassword($plainPassword);
 
+      $this->createUser($user);
+    }
+
+    public function createUser(User $user)
+    {
       $userGroup = new UserGroup();
       $userGroup->setName($user->getUsername());
       $userGroup->setIsDefaultGroup(true);
@@ -36,6 +41,17 @@ class UserManager
 
       $this->em->persist($user);
       $this->em->persist($userGroup);
+      $this->em->flush();
+    }
+
+    public function changePassword(string $username, string $newPlainPassword)
+    {
+      $user = $this->em->getRepository(User::class)->loadUserByUsername($username);
+
+      $newPassword = $this->passwordEncoder->encodePassword($user, $newPlainPassword);
+      $user->setPassword($newPassword);
+
+      $this->em->persist($user);
       $this->em->flush();
     }
 }

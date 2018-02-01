@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class DefaultController extends Controller
 {
-
     /**
      * @Route("/", name="homepage")
      */
@@ -17,5 +16,4 @@ class DefaultController extends Controller
     {
         return $this->render('default/main.html.twig');
     }
-
 }

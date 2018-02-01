@@ -9,11 +9,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Command\LockableTrait;
 use AppBundle\Service\UserManager;
 
-class CreateUserCommand extends Command
+class ChangeUserPasswordCommand extends Command
 {
     use LockableTrait;
     private $userManager;
-    protected static $defaultName = 'app:create-user';
+    protected static $defaultName = 'app:change-password';
 
     public function __construct(UserManager $userManager)
     {
@@ -24,12 +24,11 @@ class CreateUserCommand extends Command
     protected function configure()
     {
         $this
-          ->setName('app:create-user')
-          ->setDescription('Creates a new user.')
-          ->setHelp('This command allows you to create a user.')
-          ->addArgument('username', InputArgument::REQUIRED, 'The username of the user.')
-          ->addArgument('email', InputArgument::REQUIRED, 'Email of the user.')
-          ->addArgument('password', InputArgument::REQUIRED, 'Password for your account.')
+          ->setName('app:change-password')
+          ->setDescription('Changes password of user.')
+          ->setHelp('This command allows you to change a password of some user.')
+          ->addArgument('username', InputArgument::REQUIRED, 'The username or email of the user.')
+          ->addArgument('newPassword', InputArgument::REQUIRED, 'New password for account.')
         ;
     }
 
@@ -42,18 +41,12 @@ class CreateUserCommand extends Command
         }
 
         $username = $input->getArgument('username');
-        $email = $input->getArgument('email');
-        $plainPassword = $input->getArgument('password');
+        $newPlainPassword = $input->getArgument('newPassword');
 
-        $this->userManager->newUserSetup($username, $email, $plainPassword);
+        $message = $this->userManager->changePassword($username, $newPlainPassword);
 
         $output->writeln([
-          'Following User has been created:',
-          '============',
-          '',
+          'Succesfuly changed password for user: '.$username,
         ]);
-
-        $output->writeln('Username: '.$username);
-        $output->writeln('Email: '.$email);
     }
 }

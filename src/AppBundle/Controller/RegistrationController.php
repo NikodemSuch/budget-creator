@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\UserType;
 use AppBundle\Entity\User;
-use AppBundle\Entity\UserGroup;
+use AppBundle\Service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,37 +13,24 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegistrationController extends Controller
 {
-    private $em;
+    private $userManager;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(UserManager $userManager)
     {
-      $this->em = $em;
+        $this->userManager = $userManager;
     }
 
     /**
      * @Route("/register", name="user_registration")
      */
-    public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function registerAction(Request $request)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $userGroup = new UserGroup();
-            $userGroup->setName($user->getUsername());
-            $userGroup->setIsDefaultGroup(true);
-            $userGroup->setUsers([$user]);
-
-            $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
-            $user->setPassword($password);
-            $user->setUserGroups([$userGroup]);
-
-            $this->em->persist($user);
-            $this->em->persist($userGroup);
-            $this->em->flush();
-
+            $this->userManager->createUser($user);
             return $this->redirectToRoute('homepage');
         }
 
