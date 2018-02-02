@@ -85,9 +85,14 @@ class RegistrationController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
+<<<<<<< HEAD
         return $this->render(
             'user/register.html.twig',
             ['form' => $form->createView()]
+=======
+        return $this->render('user/register.html.twig',
+            array('form' => $form->createView())
+>>>>>>> 033d529... Setup for account CRUD
         );
     }
 >>>>>>> 98bd75d... Added some exception handling

@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\UserGroupRepository")
  */
 class UserGroup
 {
@@ -36,6 +36,11 @@ class UserGroup
     public function __construct()
     {
         $this->users = new ArrayCollection();
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function setUsers($users)
