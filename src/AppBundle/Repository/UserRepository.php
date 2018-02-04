@@ -16,14 +16,4 @@ class UserRepository extends EntityRepository implements UserLoaderInterface
             ->getQuery()
             ->getOneOrNullResult();
     }
-
-    public function getUserGroups($userId)
-    {
-        return $this->createQueryBuilder('user')
-            ->innerJoin('user.userGroups', 'userGroup')
-            ->where('user.id = :user_id')
-            ->setParameter('user_id', $userId)
-            ->getQuery()
-            ->getResult();
-    }
 }

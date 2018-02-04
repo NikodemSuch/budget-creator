@@ -2,184 +2,133 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\AccountType;
 use AppBundle\Entity\Account;
-use AppBundle\Entity\User;
-
+use AppBundle\Form\AccountType;
+use AppBundle\Repository\AccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-
+/**
+* @Route("account")
+*/
 class AccountController extends Controller
 {
-    private $em;
+	private $em;
+	private $accountRepository;
 
-    public function __construct(EntityManagerInterface $em)
-    {
-      $this->em = $em;
-    }
+	public function __construct(EntityManagerInterface $em)
+	{
+		$this->em = $em;
+	}
 
-    /**
-     * @Route("/getUserGroups", name="user_groups")
-     */
-    public function getUserGroups(UserInterface $user)
-    {
-      $userGroups = $user->getUserGroups();
-      $groups = $userGroups->toArray();
-      // $userGroups = $this->em->getRepository(User::class)->getUserGroups($user->getId());
-      // $userEntity = $this->em->getRepository(User::class)->find($user->getId());
-      // $userGroups = $userEntity->getUserGroups();
+	/**
+	* @Route("/", name="account_index")
+	*/
+	public function indexAction(UserInterface $user)
+	{
+        $userGroups = $user->getUserGroups()->toArray();
+        $accounts = $this->em->getRepository('AppBundle:Account')->findBy([
+            'owner' => $userGroups
+        ]);
 
-
-      var_dump($user->getId());
-      var_dump($user->getUsername());
-
-      foreach ($groups as $group) {
-          echo $group->getId(), '<br>';
-      }
-
-      return $this->render('account/base.html.twig', array(
-          'userGroups' => $userGroups,
-      ));
-
-      // $userGroups = $this->em->getRepository(User::class)->getUserGroups($user->getId());
-      //
-      // var_dump($user->getId());
-      // var_dump($user->getUsername());
-      // // echo $userGroups[0]->getId();
-      // // echo sizeof($userGroups);
-      // $groups = $userGroups[0]->getUserGroups;
-      //
-      // // foreach ($userGroups as $userGroup) {
-      // //     echo $userGroup->getUserGroups(), '<br>';
-      // // }
-      // foreach ($groups as $group) {
-      //     echo $group, '<br>';
-      // }
-      //
-      // return $this->render('account/base.html.twig', array(
-      //     'userGroups' => $userGroups,
-      // ));
-    }
-
-    /**
-     * @Route("/account", name="account_index")
-     * @Method("GET")
-     */
-    public function indexAction(UserInterface $user)
-    {
-        $accounts = $this->em->getRepository(Account::class)->findBy(
-          array('owner_id' => 'Keyboard'),
-          array('price' => 'ASC')
-        );
-
-        return $this->render('account/index.html.twig', array(
+        return $this->render('account/index.html.twig', [
             'accounts' => $accounts,
-        ));
-    }
+        ]);
+	}
 
-    /**
-     * @Route("/account/new", name="account_new")
-     * @Method({"GET", "POST"})
-     */
-    public function newAction(Request $request)
-    {
-        $account = new Account();
-        $form = $this->createForm(AccountType::class, $account);
-        $form->handleRequest($request);
+	/**
+	* @Route("/new", name="account_new")
+	*/
+	public function newAction(Request $request, UserInterface $user)
+	{
+		$account = new Account();
+		$form = $this->createForm(AccountType::class, $account,[
+			'user' => $user,
+		]);
+		$form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+		if ($form->isSubmitted() && $form->isValid()) {
+			$this->em->persist($account);
+			$this->em->flush();
+			return $this->redirectToRoute('account_show', ['id' => $account->getId()]);
+		}
 
-            $this->em->persist($account);
-            $this->em->flush();
+		return $this->render('account/new.html.twig', [
+			'account' => $account,
+			'form' => $form->createView(),
+		]);
+	}
 
-            return $this->redirectToRoute('account_show', array('id' => $account->getId()));
-        }
+	/**
+	* @Route("/{id}/show", name="account_show")
+	*/
+	public function showAction(Account $account)
+	{
+		$deleteForm = $this->createDeleteForm($account);
 
-        return $this->render('account/new.html.twig', array(
-            'account' => $account,
-            'form' => $form->createView(),
-        ));
-    }
+		return $this->render('account/show.html.twig', [
+			'account' => $account,
+			'delete_form' => $deleteForm->createView(),
+		]);
+	}
 
-    /**
-     * Finds and displays a account entity.
-     *
-     * @Route("/account/{id}", name="account_show")
-     * @Method("GET")
-     */
-    public function showAction(Account $account)
-    {
-        $deleteForm = $this->createDeleteForm($account);
+	/**
+	* @Route("/{id}/edit", name="account_edit")
+	*/
+	public function editAction(Request $request, Account $account, UserInterface $user)
+	{
+		$deleteForm = $this->createDeleteForm($account);
+		$editForm = $this->createForm(AccountType::class, $account, [
+			'user' => $user,
+		]);
+		$editForm->handleRequest($request);
 
-        return $this->render('account/show.html.twig', array(
-            'account' => $account,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
+		if ($editForm->isSubmitted() && $editForm->isValid()) {
+			$this->em->flush();
 
-    /**
-     * Displays a form to edit an existing account entity.
-     *
-     * @Route("/{id}/edit", name="account_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, Account $account)
-    {
-        $deleteForm = $this->createDeleteForm($account);
-        $editForm = $this->createForm('AppBundle\Form\AccountType', $account);
-        $editForm->handleRequest($request);
+			return $this->redirectToRoute('account_index');
+		}
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+		return $this->render('account/edit.html.twig', [
+			'account' => $account,
+			'edit_form' => $editForm->createView(),
+			'delete_form' => $deleteForm->createView(),
+		]);
+	}
 
-            return $this->redirectToRoute('account_edit', array('id' => $account->getId()));
-        }
+	/**
+	* @Route("/{id}/delete", name="account_delete")
+	* @Method("DELETE")
+	*/
+	public function deleteAction(Request $request, Account $account)
+	{
+		$form = $this->createDeleteForm($account);
+		$form->handleRequest($request);
 
-        return $this->render('account/edit.html.twig', array(
-            'account' => $account,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
+		if ($form->isSubmitted() && $form->isValid()) {
+			$this->em->persist($account);
+			$this->em->remove($account);
+			$this->em->flush();
+		}
 
-    /**
-     * Deletes a account entity.
-     *
-     * @Route("/{id}", name="account_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, Account $account)
-    {
-        $form = $this->createDeleteForm($account);
-        $form->handleRequest($request);
+		return $this->redirectToRoute('account_index');
+	}
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($account);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('account_index');
-    }
-
-    /**
-     * Creates a form to delete a account entity.
-     *
-     * @param Account $account The account entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Account $account)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('account_delete', array('id' => $account->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
+	/**
+	* @param Account $account The account entity
+	*
+	* @return \Symfony\Component\Form\Form The form
+	*/
+	private function createDeleteForm(Account $account)
+	{
+		return $this->createFormBuilder()
+		->setAction($this->generateUrl('account_delete', ['id' => $account->getId()]))
+		->setMethod('DELETE')
+		->getForm()
+		;
+	}
 }

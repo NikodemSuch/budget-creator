@@ -1,41 +1,21 @@
 {% extends 'account/base.html.twig' %}
 
 {% block pageContent %}
-    <h1>Accounts list</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Currency</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for account in accounts %}
-            <tr>
-                <td><a href="{{ path('account_show', { 'id': account.id }) }}">{{ account.id }}</a></td>
-                <td>{{ account.name }}</td>
-                <td>{{ account.currency }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('account_show', { 'id': account.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('account_edit', { 'id': account.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<div class="row">
+		<div class="page-section">
+			<h1>List of your accounts:</h1>
 
-    <ul>
-        <li>
-            <a href="{{ path('account_new') }}">Create a new account</a>
-        </li>
-    </ul>
+			{% for account in accounts %}
+				<div class="col-sm-4 col-md-3">
+					<a class="account-index" href="{{ path('account_show', { 'id': account.id }) }}">{{ account.name }}</a>
+				</div>
+			{% endfor %}
+
+			<div class="col-sm-4 col-md-3">
+				<a class="account-index" href="{{ path('account_new') }}">Create new account...</a>
+			</div>
+		</div>
+	</div>
+
 {% endblock %}

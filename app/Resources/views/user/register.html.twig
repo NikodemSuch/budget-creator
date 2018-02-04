@@ -2,17 +2,18 @@
 
 {% block form %}
 
-  <div class="form-header">
-    <h2 class="form-title">Create a new Account</h2>
-    <p>or <a href="{{ path('login') }}">sign in to your account</a></p>
-  </div>
+	<div class="form-header">
+		<h2 class="form-title">Create a new Account</h2>
+		<p>or <a href="{{ path('login') }}">sign in to your account</a></p>
+	</div>
 
-  {{ form_start(form) }}
-      {{ form_row(form.username) }}
-      {{ form_row(form.email) }}
-      {{ form_row(form.plainPassword.first) }}
-      {{ form_row(form.plainPassword.second) }}
+	{{ form_start(form) }}
+		{{ form_row(form.username) }}
+		{{ form_row(form.email) }}
+		{{ form_row(form.plainPassword.first) }}
+		{{ form_row(form.plainPassword.second) }}
 
+<<<<<<< HEAD
       <div class="form-errors">
         {% for label, messages in app.flashes %}
           {% for message in messages %}
@@ -29,5 +30,23 @@
   <div class="form-footer">
     <p>By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
   </div>
+=======
+		<button class="form-button btn btn-primary btn-lg btn-block" type="submit">Create New Account</button>
+	{{ form_end(form) }}
+
+	<div class="form-errors">
+		{% for label, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="flash-{{ label }}">
+					{{ message }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+	</div>
+
+	<div class="form-footer">
+		<p>By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+	</div>
+>>>>>>> 0df668c... CRUD Account ver. 1.0
 
 {% endblock %}
