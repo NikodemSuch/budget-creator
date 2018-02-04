@@ -19,6 +19,10 @@
                 <td>{{ account.name }}</td>
               </tr>
               <tr>
+                <th>Balance:</th>
+                <td>{% if accountBalance %} {{ accountBalance }} {% else %} 0.00 {% endif %}</td>
+              </tr>
+              <tr>
                 <th>Currency:</th>
                 <td>{{ account.currency }}</td>
               </tr>
@@ -34,6 +38,11 @@
         </div>
       </div>
     </div>
+
+    {% include 'transaction/index.html.twig' %}
+
   </div>
+
+
 
 {% endblock %}

@@ -37,6 +37,17 @@ class AccountController extends Controller
             'owner' => $userGroups,
         ]);
 
+        // $accountBalances = array();
+        //
+        // foreach ($accounts as $account) {
+        //     array_push($accountBalances, $this->em->getRepository('AppBundle:Transaction')->getAccountBalance($account->getId()));
+        // }
+        //
+        // $accountArrays = array_map(null, $accounts, $accountBalances);
+        //
+        // var_dump($accountArrays);
+
+
         return $this->render('account/index.html.twig', [
             'accounts' => $accounts,
         ]);
@@ -70,13 +81,23 @@ class AccountController extends Controller
     }
 
     /**
+     * @param User $user
      * @Route("/{id}/show", name="account_show")
      */
-    public function showAction(Account $account)
+    public function showAction(UserInterface $user, Account $account)
     {
+        $userGroups = $user->getUserGroups()->toArray();
         $deleteForm = $this->createDeleteForm($account);
+        $accountBalance = $this->em->getRepository('AppBundle:Transaction')->getAccountBalance($account->getId());
+
+        $transactions = $this->em->getRepository('AppBundle:Transaction')->findBy([
+            'creator' => $userGroups,
+            'account' => $account->getId(),
+        ]);
 
         return $this->render('account/show.html.twig', [
+            'transactions' => $transactions,
+            'accountBalance' => $accountBalance,
             'account' => $account,
             'delete_form' => $deleteForm->createView(),
         ]);

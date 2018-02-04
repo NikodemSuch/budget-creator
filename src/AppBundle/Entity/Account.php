@@ -67,4 +67,8 @@ class Account
     {
         return $this->currency;
     }
+
+    public function __toString() {
+        return $this->name;
+    }
 }

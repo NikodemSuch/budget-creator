@@ -19,6 +19,10 @@
                 <td>{{ budget.name }}</td>
               </tr>
               <tr>
+                <th>Balance:</th>
+                <td>{% if budgetBalance %} {{ budgetBalance }} {% else %} 0.00 {% endif %}</td>
+              </tr>
+              <tr>
                 <th>Owner</th>
                 <td>{{ budget.owner }}</td>
               </tr>
@@ -34,6 +38,9 @@
         </div>
       </div>
     </div>
+
+    {% include 'transaction/index.html.twig' %}
+
   </div>
 
 {% endblock %}

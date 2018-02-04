@@ -72,11 +72,20 @@ class BudgetController extends Controller
     /**
      * @Route("/{id}/show", name="budget_show")
      */
-    public function showAction(Budget $budget)
+    public function showAction(UserInterface $user, Budget $budget)
     {
+        $userGroups = $user->getUserGroups()->toArray();
         $deleteForm = $this->createDeleteForm($budget);
+        $budgetBalance = $this->em->getRepository('AppBundle:Transaction')->getBudgetBalance($budget->getId());
+
+        $transactions = $this->em->getRepository('AppBundle:Transaction')->findBy([
+            'creator' => $userGroups,
+            'budget' => $budget->getId(),
+        ]);
 
         return $this->render('budget/show.html.twig', [
+            'transactions' => $transactions,
+            'budgetBalance' => $budgetBalance,
             'budget' => $budget,
             'delete_form' => $deleteForm->createView(),
         ]);

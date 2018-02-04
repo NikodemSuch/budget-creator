@@ -149,6 +149,10 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->isActive;
     }
 
+    public function __toString() {
+        return $this->username;
+    }
+
     /** @see \Serializable::serialize() */
     public function serialize()
     {
