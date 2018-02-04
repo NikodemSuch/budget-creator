@@ -5,16 +5,16 @@
   <div class="container">
     <div class="row">
       <div class="page-section">
-        <h1>List of your accounts:</h1>
+        <h1>List of your budgets:</h1>
 
-        {% for account in accounts %}
+        {% for budget in budgets %}
           <div class="col-sm-4 col-md-3">
-            <a class="item-index" href="{{ path('account_show', { 'id': account.id }) }}">{{ account.name }}</a>
+            <a class="item-index" href="{{ path('budget_show', { 'id': budget.id }) }}">{{ budget.name }}</a>
           </div>
         {% endfor %}
 
         <div class="col-sm-4 col-md-3">
-          <a class="item-index" href="{{ path('account_new') }}">Create new account...</a>
+          <a class="item-index" href="{{ path('budget_new') }}">Create new budget...</a>
         </div>
       </div>
     </div>

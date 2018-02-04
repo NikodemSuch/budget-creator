@@ -2,9 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Account;
-use AppBundle\Form\AccountType;
-use AppBundle\Repository\AccountRepository;
+use AppBundle\Entity\Budget;
+use AppBundle\Form\BudgetType;
+use AppBundle\Repository\BudgetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,82 +13,82 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
- * @Route("account")
+ * @Route("budget")
  */
-class AccountController extends Controller
+class BudgetController extends Controller
 {
     private $em;
-    private $accountRepository;
+    private $budgetRepository;
 
-    public function __construct(EntityManagerInterface $em, AccountRepository $accountRepository)
+    public function __construct(EntityManagerInterface $em, BudgetRepository $budgetRepository)
     {
         $this->em = $em;
-        $this->accountRepository = $accountRepository;
+        $this->budgetRepository = $budgetRepository;
     }
 
     /**
      * @param User $user
-     * @Route("/", name="account_index")
+     * @Route("/", name="budget_index")
      */
     public function indexAction(UserInterface $user)
     {
         $userGroups = $user->getUserGroups()->toArray();
-        $accounts = $this->accountRepository->findBy([
+        $budgets = $this->budgetRepository->findBy([
             'owner' => $userGroups,
         ]);
 
-        return $this->render('account/index.html.twig', [
-            'accounts' => $accounts,
+        return $this->render('budget/index.html.twig', [
+            'budgets' => $budgets,
         ]);
     }
 
     /**
      * @param User $user
-     * @Route("/new", name="account_new")
+     * @Route("/new", name="budget_new")
      */
     public function newAction(Request $request, UserInterface $user)
     {
-        $account = new Account();
-        $form = $this->createForm(AccountType::class, $account, [
+        $budget = new Budget();
+        $form = $this->createForm(BudgetType::class, $budget, [
             'user' => $user,
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($account);
+            $this->em->persist($budget);
             $this->em->flush();
 
-            return $this->redirectToRoute('account_show', [
-                'id' => $account->getId()
+            return $this->redirectToRoute('budget_show', [
+                'id' => $budget->getId()
             ]);
         }
 
-        return $this->render('account/new.html.twig', [
-            'account' => $account,
+        return $this->render('budget/new.html.twig', [
+            'budget' => $budget,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/show", name="account_show")
+     * @Route("/{id}", name="budget_show")
      */
-    public function showAction(Account $account)
+    public function showAction(Budget $budget)
     {
-        $deleteForm = $this->createDeleteForm($account);
+        $deleteForm = $this->createDeleteForm($budget);
 
-        return $this->render('account/show.html.twig', [
-            'account' => $account,
+        return $this->render('budget/show.html.twig', [
+            'budget' => $budget,
             'delete_form' => $deleteForm->createView(),
         ]);
     }
 
     /**
      * @param User $user
-     * @Route("/{id}/edit", name="account_edit")
+     * @Route("/{id}/edit", name="budget_edit")
      */
-    public function editAction(Request $request, Account $account, UserInterface $user)
+    public function editAction(Request $request, Budget $budget, UserInterface $user)
     {
-        $editForm = $this->createForm(AccountType::class, $account, [
+        $editForm = $this->createForm(BudgetType::class, $budget, [
             'user' => $user,
         ]);
         $editForm->handleRequest($request);
@@ -96,24 +96,24 @@ class AccountController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('account_show', [
+            return $this->redirectToRoute('budget_show', [
                 'id' => $account->getId()
             ]);
         }
 
-        return $this->render('account/edit.html.twig', [
-            'account' => $account,
+        return $this->render('budget/edit.html.twig', [
+            'budget' => $budget,
             'edit_form' => $editForm->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/delete", name="account_delete")
+     * @Route("/{id}", name="budget_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, Account $account)
+    public function deleteAction(Request $request, Budget $budget)
     {
-        $form = $this->createDeleteForm($account);
+        $form = $this->createDeleteForm($budget);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -122,17 +122,17 @@ class AccountController extends Controller
             $this->em->flush();
         }
 
-        return $this->redirectToRoute('account_index');
+        return $this->redirectToRoute('budget_index');
     }
 
     /**
-     * @param Account $account
+     * @param Budget $budget
      * @return \Symfony\Component\Form\Form
      */
-    private function createDeleteForm(Account $account)
+    private function createDeleteForm(Budget $budget)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('account_delete', ['id' => $account->getId()]))
+            ->setAction($this->generateUrl('budget_delete', ['id' => $budget->getId()]))
             ->setMethod('DELETE')
             ->getForm()
         ;
