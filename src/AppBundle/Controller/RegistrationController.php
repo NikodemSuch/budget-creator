@@ -13,6 +13,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class RegistrationController extends Controller
 {
+<<<<<<< HEAD
 	private $userManager;
 
 	public function __construct(UserManager $userManager)
@@ -35,6 +36,7 @@ class RegistrationController extends Controller
 				$this->userManager->persistUserWithCredentials($user);
 			} catch (UniqueConstraintViolationException $e) {
 				$this->addFlash('error', 'Username already taken.');
+
 				return $this->render(
 					'user/register.html.twig',
 					['form' => $form->createView()]
@@ -49,4 +51,44 @@ class RegistrationController extends Controller
 			['form' => $form->createView()]
 		);
 	}
+=======
+    private $userManager;
+
+    public function __construct(UserManager $userManager)
+    {
+        $this->userManager = $userManager;
+    }
+
+    /**
+     * @Route("/register", name="user_registration")
+     */
+    public function registerAction(Request $request)
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            try {
+              $this->userManager->persistUserWithCredentials($user);
+            }
+
+            catch(\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+              $this->addFlash('error', 'User with given credentials already exists in database.');
+              return $this->render(
+                  'user/register.html.twig',
+                  ['form' => $form->createView()]
+              );
+            }
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render(
+            'user/register.html.twig',
+            ['form' => $form->createView()]
+        );
+    }
+>>>>>>> 98bd75d... Added some exception handling
 }
