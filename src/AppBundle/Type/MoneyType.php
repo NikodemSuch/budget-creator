@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Type;
  */
 class MoneyType extends Type
 {
-    const MONEY = 'MONEY';
+    const MONEY = 'money';
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {

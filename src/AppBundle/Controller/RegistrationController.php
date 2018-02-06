@@ -9,34 +9,44 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class RegistrationController extends Controller
 {
-    private $userManager;
+	private $userManager;
 
-    public function __construct(UserManager $userManager)
-    {
-        $this->userManager = $userManager;
-    }
+	public function __construct(UserManager $userManager)
+	{
+		$this->userManager = $userManager;
+	}
 
-    /**
-     * @Route("/register", name="user_registration")
-     */
-    public function registerAction(Request $request)
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+	/**
+	* @Route("/register", name="user_registration")
+	*/
+	public function registerAction(Request $request)
+	{
+		$user = new User();
+		$form = $this->createForm(UserType::class, $user);
+		$form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->userManager->persistUserWithCredentials($user);
-            return $this->redirectToRoute('homepage');
-        }
+		if ($form->isSubmitted() && $form->isValid()) {
 
-        return $this->render(
-            'user/register.html.twig',
-            array('form' => $form->createView())
-        );
-    }
+			try {
+				$this->userManager->persistUserWithCredentials($user);
+			} catch (\UniqueConstraintViolationException $e) {
+				$this->addFlash('error', 'Username already taken.');
+				return $this->render(
+					'user/register.html.twig',
+					['form' => $form->createView()]
+				);
+			}
+
+			return $this->redirectToRoute('homepage');
+		}
+
+		return $this->render(
+			'user/register.html.twig',
+			['form' => $form->createView()]
+		);
+	}
 }

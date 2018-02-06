@@ -6,7 +6,6 @@ use Acelaya\Doctrine\Type\PhpEnumType;
 use AppBundle\Type\TransferType;
 use Symfony\Component\Validator\Constraints as Assert;
 
-PhpEnumType::registerEnumType(TransferType::class);
 
 /**
  * @ORM\Entity
@@ -26,7 +25,7 @@ class Transfer
     private $transactionMaster;
 
     /**
-     * @ORM\Column(type=TransferType::class)
+     * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
     private $transferType;
@@ -46,12 +45,12 @@ class Transfer
         return $this->transactionMaster;
     }
 
-    public function setTransferType(TransferType $transferType)
+    public function setTransferType(string $transferType)
     {
         $this->transferType = $transferType;
     }
 
-    public function getTransferType(): TransferType
+    public function getTransferType(): string
     {
         return $this->transferType;
     }
