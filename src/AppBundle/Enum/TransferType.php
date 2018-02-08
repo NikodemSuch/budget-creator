@@ -1,5 +1,6 @@
 <?php
-namespace AppBundle\Type;
+
+namespace AppBundle\Enum;
 
 use MyCLabs\Enum\Enum;
 

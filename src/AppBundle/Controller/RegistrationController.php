@@ -33,7 +33,7 @@ class RegistrationController extends Controller
 
 			try {
 				$this->userManager->persistUserWithCredentials($user);
-			} catch (\UniqueConstraintViolationException $e) {
+			} catch (UniqueConstraintViolationException $e) {
 				$this->addFlash('error', 'Username already taken.');
 				return $this->render(
 					'user/register.html.twig',

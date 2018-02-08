@@ -46,7 +46,7 @@ class CreateUserCommand extends Command
 				'Username: '.$username,
 				'Email: '.$email,
 			]);
-		} catch(\UniqueConstraintViolationException $e)  {
+		} catch(UniqueConstraintViolationException $e)  {
 			$output->writeln('Username already taken.');
 		}
 	}

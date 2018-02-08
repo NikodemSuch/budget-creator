@@ -13,18 +13,18 @@
       {{ form_row(form.plainPassword.first) }}
       {{ form_row(form.plainPassword.second) }}
 
+      <div class="form-errors">
+        {% for label, messages in app.flashes %}
+          {% for message in messages %}
+              <div class="alert alert-danger flash-{{ label }}" role="alert">
+                  {{ message }}
+              </div>
+          {% endfor %}
+        {% endfor %}
+      </div>
+
       <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Create New Account</button>
   {{ form_end(form) }}
-
-  <div class="form-errors">
-    {% for label, messages in app.flashes %}
-      {% for message in messages %}
-          <div class="flash-{{ label }}">
-              {{ message }}
-          </div>
-      {% endfor %}
-    {% endfor %}
-  </div>
 
   <div class="form-footer">
     <p>By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
