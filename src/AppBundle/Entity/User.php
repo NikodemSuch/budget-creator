@@ -8,50 +8,50 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
- */
+* @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+*/
 class User implements AdvancedUserInterface, \Serializable
 {
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    * @ORM\Column(type="integer")
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    */
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="UserGroup", inversedBy="users")
-     * @ORM\JoinTable(name="user_membership")
-     */
+    * @ORM\ManyToMany(targetEntity="UserGroup", inversedBy="users")
+    * @ORM\JoinTable(name="user_membership")
+    */
     private $userGroups;
 
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
-     * @Assert\Email()
-     * @Assert\NotBlank()
-     */
+    * @ORM\Column(type="string", length=60, unique=true)
+    * @Assert\Email()
+    * @Assert\NotBlank()
+    */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
-     * @Assert\NotBlank()
-     */
+    * @ORM\Column(type="string", length=60, unique=true)
+    * @Assert\NotBlank()
+    */
     private $username;
 
     /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
-     */
+    * @Assert\NotBlank()
+    * @Assert\Length(max=4096)
+    */
     private $plainPassword;
 
     /**
-     * @ORM\Column(type="string", length=60)
-     */
+    * @ORM\Column(type="string", length=60)
+    */
     private $password;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")
-     */
+    * @ORM\Column(name="is_active", type="boolean")
+    */
     private $isActive;
 
     public function __construct()
@@ -168,6 +168,6 @@ class User implements AdvancedUserInterface, \Serializable
             $this->username,
             $this->password,
             $this->isActive,
-        ) = unserialize($serialized);
+            ) = unserialize($serialized);
+        }
     }
-}

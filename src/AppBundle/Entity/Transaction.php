@@ -5,62 +5,62 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
- */
+* @ORM\Entity
+*/
 class Transaction
 {
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    * @ORM\Column(type="integer")
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    */
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
-     */
+    * @ORM\ManyToOne(targetEntity="User")
+    */
     private $creator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Account")
-     */
+    * @ORM\ManyToOne(targetEntity="Account")
+    */
     private $account;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Budget")
-     */
+    * @ORM\ManyToOne(targetEntity="Budget")
+    */
     private $budget;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Category")
-     */
+    * @ORM\ManyToOne(targetEntity="Category")
+    */
     private $category;
 
     /**
-     * @ORM\Column(type="string", length=200, nullable=true)
-     */
+    * @ORM\Column(type="string", length=200, nullable=true)
+    */
     private $title;
 
     /**
-     * @ORM\Column(type="money")
-     * @Assert\NotBlank()
-     */
+    * @ORM\Column(type="money")
+    * @Assert\NotBlank()
+    */
     private $amount;
 
     /**
-     * @ORM\Column(type="datetime")
-     * @Assert\NotBlank()
-     */
+    * @ORM\Column(type="datetime")
+    * @Assert\NotBlank()
+    */
     private $dateTime;
 
     /**
-     * @ORM\OneToOne(targetEntity="Transaction")
-     */
+    * @ORM\OneToOne(targetEntity="Transaction")
+    */
     private $transferSlave;
 
     /**
-     * @ORM\Column(name="is_transfer_half", type="boolean")
-     */
+    * @ORM\Column(name="is_transfer_half", type="boolean")
+    */
     private $isTransferHalf;
 
     public function __construct()

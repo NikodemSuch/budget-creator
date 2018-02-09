@@ -2,20 +2,20 @@
 
 {% block pageContent %}
 
-	<div class="row">
-		<div class="page-section">
-			<h1>List of your accounts:</h1>
+  <div class="row">
+    <div class="page-section">
+      <h1>List of your accounts:</h1>
 
-			{% for account in accounts %}
-				<div class="col-sm-4 col-md-3">
-					<a class="account-index" href="{{ path('account_show', { 'id': account.id }) }}">{{ account.name }}</a>
-				</div>
-			{% endfor %}
+      {% for account in accounts %}
+        <div class="col-sm-4 col-md-3">
+          <a class="account-index" href="{{ path('account_show', { 'id': account.id }) }}">{{ account.name }}</a>
+        </div>
+      {% endfor %}
 
-			<div class="col-sm-4 col-md-3">
-				<a class="account-index" href="{{ path('account_new') }}">Create new account...</a>
-			</div>
-		</div>
-	</div>
+      <div class="col-sm-4 col-md-3">
+        <a class="account-index" href="{{ path('account_new') }}">Create new account...</a>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}
