@@ -6,31 +6,31 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
-* @ORM\Entity(repositoryClass="AppBundle\Repository\UserGroupRepository")
-*/
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\UserGroupRepository")
+ */
 class UserGroup
 {
     /**
-    * @ORM\Column(type="integer")
-    * @ORM\Id
-    * @ORM\GeneratedValue(strategy="AUTO")
-    */
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     private $id;
 
     /**
-    * @ORM\ManyToMany(targetEntity="User", mappedBy="userGroups")
-    */
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="userGroups")
+     */
     private $users;
 
     /**
-    * @ORM\Column(type="string", length=200)
-    * @Assert\NotBlank()
-    */
+     * @ORM\Column(type="string", length=200)
+     * @Assert\NotBlank()
+     */
     private $name;
 
     /**
-    * @ORM\Column(name="is_default_group", type="boolean")
-    */
+     * @ORM\Column(name="is_default_group", type="boolean")
+     */
     private $isDefaultGroup;
 
     public function __construct()

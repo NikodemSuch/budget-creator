@@ -13,25 +13,27 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
-* @Route("account")
-*/
+ * @Route("account")
+ */
 class AccountController extends Controller
 {
     private $em;
     private $accountRepository;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, AccountRepository $accountRepository)
     {
         $this->em = $em;
+        $this->accountRepository = $accountRepository;
     }
 
     /**
-    * @Route("/", name="account_index")
-    */
+     * @param User $user
+     * @Route("/", name="account_index")
+     */
     public function indexAction(UserInterface $user)
     {
         $userGroups = $user->getUserGroups()->toArray();
-        $accounts = $this->em->getRepository('AppBundle:Account')->findBy([
+        $accounts = $this->accountRepository->findBy([
             'owner' => $userGroups
         ]);
 
@@ -41,8 +43,9 @@ class AccountController extends Controller
     }
 
     /**
-    * @Route("/new", name="account_new")
-    */
+     * @param User $user
+     * @Route("/new", name="account_new")
+     */
     public function newAction(Request $request, UserInterface $user)
     {
         $account = new Account();
@@ -64,8 +67,8 @@ class AccountController extends Controller
     }
 
     /**
-    * @Route("/{id}/show", name="account_show")
-    */
+     * @Route("/{id}/show", name="account_show")
+     */
     public function showAction(Account $account)
     {
         $deleteForm = $this->createDeleteForm($account);
@@ -77,8 +80,9 @@ class AccountController extends Controller
     }
 
     /**
-    * @Route("/{id}/edit", name="account_edit")
-    */
+     * @param User $user
+     * @Route("/{id}/edit", name="account_edit")
+     */
     public function editAction(Request $request, Account $account, UserInterface $user)
     {
         $editForm = $this->createForm(AccountType::class, $account, [
@@ -99,9 +103,9 @@ class AccountController extends Controller
     }
 
     /**
-    * @Route("/{id}/delete", name="account_delete")
-    * @Method("DELETE")
-    */
+     * @Route("/{id}/delete", name="account_delete")
+     * @Method("DELETE")
+     */
     public function deleteAction(Request $request, Account $account)
     {
         $form = $this->createDeleteForm($account);
@@ -117,10 +121,9 @@ class AccountController extends Controller
     }
 
     /**
-    * @param Account $account The account entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
+     * @param Account $account
+     * @return \Symfony\Component\Form\Form
+     */
     private function createDeleteForm(Account $account)
     {
         return $this->createFormBuilder()

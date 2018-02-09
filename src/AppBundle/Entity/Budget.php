@@ -5,26 +5,26 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
-* @ORM\Entity
-*/
+ * @ORM\Entity
+ */
 class Budget
 {
     /**
-    * @ORM\Column(type="integer")
-    * @ORM\Id
-    * @ORM\GeneratedValue(strategy="AUTO")
-    */
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     private $id;
 
     /**
-    * @ORM\ManyToOne(targetEntity="UserGroup")
-    */
+     * @ORM\ManyToOne(targetEntity="UserGroup")
+     */
     private $owner;
 
     /**
-    * @ORM\Column(type="string", length=200)
-    * @Assert\NotBlank()
-    */
+     * @ORM\Column(type="string", length=200)
+     * @Assert\NotBlank()
+     */
     private $name;
 
     public function setOwner(UserGroup $owner)
