@@ -4,12 +4,9 @@ namespace AppBundle\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
-/**
- * 2 precision money type, using decimal as an SQL type, and integer as PHP type.
- */
 class MoneyType extends Type
 {
-    const MONEY = 'MONEY';
+    const NAME = 'money';
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
@@ -39,7 +36,7 @@ class MoneyType extends Type
 
     public function getName()
     {
-        return self::MONEY;
+        return self::NAME;
     }
 
     public function canRequireSQLConversion()

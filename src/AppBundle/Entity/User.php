@@ -60,12 +60,12 @@ class User implements AdvancedUserInterface, \Serializable
         $this->userGroups = new ArrayCollection();
     }
 
-    public function setUserGroups(UserGroup $userGroups)
+    public function setUserGroups($userGroups)
     {
         $this->userGroups = $userGroups;
     }
 
-    public function getUserGroups(): UserGroup
+    public function getUserGroups()
     {
         return $this->userGroups;
     }
