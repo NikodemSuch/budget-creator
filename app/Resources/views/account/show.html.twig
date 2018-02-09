@@ -1,35 +1,37 @@
-{% extends 'account/base.html.twig' %}
+{% extends 'default/base.html.twig' %}
 
-{% block pageContent %}
+{% block page %}
 
-  <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-      <div class="page-section">
-        <h2>Account Data</h2>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <div class="page-section">
+          <h2>Account Data</h2>
 
-        <table class="table">
-          <tbody>
-            <tr>
-              <th>Id:</th>
-              <td>{{ account.id }}</td>
-            </tr>
-            <tr>
-              <th>Name:</th>
-              <td>{{ account.name }}</td>
-            </tr>
-            <tr>
-              <th>Currency:</th>
-              <td>{{ account.currency }}</td>
-            </tr>
-          </tbody>
-        </table>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th>Id:</th>
+                <td>{{ account.id }}</td>
+              </tr>
+              <tr>
+                <th>Name:</th>
+                <td>{{ account.name }}</td>
+              </tr>
+              <tr>
+                <th>Currency:</th>
+                <td>{{ account.currency }}</td>
+              </tr>
+            </tbody>
+          </table>
 
-        <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('account_edit', { 'id': account.id }) }}">Edit</a>
-        {{ form_start(delete_form) }}
-          <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Delete</button>
-        {{ form_end(delete_form) }}
-        <a href="{{ path('account_index') }}">Back to the list</a>
+          <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('account_edit', { 'id': account.id }) }}">Edit</a>
+          {{ form_start(delete_form) }}
+            <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Delete</button>
+          {{ form_end(delete_form) }}
+          <a href="{{ path('account_index') }}">Back to the list</a>
 
+        </div>
       </div>
     </div>
   </div>

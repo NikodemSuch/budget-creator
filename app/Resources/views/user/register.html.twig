@@ -8,11 +8,6 @@
   </div>
 
   {{ form_start(form) }}
-    {{ form_row(form.username) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.plainPassword.first) }}
-    {{ form_row(form.plainPassword.second) }}
-
     <div class="form-errors">
       {% for label, messages in app.flashes %}
         {% for message in messages %}
@@ -22,6 +17,11 @@
         {% endfor %}
       {% endfor %}
     </div>
+
+    {{ form_row(form.username) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.plainPassword.first) }}
+    {{ form_row(form.plainPassword.second) }}
 
     <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Create New Account</button>
   {{ form_end(form) }}

@@ -81,7 +81,6 @@ class AccountController extends Controller
     */
     public function editAction(Request $request, Account $account, UserInterface $user)
     {
-        $deleteForm = $this->createDeleteForm($account);
         $editForm = $this->createForm(AccountType::class, $account, [
             'user' => $user,
         ]);
@@ -90,13 +89,12 @@ class AccountController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('account_index');
+            return $this->redirectToRoute('account_show', ['id' => $account->getId()]);
         }
 
         return $this->render('account/edit.html.twig', [
             'account' => $account,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
         ]);
     }
 
