@@ -17,7 +17,6 @@ class UserManager
     {
         $this->em = $em;
         $this->passwordEncoder = $passwordEncoder;
-
     }
 
     public function createUser(string $username, string $email, string $plainPassword)

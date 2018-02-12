@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AccountRepository")
  */
 class Account
 {
@@ -33,12 +33,17 @@ class Account
      */
     private $currency;
 
-    public function setOwner(UserGroup $owner)
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setOwner($owner)
     {
         $this->owner = $owner;
     }
 
-    public function getOwner(): UserGroup
+    public function getOwner()
     {
         return $this->owner;
     }

@@ -13,40 +13,41 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class RegistrationController extends Controller
 {
-	private $userManager;
+    private $userManager;
 
-	public function __construct(UserManager $userManager)
-	{
-		$this->userManager = $userManager;
-	}
+    public function __construct(UserManager $userManager)
+    {
+        $this->userManager = $userManager;
+    }
 
-	/**
-	* @Route("/register", name="user_registration")
-	*/
-	public function registerAction(Request $request)
-	{
-		$user = new User();
-		$form = $this->createForm(UserType::class, $user);
-		$form->handleRequest($request);
+    /**
+     * @Route("/register", name="user_registration")
+     */
+    public function registerAction(Request $request)
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
 
-		if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
-			try {
-				$this->userManager->persistUserWithCredentials($user);
-			} catch (UniqueConstraintViolationException $e) {
-				$this->addFlash('error', 'Username already taken.');
-				return $this->render(
-					'user/register.html.twig',
-					['form' => $form->createView()]
-				);
-			}
+            try {
+                $this->userManager->persistUserWithCredentials($user);
+            } catch (UniqueConstraintViolationException $e) {
+                $this->addFlash('error', 'Username already taken.');
 
-			return $this->redirectToRoute('homepage');
-		}
+                return $this->render(
+                    'user/register.html.twig',
+                    ['form' => $form->createView()]
+                );
+            }
 
-		return $this->render(
-			'user/register.html.twig',
-			['form' => $form->createView()]
-		);
-	}
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render(
+            'user/register.html.twig',
+            ['form' => $form->createView()]
+        );
+    }
 }
