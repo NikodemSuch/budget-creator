@@ -70,7 +70,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="budget_show")
+     * @Route("/{id}/show", name="budget_show")
      */
     public function showAction(Budget $budget)
     {
@@ -97,7 +97,7 @@ class BudgetController extends Controller
             $this->em->flush();
 
             return $this->redirectToRoute('budget_show', [
-                'id' => $account->getId()
+                'id' => $budget->getId()
             ]);
         }
 
@@ -108,7 +108,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="budget_delete")
+     * @Route("/{id}/delete", name="budget_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Budget $budget)
@@ -117,8 +117,8 @@ class BudgetController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($account);
-            $this->em->remove($account);
+            $this->em->persist($budget);
+            $this->em->remove($budget);
             $this->em->flush();
         }
 
