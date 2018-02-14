@@ -38,12 +38,12 @@ class Account
         return $this->id;
     }
 
-    public function setOwner($owner)
+    public function setOwner(UserGroup $owner)
     {
         $this->owner = $owner;
     }
 
-    public function getOwner()
+    public function getOwner(): ?UserGroup
     {
         return $this->owner;
     }

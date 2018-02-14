@@ -34,7 +34,7 @@ class AccountController extends Controller
     {
         $userGroups = $user->getUserGroups()->toArray();
         $accounts = $this->accountRepository->findBy([
-            'owner' => $userGroups
+            'owner' => $userGroups,
         ]);
 
         return $this->render('account/index.html.twig', [
@@ -49,7 +49,7 @@ class AccountController extends Controller
     public function newAction(Request $request, UserInterface $user)
     {
         $account = new Account();
-        $form = $this->createForm(AccountType::class, $account,[
+        $form = $this->createForm(AccountType::class, $account, [
             'user' => $user,
         ]);
         $form->handleRequest($request);
@@ -57,7 +57,10 @@ class AccountController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($account);
             $this->em->flush();
-            return $this->redirectToRoute('account_show', ['id' => $account->getId()]);
+
+            return $this->redirectToRoute('account_show', [
+                'id' => $account->getId()
+            ]);
         }
 
         return $this->render('account/new.html.twig', [
@@ -93,7 +96,9 @@ class AccountController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('account_show', ['id' => $account->getId()]);
+            return $this->redirectToRoute('account_show', [
+                'id' => $account->getId()
+            ]);
         }
 
         return $this->render('account/edit.html.twig', [
@@ -127,9 +132,9 @@ class AccountController extends Controller
     private function createDeleteForm(Account $account)
     {
         return $this->createFormBuilder()
-        ->setAction($this->generateUrl('account_delete', ['id' => $account->getId()]))
-        ->setMethod('DELETE')
-        ->getForm()
+            ->setAction($this->generateUrl('account_delete', ['id' => $account->getId()]))
+            ->setMethod('DELETE')
+            ->getForm()
         ;
     }
 }
