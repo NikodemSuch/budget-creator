@@ -6,15 +6,19 @@
     <div class="row">
       <div class="page-section">
         <h1>List of your budgets:</h1>
+        <h1>Total Balance: {{ totalBalance }}</h1>
 
-        {% for budget in budgets %}
+        {% for budgetData in budgetsData %}
           <div class="col-sm-4 col-md-3">
-            <a class="item-index" href="{{ path('budget_show', { 'id': budget.id }) }}">{{ budget.name }}</a>
+            <a class="item-index" href="{{ path('budget_show', { 'id': budgetData.0.id }) }}">
+              <p>{{ budgetData.0.name }}</p>
+              <p>{% if budgetData.1 %} {{ budgetData.1 }} {% else %} 0.00 {% endif %} </p>
+            </a>
           </div>
         {% endfor %}
 
         <div class="col-sm-4 col-md-3">
-          <a class="item-index" href="{{ path('budget_new') }}">Create new budget...</a>
+          <a class="item-index" href="{{ path('budget_new') }}"><p>Create new budget...</p></a>
         </div>
       </div>
     </div>

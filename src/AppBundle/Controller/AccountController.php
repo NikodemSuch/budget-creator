@@ -36,20 +36,20 @@ class AccountController extends Controller
         $accounts = $this->accountRepository->findBy([
             'owner' => $userGroups,
         ]);
+        $accountsBalances = array();
+        $totalBalance = 0;
 
-        // $accountBalances = array();
-        //
-        // foreach ($accounts as $account) {
-        //     array_push($accountBalances, $this->em->getRepository('AppBundle:Transaction')->getAccountBalance($account->getId()));
-        // }
-        //
-        // $accountArrays = array_map(null, $accounts, $accountBalances);
-        //
-        // var_dump($accountArrays);
+        foreach ($accounts as $account) {
+            $accountBalance = $this->em->getRepository('AppBundle:Transaction')->getAccountBalance($account->getId());
+            $totalBalance += $accountBalance;
+            array_push($accountsBalances, $accountBalance);
+        }
 
+        $accountsData = array_map(null, $accounts, $accountsBalances);
 
         return $this->render('account/index.html.twig', [
-            'accounts' => $accounts,
+            'accountsData' => $accountsData,
+            'totalBalance' => $totalBalance,
         ]);
     }
 
@@ -82,7 +82,7 @@ class AccountController extends Controller
 
     /**
      * @param User $user
-     * @Route("/{id}/show", name="account_show")
+     * @Route("/{id}", name="account_show")
      */
     public function showAction(UserInterface $user, Account $account)
     {

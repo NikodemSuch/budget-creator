@@ -32,7 +32,7 @@ class CategoryGroup
         $this->defaultCategory = $defaultCategory;
     }
 
-    public function getDefaultCategory(): Category
+    public function getDefaultCategory(): ?Category
     {
         return $this->defaultCategory;
     }

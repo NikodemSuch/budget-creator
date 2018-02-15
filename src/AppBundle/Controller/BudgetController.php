@@ -36,9 +36,20 @@ class BudgetController extends Controller
         $budgets = $this->budgetRepository->findBy([
             'owner' => $userGroups,
         ]);
+        $budgetsBalances = array();
+        $totalBalance = 0;
+
+        foreach ($budgets as $budget) {
+            $budgetBalance = $this->em->getRepository('AppBundle:Transaction')->getBudgetBalance($budget->getId());
+            $totalBalance += $budgetBalance;
+            array_push($budgetsBalances, $budgetBalance);
+        }
+
+        $budgetsData = array_map(null, $budgets, $budgetsBalances);
 
         return $this->render('budget/index.html.twig', [
-            'budgets' => $budgets,
+            'budgetsData' => $budgetsData,
+            'totalBalance' => $totalBalance,
         ]);
     }
 
@@ -70,7 +81,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * @Route("/{id}/show", name="budget_show")
+     * @Route("/{id}", name="budget_show")
      */
     public function showAction(UserInterface $user, Budget $budget)
     {

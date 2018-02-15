@@ -87,7 +87,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * @Route("/{id}/show", name="transaction_show")
+     * @Route("/{id}", name="transaction_show")
      */
     public function showAction(Transaction $transaction)
     {

@@ -6,16 +6,21 @@
     <div class="row">
       <div class="page-section">
         <h1>List of your accounts:</h1>
+        <h1>Total Balance: {{ totalBalance }}</h1>
 
-        {% for account in accounts %}
+        {% for accountData in accountsData %}
           <div class="col-sm-4 col-md-3">
-            <a class="item-index" href="{{ path('account_show', { 'id': account.id }) }}">{{ account.name }}</a>
+            <a class="item-index" href="{{ path('account_show', { 'id': accountData.0.id }) }}">
+              <p>{{ accountData.0.name }}</p>
+              <p>{% if accountData.1 %} {{ accountData.1 }} {% else %} 0.00 {% endif %} {{ accountData.0.currency }} </p>
+            </a>
           </div>
         {% endfor %}
 
         <div class="col-sm-4 col-md-3">
-          <a class="item-index" href="{{ path('account_new') }}">Create new account...</a>
+          <a class="item-index" href="{{ path('account_new') }}"><p>Create new account...</p></a>
         </div>
+
       </div>
     </div>
   </div>

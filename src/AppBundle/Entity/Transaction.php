@@ -134,12 +134,12 @@ class Transaction
         return $this->amount;
     }
 
-    public function setDateTime($dateTime)
+    public function setDateTime(\DateTime $dateTime)
     {
         $this->dateTime = $dateTime;
     }
 
-    public function getDateTime()
+    public function getDateTime(): \DateTime
     {
         return $this->dateTime;
     }

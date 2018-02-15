@@ -32,7 +32,7 @@ class Category
         $this->group = $group;
     }
 
-    public function getGroup(): CategoryGroup
+    public function getGroup(): ?CategoryGroup
     {
         return $this->group;
     }

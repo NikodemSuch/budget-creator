@@ -75,6 +75,7 @@ section {
 }
 
 .page-section h1 {
+  width: 100%;
   text-align: left;
   font-weight: 600;
   margin-left: 40px;
@@ -90,15 +91,18 @@ section {
 }
 
 .page-section .item-index {
+  overflow: hidden;
+  vertical-align: center;
   display: block;
   background: transparent;
   width: 100%;
+  min-height: 125px;
   border: 3px solid #1ABC9C;
   text-align: center;
   font-size: 20px;
   font-weight: 500;
   color: #343434;
-  padding: 20px;
+  padding: 15px;
   margin: 20px 20px 10px 20px;
   transition: all 0.2s ease-in-out;
 }
