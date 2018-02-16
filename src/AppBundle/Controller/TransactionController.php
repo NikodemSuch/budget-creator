@@ -74,10 +74,23 @@ class TransactionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $transaction->setCreator($user);
-            $this->em->persist($transaction);
-            $this->em->flush();
-            return $this->redirectToRoute('transaction_show', ['id' => $transaction->getId()]);
+
+            if ($transaction->getAccount()->getCurrency() === $transaction->getBudget()->getCurrency()) {
+                $transaction->setCreator($user);
+                $this->em->persist($transaction);
+                $this->em->flush();
+
+                return $this->redirectToRoute('transaction_show', ['id' => $transaction->getId()]);
+            }
+
+            else {
+                $this->addFlash('error', 'Currency of account is not the same as currency of budget.');
+
+                return $this->render('transaction/new.html.twig', [
+                    'transaction' => $transaction,
+                    'form' => $form->createView(),
+                ]);
+            }
         }
 
         return $this->render('transaction/new.html.twig', [
@@ -123,8 +136,21 @@ class TransactionController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->em->flush();
-            return $this->redirectToRoute('transaction_index');
+
+            if ($transaction->getAccount()->getCurrency() === $transaction->getBudget()->getCurrency()) {
+                $this->em->flush();
+
+                return $this->redirectToRoute('transaction_index');
+            }
+
+            else {
+                $this->addFlash('error', 'Currency of account is not the same as currency of budget.');
+
+                return $this->render('transaction/edit.html.twig', [
+                    'transaction' => $transaction,
+                    'edit_form' => $editForm->createView(),
+                ]);
+            }
         }
 
         return $this->render('transaction/edit.html.twig', [

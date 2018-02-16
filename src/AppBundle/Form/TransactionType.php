@@ -23,6 +23,7 @@ class TransactionType extends AbstractType
             ->add('title', TextType::class)
             ->add('amount', MoneyType::class, array(
                 'currency' => false,
+                'divisor' => 100,
             ))
             ->add('dateTime', DateTimeType::class)
             ->add('category', EntityType::class, [

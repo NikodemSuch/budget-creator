@@ -20,7 +20,7 @@
               </tr>
               <tr>
                 <th>Amount</th>
-                <td>{{ transaction.amount}}</td>
+                <td>{{ transaction.amount|money() }} {{ transaction.account.currency }}</td>
               </tr>
               <tr>
                 <th>Datetime</th>

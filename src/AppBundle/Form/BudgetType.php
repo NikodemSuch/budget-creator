@@ -16,19 +16,20 @@ class BudgetType extends AbstractType
         $user = $options['user'];
         $builder
             ->add('name', TextType::class)
-            ->add('owner', EntityType::class, array(
+            ->add('currency', TextType::class)
+            ->add('owner', EntityType::class, [
                 'class' => 'AppBundle:UserGroup',
                 'choices' => $user->getUserGroups(),
-            ));
+            ]);
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired('user');
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => Budget::class,
-        ));
+        ]);
     }
 
     public function getBlockPrefix()

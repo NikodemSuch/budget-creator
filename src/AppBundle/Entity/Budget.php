@@ -27,6 +27,12 @@ class Budget
      */
     private $name;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     * @Assert\NotBlank()
+     */
+    private $currency;
+
     public function getId(): int
     {
         return $this->id;
@@ -50,6 +56,16 @@ class Budget
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function setCurrency(string $currency)
+    {
+        $this->currency = $currency;
+    }
+
+    public function getCurrency(): ?string
+    {
+        return $this->currency;
     }
 
     public function __toString() {
