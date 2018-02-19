@@ -20,7 +20,7 @@
               </tr>
               <tr>
                 <th>Balance:</th>
-                <td>{{ budgetBalance|money() }}</td>
+                <td>{{ budgetBalance|money }}</td>
               </tr>
               <tr>
                 <th>Currency:</th>
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    {% include 'transaction/index.html.twig' %}
+    {% include 'transaction/list.html.twig' %}
 
   </div>
 

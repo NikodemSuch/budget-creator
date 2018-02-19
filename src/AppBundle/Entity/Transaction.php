@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TransactionRepository")
@@ -62,6 +63,22 @@ class Transaction
      * @ORM\Column(name="is_transfer_half", type="boolean")
      */
     private $isTransferHalf;
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        $accountCurrency = $this->getAccount()->getCurrency();
+        $budgetCurrency = $this->getBudget()->getCurrency();
+        $budgetCurrency = (null == $budgetCurrency) ? 'empty' : $budgetCurrency;
+
+        if ( $accountCurrency != $budgetCurrency ) {
+            $context->buildViolation('Currency of budget ('.$budgetCurrency.') is not the same as currency of account ('.$accountCurrency.').')
+                ->atPath('budget')
+                ->addViolation();
+        }
+    }
 
     public function __construct()
     {

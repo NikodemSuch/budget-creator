@@ -13,6 +13,9 @@ class MoneyExtension extends \Twig_Extension
 
     public function moneyFilter($amount)
     {
-        return (null === $amount) ? '0,00' : (string) substr_replace($amount, ',', strlen($amount) - 2 , 0);
+        $locale_info = localeconv();
+        $decimalPoint = $locale_info['mon_decimal_point'];
+
+        return (null === $amount) ? '0'.$decimalPoint.'00' : substr_replace( $amount, $decimalPoint, -2 , 0);
     }
 }

@@ -40,7 +40,7 @@ class TransactionController extends Controller
             'creator' => $userGroups,
         ]);
 
-        return $this->render('transaction/base.html.twig', [
+        return $this->render('transaction/index.html.twig', [
             'transactions' => $transactions,
         ]);
     }
@@ -62,10 +62,6 @@ class TransactionController extends Controller
             'owner' => $userGroups
         ]);
 
-        // $categories = $this->em->getRepository('AppBundle:Category')->findBy([
-        //     'group' => $userGroups
-        // ]);
-
         $form = $this->createForm(TransactionType::class, $transaction, [
             'user' => $user,
             'accounts' => $accounts,
@@ -74,23 +70,11 @@ class TransactionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $transaction->setCreator($user);
+            $this->em->persist($transaction);
+            $this->em->flush();
 
-            if ($transaction->getAccount()->getCurrency() === $transaction->getBudget()->getCurrency()) {
-                $transaction->setCreator($user);
-                $this->em->persist($transaction);
-                $this->em->flush();
-
-                return $this->redirectToRoute('transaction_show', ['id' => $transaction->getId()]);
-            }
-
-            else {
-                $this->addFlash('error', 'Currency of account is not the same as currency of budget.');
-
-                return $this->render('transaction/new.html.twig', [
-                    'transaction' => $transaction,
-                    'form' => $form->createView(),
-                ]);
-            }
+            return $this->redirectToRoute('transaction_show', ['id' => $transaction->getId()]);
         }
 
         return $this->render('transaction/new.html.twig', [
@@ -136,21 +120,7 @@ class TransactionController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-
-            if ($transaction->getAccount()->getCurrency() === $transaction->getBudget()->getCurrency()) {
-                $this->em->flush();
-
-                return $this->redirectToRoute('transaction_index');
-            }
-
-            else {
-                $this->addFlash('error', 'Currency of account is not the same as currency of budget.');
-
-                return $this->render('transaction/edit.html.twig', [
-                    'transaction' => $transaction,
-                    'edit_form' => $editForm->createView(),
-                ]);
-            }
+            $this->em->flush();
         }
 
         return $this->render('transaction/edit.html.twig', [
