@@ -1,0 +1,39 @@
+{% extends 'default/base.html.twig' %}
+
+{% block page %}
+
+  <div class="container">
+    <div class="row">
+      <div class="page-section">
+        <h2>Categories list</h2>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Category Group</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for category in categories %}
+            <tr>
+              <td>{{ category.name }}</td>
+              <td>{{ category.group.name }}</td>
+              <td>
+                <ul class="list-inline">
+                  <li><a href="{{ path('category_show', { 'id': category.id }) }}">show</a></li>
+                  <li><a href="{{ path('category_edit', { 'id': category.id }) }}">edit</a></li>
+                </ul>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('category_new') }}">Create a new category</a>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

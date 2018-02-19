@@ -139,7 +139,6 @@ class TransactionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($transaction);
             $this->em->remove($transaction);
             $this->em->flush();
         }

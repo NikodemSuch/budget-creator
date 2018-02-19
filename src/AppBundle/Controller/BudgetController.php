@@ -134,7 +134,6 @@ class BudgetController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($budget);
             $this->em->remove($budget);
             $this->em->flush();
         }

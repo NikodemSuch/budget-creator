@@ -135,7 +135,6 @@ class AccountController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($account);
             $this->em->remove($account);
             $this->em->flush();
         }
