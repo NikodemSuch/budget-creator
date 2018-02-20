@@ -63,6 +63,7 @@ class AccountController extends Controller
         $form = $this->createForm(AccountType::class, $account, [
             'user' => $user,
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -86,6 +87,7 @@ class AccountController extends Controller
      */
     public function showAction(UserInterface $user, Account $account)
     {
+        $this->denyAccessUnlessGranted('view', $account);
         $userGroups = $user->getUserGroups()->toArray();
         $deleteForm = $this->createDeleteForm($account);
         $accountBalance = $this->transactionRepository->getAccountBalance($account->getId());
@@ -109,6 +111,7 @@ class AccountController extends Controller
      */
     public function editAction(Request $request, Account $account, UserInterface $user)
     {
+        $this->denyAccessUnlessGranted('edit', $account);
         $editForm = $this->createForm(AccountType::class, $account, [
             'user' => $user,
         ]);
@@ -134,6 +137,7 @@ class AccountController extends Controller
      */
     public function deleteAction(Request $request, Account $account)
     {
+        $this->denyAccessUnlessGranted('delete', $account);
         $form = $this->createDeleteForm($account);
         $form->handleRequest($request);
 

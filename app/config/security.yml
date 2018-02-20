@@ -22,7 +22,7 @@ security:
             form_login:
                 login_path: login
                 check_path: login
-                default_target_path: account_index
+                default_target_path: homepage
             logout:
                 path:       logout
                 target:     homepage
@@ -31,11 +31,13 @@ security:
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/category, roles: ROLE_ADMIN }
         - { path: ^/categorygroup, roles: ROLE_ADMIN }
         - { path: ^/, roles: ROLE_USER }
 
+
     role_hierarchy:
         ROLE_PRIVILEGEUSER: [ROLE_USER]
-        ROLE_ADMIN:      [ROLE_PRIVILEGEUSER]
-        ROLE_SUPERADMIN: [ROLE_ADMIN]
+        ROLE_ADMIN:         [ROLE_PRIVILEGEUSER]
+        ROLE_SUPERADMIN:    [ROLE_ADMIN]

@@ -85,6 +85,7 @@ class BudgetController extends Controller
      */
     public function showAction(UserInterface $user, Budget $budget)
     {
+        $this->denyAccessUnlessGranted('view', $budget);
         $userGroups = $user->getUserGroups()->toArray();
         $deleteForm = $this->createDeleteForm($budget);
         $budgetBalance = $this->transactionRepository->getBudgetBalance($budget->getId());
@@ -108,6 +109,7 @@ class BudgetController extends Controller
      */
     public function editAction(Request $request, Budget $budget, UserInterface $user)
     {
+        $this->denyAccessUnlessGranted('edit', $budget);
         $editForm = $this->createForm(BudgetType::class, $budget, [
             'user' => $user,
         ]);
@@ -133,6 +135,7 @@ class BudgetController extends Controller
      */
     public function deleteAction(Request $request, Budget $budget)
     {
+        $this->denyAccessUnlessGranted('delete', $budget);
         $form = $this->createDeleteForm($budget);
         $form->handleRequest($request);
 

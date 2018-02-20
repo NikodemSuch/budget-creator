@@ -98,6 +98,7 @@ class TransactionController extends Controller
      */
     public function showAction(Transaction $transaction)
     {
+        $this->denyAccessUnlessGranted('view', $transaction);
         $deleteForm = $this->createDeleteForm($transaction);
 
         return $this->render('transaction/show.html.twig', [
@@ -112,6 +113,7 @@ class TransactionController extends Controller
      */
     public function editAction(Request $request, Transaction $transaction, UserInterface $user)
     {
+        $this->denyAccessUnlessGranted('edit', $transaction);
         $userGroups = $user->getUserGroups()->toArray();
 
         $accounts = $this->accountRepository->findBy([
@@ -149,6 +151,7 @@ class TransactionController extends Controller
      */
     public function deleteAction(Request $request, Transaction $transaction)
     {
+        $this->denyAccessUnlessGranted('delete', $transaction);
         $form = $this->createDeleteForm($transaction);
         $form->handleRequest($request);
 
