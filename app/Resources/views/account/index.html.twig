@@ -7,15 +7,19 @@
       <div class="page-section">
         <h1>List of your accounts:</h1>
 
-        {% for account in accounts %}
+        {% for accountData in accountsData %}
           <div class="col-sm-4 col-md-3">
-            <a class="item-index" href="{{ path('account_show', { 'id': account.id }) }}">{{ account.name }}</a>
+            <a class="item-index" href="{{ path('account_show', { 'id': accountData.0.id }) }}">
+              {{ accountData.0.name }} </br>
+              {{ accountData.1|money }} {{ accountData.0.currency }}
+            </a>
           </div>
         {% endfor %}
 
         <div class="col-sm-4 col-md-3">
-          <a class="item-index" href="{{ path('account_new') }}">Create new account...</a>
+          <p><a class="item-index" href="{{ path('account_new') }}">Create new account...</a></p>
         </div>
+
       </div>
     </div>
   </div>

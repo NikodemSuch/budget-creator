@@ -7,14 +7,17 @@
       <div class="page-section">
         <h1>List of your budgets:</h1>
 
-        {% for budget in budgets %}
+        {% for budgetData in budgetsData %}
           <div class="col-sm-4 col-md-3">
-            <a class="item-index" href="{{ path('budget_show', { 'id': budget.id }) }}">{{ budget.name }}</a>
+            <a class="item-index" href="{{ path('budget_show', { 'id': budgetData.0.id }) }}">
+              {{ budgetData.0.name }}</br>
+              {{ budgetData.1|money }} {{ budgetData.0.currency }}
+            </a>
           </div>
         {% endfor %}
 
         <div class="col-sm-4 col-md-3">
-          <a class="item-index" href="{{ path('budget_new') }}">Create new budget...</a>
+          <p><a class="item-index" href="{{ path('budget_new') }}">Create new budget...</a></p>
         </div>
       </div>
     </div>

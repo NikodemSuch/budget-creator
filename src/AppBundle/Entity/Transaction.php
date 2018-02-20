@@ -3,9 +3,10 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TransactionRepository")
  */
 class Transaction
 {
@@ -63,9 +64,30 @@ class Transaction
      */
     private $isTransferHalf;
 
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        $accountCurrency = $this->getAccount()->getCurrency();
+        $budgetCurrency = $this->getBudget()->getCurrency();
+
+        if ( $accountCurrency != $budgetCurrency ) {
+            $context->buildViolation("Currency of budget ($budgetCurrency) is not the same as currency of account ($accountCurrency).")
+                ->atPath('budget')
+                ->addViolation();
+        }
+    }
+
     public function __construct()
     {
+        $this->dateTime = new \DateTime();
         $this->isTransferHalf = false;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function setCreator(User $creator)
@@ -73,7 +95,7 @@ class Transaction
         $this->creator = $creator;
     }
 
-    public function getCreator(): User
+    public function getCreator(): ?User
     {
         return $this->creator;
     }
@@ -83,9 +105,19 @@ class Transaction
         $this->account = $account;
     }
 
-    public function getAccount(): Account
+    public function getAccount(): ?Account
     {
         return $this->account;
+    }
+
+    public function setBudget(Budget $budget)
+    {
+        $this->budget = $budget;
+    }
+
+    public function getBudget(): ?Budget
+    {
+        return $this->budget;
     }
 
     public function setCategory(Category $category)
@@ -93,7 +125,7 @@ class Transaction
         $this->category = $category;
     }
 
-    public function getCategory(): Category
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
@@ -113,17 +145,17 @@ class Transaction
         $this->amount = $amount;
     }
 
-    public function getAmount(): int
+    public function getAmount(): ?int
     {
         return $this->amount;
     }
 
-    public function setDateTime($dateTime): DateTime
+    public function setDateTime(\DateTime $dateTime)
     {
         $this->dateTime = $dateTime;
     }
 
-    public function getDateTime(): DateTime
+    public function getDateTime(): \DateTime
     {
         return $this->dateTime;
     }

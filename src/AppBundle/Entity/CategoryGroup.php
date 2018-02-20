@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryGroupRepository")
  */
 class CategoryGroup
 {
@@ -32,7 +32,7 @@ class CategoryGroup
         $this->defaultCategory = $defaultCategory;
     }
 
-    public function getDefaultCategory(): Category
+    public function getDefaultCategory(): ?Category
     {
         return $this->defaultCategory;
     }

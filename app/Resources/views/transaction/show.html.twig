@@ -1,0 +1,55 @@
+{% extends 'default/base.html.twig' %}
+
+{% block page %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <div class="page-section">
+          <h2>Transaction Data</h2>
+
+          <table class="table">
+            <tbody>
+              <tr>
+                <th>Id</th>
+                <td>{{ transaction.id }}</td>
+              </tr>
+              <tr>
+                <th>Title</th>
+                <td>{{ transaction.title }}</td>
+              </tr>
+              <tr>
+                <th>Amount</th>
+                <td>{{ transaction.amount|money }} {{ transaction.account.currency }}</td>
+              </tr>
+              <tr>
+                <th>Datetime</th>
+                <td>{{ transaction.dateTime|date('Y-m-d H:i:s') }}</td>
+              </tr>
+              <tr>
+                <th>Creator</th>
+                <td>{{ transaction.creator }}</td>
+              </tr>
+              <tr>
+                <th>Account</th>
+                <td>{{ transaction.account }}</td>
+              </tr>
+              <tr>
+                <th>Budget</th>
+                <td>{{ transaction.budget }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('transaction_edit', { 'id': transaction.id }) }}">Edit</a>
+          {{ form_start(delete_form) }}
+            <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Delete</button>
+          {{ form_end(delete_form) }}
+          <a href="{{ path('transaction_index') }}">Back to the list</a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

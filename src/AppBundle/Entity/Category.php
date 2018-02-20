@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryRepository")
  */
 class Category
 {
@@ -32,7 +32,7 @@ class Category
         $this->group = $group;
     }
 
-    public function getGroup(): CategoryGroup
+    public function getGroup(): ?CategoryGroup
     {
         return $this->group;
     }

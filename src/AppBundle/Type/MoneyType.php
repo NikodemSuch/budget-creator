@@ -10,23 +10,17 @@ class MoneyType extends Type
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $fieldDeclaration['scale'] = 2;
-        return $platform->getDecimalTypeDeclarationSQL($fieldDeclaration);
+        return $platform->getBigIntTypeDeclarationSQL($fieldDeclaration);
     }
 
-    public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return $sqlExpr . ' / 100';
-    }
-
-    public function convertToPHPValueSQL($sqlExpr, $platform)
-    {
-        return $sqlExpr . ' * 100';
+        return (null === $value) ? null : (int) $value;
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return (null === $value) ? null : (int) $value;
+        return (null === $value) ? null : (string) $value;
     }
 
     public function getBindingType()

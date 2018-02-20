@@ -19,6 +19,10 @@
                 <td>{{ account.name }}</td>
               </tr>
               <tr>
+                <th>Balance:</th>
+                <td>{{ accountBalance|money }}</td>
+              </tr>
+              <tr>
                 <th>Currency:</th>
                 <td>{{ account.currency }}</td>
               </tr>
@@ -34,6 +38,11 @@
         </div>
       </div>
     </div>
+
+    {% include 'transaction/list.html.twig' %}
+
   </div>
+
+
 
 {% endblock %}
