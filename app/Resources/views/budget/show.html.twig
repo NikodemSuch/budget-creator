@@ -20,7 +20,7 @@
               </tr>
               <tr>
                 <th>Balance:</th>
-                <td>{{ budgetBalance|money }}</td>
+                <td>{{ budgetBalance|money(app.request.getLocale()) }}</td>
               </tr>
               <tr>
                 <th>Currency:</th>

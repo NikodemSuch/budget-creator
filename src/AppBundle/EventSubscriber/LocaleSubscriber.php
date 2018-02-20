@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\EventListener;
+namespace AppBundle\EventSubscriber;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class LocaleListener implements EventSubscriberInterface
+class LocaleSubscriber implements EventSubscriberInterface
 {
     private $defaultLocale;
 
@@ -20,7 +20,6 @@ class LocaleListener implements EventSubscriberInterface
         $request = $event->getRequest();
         $locale = $request->getPreferredLanguage();
         $request->setLocale($locale);
-        setLocale(LC_ALL, $locale);
     }
 
     static public function getSubscribedEvents()

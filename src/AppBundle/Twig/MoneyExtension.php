@@ -11,11 +11,11 @@ class MoneyExtension extends \Twig_Extension
         );
     }
 
-    public function moneyFilter($amount)
+    public function moneyFilter($amount, $locale)
     {
-        $locale_info = localeconv();
-        $decimalPoint = $locale_info['mon_decimal_point'];
+        $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+        $decimalPoint = $fmt->getSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL);
 
-        return (null === $amount) ? '0'.$decimalPoint.'00' : substr_replace( $amount, $decimalPoint, -2 , 0);
+        return (null == $amount) ? "0${decimalPoint}00" : substr_replace($amount, $decimalPoint, -2 , 0);
     }
 }

@@ -20,15 +20,15 @@ class TransferTypeType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if (! Action::isValid($value)) {
+        if (! TransferType::isValid($value)) {
             throw new \InvalidArgumentException(sprintf(
                 'The value "%s" is not valid for the enum "%s". Expected one of ["%s"]',
                 $value,
                 TransferType::class,
-                implode('", "', Action::keys())
+                implode('", "', TransferType::keys())
             ));
         }
-        return new Action($value);
+        return new TransferType($value);
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)

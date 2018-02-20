@@ -71,10 +71,9 @@ class Transaction
     {
         $accountCurrency = $this->getAccount()->getCurrency();
         $budgetCurrency = $this->getBudget()->getCurrency();
-        $budgetCurrency = (null == $budgetCurrency) ? 'empty' : $budgetCurrency;
 
         if ( $accountCurrency != $budgetCurrency ) {
-            $context->buildViolation('Currency of budget ('.$budgetCurrency.') is not the same as currency of account ('.$accountCurrency.').')
+            $context->buildViolation("Currency of budget ($budgetCurrency) is not the same as currency of account ($accountCurrency).")
                 ->atPath('budget')
                 ->addViolation();
         }
