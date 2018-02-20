@@ -37,11 +37,9 @@ class BudgetController extends Controller
             'owner' => $userGroups,
         ]);
         $budgetsBalances = array();
-        $totalBalance = 0;
 
         foreach ($budgets as $budget) {
             $budgetBalance = $this->em->getRepository('AppBundle:Transaction')->getBudgetBalance($budget->getId());
-            $totalBalance += $budgetBalance;
             array_push($budgetsBalances, $budgetBalance);
         }
 
@@ -49,7 +47,6 @@ class BudgetController extends Controller
 
         return $this->render('budget/index.html.twig', [
             'budgetsData' => $budgetsData,
-            'totalBalance' => $totalBalance,
         ]);
     }
 

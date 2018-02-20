@@ -37,11 +37,9 @@ class AccountController extends Controller
             'owner' => $userGroups,
         ]);
         $accountsBalances = array();
-        $totalBalance = 0;
 
         foreach ($accounts as $account) {
             $accountBalance = $this->em->getRepository('AppBundle:Transaction')->getAccountBalance($account->getId());
-            $totalBalance += $accountBalance;
             array_push($accountsBalances, $accountBalance);
         }
 
@@ -49,7 +47,6 @@ class AccountController extends Controller
 
         return $this->render('account/index.html.twig', [
             'accountsData' => $accountsData,
-            'totalBalance' => $totalBalance,
         ]);
     }
 
