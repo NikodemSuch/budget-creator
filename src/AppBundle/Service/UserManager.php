@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserGroup;
+use AppBundle\Repository\UserRepository;
 use AppBundle\Exception\UserNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -12,11 +13,13 @@ class UserManager
 {
     private $em;
     private $passwordEncoder;
+    private $userRepository;
 
-    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder, UserRepository $userRepository)
     {
         $this->em = $em;
         $this->passwordEncoder = $passwordEncoder;
+        $this->userRepository = $userRepository;
     }
 
     public function createUser(string $username, string $email, string $plainPassword)
@@ -46,7 +49,7 @@ class UserManager
 
     public function changePassword(string $username, string $newPlainPassword)
     {
-        $user = $this->em->getRepository(User::class)->loadUserByUsername($username);
+        $user = $this->userRepository->loadUserByUsername($username);
 
         if (!$user) {
             throw new UserNotFoundException('User not found.');

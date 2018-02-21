@@ -12,30 +12,22 @@
             <tbody>
               <tr>
                 <th>Id:</th>
-                <td>{{ categoryGroup.id }}</td>
+                <td>{{ category_group.id }}</td>
               </tr>
               <tr>
                 <th>Name:</th>
-                <td>{{ categoryGroup.name }}</td>
+                <td>{{ category_group.name }}</td>
               </tr>
               <tr>
                 <th>Default category:</th>
-                <td>{{ categoryGroup.defaultCategory.name }}</td>
+                <td>{{ category_group.defaultCategory.name }}</td>
               </tr>
             </tbody>
           </table>
 
-          <div class="form-errors">
-            {% for label, messages in app.flashes %}
-              {% for message in messages %}
-                <div class="alert alert-danger flash-{{ label }}" role="alert">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endfor %}
-          </div>
+          {% include 'default/formErrors.html.twig' %}
 
-          <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('categorygroup_edit', { 'id': categoryGroup.id }) }}">Edit</a>
+          <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('categorygroup_edit', { 'id': category_group.id }) }}">Edit</a>
           {{ form_start(delete_form) }}
             <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Delete</button>
           {{ form_end(delete_form) }}

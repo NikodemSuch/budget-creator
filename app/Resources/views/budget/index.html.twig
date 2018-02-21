@@ -7,11 +7,11 @@
       <div class="page-section">
         <h1>List of your budgets:</h1>
 
-        {% for budgetData in budgetsData %}
+        {% for budget_data in budgets_data %}
           <div class="col-sm-4 col-md-3">
-            <a class="item-index" href="{{ path('budget_show', { 'id': budgetData.0.id }) }}">
-              {{ budgetData.0.name }}</br>
-              {{ budgetData.1|money }} {{ budgetData.0.currency }}
+            <a class="item-index" href="{{ path('budget_show', { 'id': budget_data.0.id }) }}">
+              {{ budget_data.0.name }}</br>
+              {{ budget_data.1|money }} {{ budget_data.0.currency }}
             </a>
           </div>
         {% endfor %}

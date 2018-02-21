@@ -7,6 +7,8 @@ use AppBundle\Entity\Budget;
 use AppBundle\Entity\Transaction;
 use AppBundle\Form\TransactionType;
 use AppBundle\Repository\TransactionRepository;
+use AppBundle\Repository\AccountRepository;
+use AppBundle\Repository\BudgetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,11 +22,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class TransactionController extends Controller
 {
     private $em;
+    private $accountRepository;
+    private $budgetRepository;
     private $transactionRepository;
 
-    public function __construct(EntityManagerInterface $em, TransactionRepository $transactionRepository)
+    public function __construct(EntityManagerInterface $em, AccountRepository $accountRepository, BudgetRepository $budgetRepository, TransactionRepository $transactionRepository)
     {
         $this->em = $em;
+        $this->accountRepository = $accountRepository;
+        $this->budgetRepository = $budgetRepository;
         $this->transactionRepository = $transactionRepository;
     }
 
@@ -54,11 +60,11 @@ class TransactionController extends Controller
         $transaction = new Transaction();
         $userGroups = $user->getUserGroups()->toArray();
 
-        $accounts = $this->em->getRepository('AppBundle:Account')->findBy([
+        $accounts = $this->accountRepository->findBy([
             'owner' => $userGroups
         ]);
 
-        $budgets = $this->em->getRepository('AppBundle:Budget')->findBy([
+        $budgets = $this->budgetRepository->findBy([
             'owner' => $userGroups
         ]);
 
@@ -104,11 +110,11 @@ class TransactionController extends Controller
     {
         $userGroups = $user->getUserGroups()->toArray();
 
-        $accounts = $this->em->getRepository('AppBundle:Account')->findBy([
+        $accounts = $this->accountRepository->findBy([
             'owner' => $userGroups
         ]);
 
-        $budgets = $this->em->getRepository('AppBundle:Budget')->findBy([
+        $budgets = $this->budgetRepository->findBy([
             'owner' => $userGroups
         ]);
 

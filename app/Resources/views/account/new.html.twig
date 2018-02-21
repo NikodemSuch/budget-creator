@@ -11,15 +11,9 @@
         </div>
 
         {{ form_start(form) }}
-          <div class="form-errors">
-            {% for label, messages in app.flashes %}
-              {% for message in messages %}
-                <div class="alert alert-danger flash-{{ label }}" role="alert">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endfor %}
-          </div>
+
+          {% include 'default/formErrors.html.twig' %}
+
           {{ form_widget(form) }}
           <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Create New</button>
         {{ form_end(form) }}

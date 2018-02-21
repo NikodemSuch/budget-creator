@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Budget;
 use AppBundle\Form\BudgetType;
 use AppBundle\Repository\BudgetRepository;
+use AppBundle\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,11 +20,13 @@ class BudgetController extends Controller
 {
     private $em;
     private $budgetRepository;
+    private $transactionRepository;
 
-    public function __construct(EntityManagerInterface $em, BudgetRepository $budgetRepository)
+    public function __construct(EntityManagerInterface $em, BudgetRepository $budgetRepository, TransactionRepository $transactionRepository)
     {
         $this->em = $em;
         $this->budgetRepository = $budgetRepository;
+        $this->transactionRepository = $transactionRepository;
     }
 
     /**
@@ -39,14 +42,14 @@ class BudgetController extends Controller
         $budgetsBalances = array();
 
         foreach ($budgets as $budget) {
-            $budgetBalance = $this->em->getRepository('AppBundle:Transaction')->getBudgetBalance($budget->getId());
+            $budgetBalance = $this->transactionRepository->getBudgetBalance($budget->getId());
             array_push($budgetsBalances, $budgetBalance);
         }
 
         $budgetsData = array_map(null, $budgets, $budgetsBalances);
 
         return $this->render('budget/index.html.twig', [
-            'budgetsData' => $budgetsData,
+            'budgets_data' => $budgetsData,
         ]);
     }
 
@@ -84,17 +87,17 @@ class BudgetController extends Controller
     {
         $userGroups = $user->getUserGroups()->toArray();
         $deleteForm = $this->createDeleteForm($budget);
-        $budgetBalance = $this->em->getRepository('AppBundle:Transaction')->getBudgetBalance($budget->getId());
+        $budgetBalance = $this->transactionRepository->getBudgetBalance($budget->getId());
 
-        $transactions = $this->em->getRepository('AppBundle:Transaction')->findBy([
+        $transactions = $this->transactionRepository->findBy([
             'creator' => $userGroups,
             'budget' => $budget->getId(),
         ]);
 
         return $this->render('budget/show.html.twig', [
             'transactions' => $transactions,
-            'budgetBalance' => $budgetBalance,
             'budget' => $budget,
+            'budget_balance' => $budgetBalance,
             'delete_form' => $deleteForm->createView(),
         ]);
     }

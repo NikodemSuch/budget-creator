@@ -2,7 +2,7 @@
 
 namespace AppBundle\Exception;
 
-class ExistingCategoriesException extends \RunTimeException
+class ExistingCategoriesException extends \RuntimeException
 {
 
 }

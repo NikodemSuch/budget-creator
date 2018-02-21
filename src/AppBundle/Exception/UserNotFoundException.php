@@ -2,7 +2,7 @@
 
 namespace AppBundle\Exception;
 
-class UserNotFoundException extends \RunTimeException
+class UserNotFoundException extends \RuntimeException
 {
 
 }

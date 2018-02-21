@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\CategoryGroup;
 use AppBundle\Form\CategoryGroupType;
+use AppBundle\Repository\CategoryRepository;
 use AppBundle\Repository\CategoryGroupRepository;
 use AppBundle\Exception\ExistingCategoriesException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,11 +22,13 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 class CategoryGroupController extends Controller
 {
     private $em;
+    private $categoryRepository;
     private $categoryGroupRepository;
 
-    public function __construct(EntityManagerInterface $em, CategoryGroupRepository $categoryGroupRepository)
+    public function __construct(EntityManagerInterface $em, CategoryRepository $categoryRepository, CategoryGroupRepository $categoryGroupRepository)
     {
         $this->em = $em;
+        $this->categoryRepository = $categoryRepository;
         $this->categoryGroupRepository = $categoryGroupRepository;
     }
 
@@ -37,7 +40,7 @@ class CategoryGroupController extends Controller
         $categoryGroups = $this->categoryGroupRepository->findAll();
 
         return $this->render('categorygroup/index.html.twig', [
-            'categoryGroups' => $categoryGroups,
+            'category_groups' => $categoryGroups,
         ]);
     }
 
@@ -46,7 +49,7 @@ class CategoryGroupController extends Controller
      */
     public function newAction(Request $request)
     {
-        $categoryGroup = new Categorygroup();
+        $categoryGroup = new CategoryGroup();
         $form = $this->createForm(CategoryGroupType::class, $categoryGroup);
         $form->handleRequest($request);
 
@@ -65,7 +68,7 @@ class CategoryGroupController extends Controller
         }
 
         return $this->render('categorygroup/new.html.twig', [
-            'categoryGroup' => $categoryGroup,
+            'category_group' => $categoryGroup,
             'form' => $form->createView(),
         ]);
     }
@@ -78,7 +81,7 @@ class CategoryGroupController extends Controller
         $deleteForm = $this->createDeleteForm($categoryGroup);
 
         return $this->render('categorygroup/show.html.twig', [
-            'categoryGroup' => $categoryGroup,
+            'category_group' => $categoryGroup,
             'delete_form' => $deleteForm->createView(),
         ]);
     }
@@ -100,7 +103,7 @@ class CategoryGroupController extends Controller
         }
 
         return $this->render('categorygroup/edit.html.twig', [
-            'categoryGroup' => $categoryGroup,
+            'category_group' => $categoryGroup,
             'edit_form' => $editForm->createView(),
         ]);
     }
@@ -116,9 +119,9 @@ class CategoryGroupController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $categories = $this->em->getRepository('AppBundle:Category')->getNumberOfCategories($categoryGroup->getId());
+                $categoriesNum = $this->categoryRepository->getCountByGroup($categoryGroup);
 
-                if ($categories != '1') {
+                if ($categoriesNum != 1) {
                     throw new ExistingCategoriesException('This group still contains some categories.');
                 }
 

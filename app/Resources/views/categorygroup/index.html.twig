@@ -16,14 +16,14 @@
             </tr>
           </thead>
           <tbody>
-            {% for categoryGroup in categoryGroups %}
+            {% for category_group in category_groups %}
             <tr>
-              <td>{{ categoryGroup.name }}</td>
-              <td>{{ categoryGroup.defaultCategory.name }}</td>
+              <td>{{ category_group.name }}</td>
+              <td>{{ category_group.defaultCategory.name }}</td>
               <td>
                 <ul class="list-inline">
-                  <li><a href="{{ path('categorygroup_show', { 'id': categoryGroup.id }) }}">show</a></li>
-                  <li><a href="{{ path('categorygroup_edit', { 'id': categoryGroup.id }) }}">edit</a></li>
+                  <li><a href="{{ path('categorygroup_show', { 'id': category_group.id }) }}">show</a></li>
+                  <li><a href="{{ path('categorygroup_edit', { 'id': category_group.id }) }}">edit</a></li>
                 </ul>
               </td>
             </tr>

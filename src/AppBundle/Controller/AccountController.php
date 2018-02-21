@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Account;
 use AppBundle\Form\AccountType;
 use AppBundle\Repository\AccountRepository;
+use AppBundle\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,11 +20,13 @@ class AccountController extends Controller
 {
     private $em;
     private $accountRepository;
+    private $transactionRepository;
 
-    public function __construct(EntityManagerInterface $em, AccountRepository $accountRepository)
+    public function __construct(EntityManagerInterface $em, AccountRepository $accountRepository, TransactionRepository $transactionRepository)
     {
         $this->em = $em;
         $this->accountRepository = $accountRepository;
+        $this->transactionRepository = $transactionRepository;
     }
 
     /**
@@ -39,14 +42,14 @@ class AccountController extends Controller
         $accountsBalances = array();
 
         foreach ($accounts as $account) {
-            $accountBalance = $this->em->getRepository('AppBundle:Transaction')->getAccountBalance($account->getId());
+            $accountBalance = $this->transactionRepository->getAccountBalance($account->getId());
             array_push($accountsBalances, $accountBalance);
         }
 
         $accountsData = array_map(null, $accounts, $accountsBalances);
 
         return $this->render('account/index.html.twig', [
-            'accountsData' => $accountsData,
+            'accounts_data' => $accountsData,
         ]);
     }
 
@@ -85,17 +88,17 @@ class AccountController extends Controller
     {
         $userGroups = $user->getUserGroups()->toArray();
         $deleteForm = $this->createDeleteForm($account);
-        $accountBalance = $this->em->getRepository('AppBundle:Transaction')->getAccountBalance($account->getId());
+        $accountBalance = $this->transactionRepository->getAccountBalance($account->getId());
 
-        $transactions = $this->em->getRepository('AppBundle:Transaction')->findBy([
+        $transactions = $this->transactionRepository->findBy([
             'creator' => $userGroups,
             'account' => $account->getId(),
         ]);
 
         return $this->render('account/show.html.twig', [
             'transactions' => $transactions,
-            'accountBalance' => $accountBalance,
             'account' => $account,
+            'account_balance' => $accountBalance,
             'delete_form' => $deleteForm->createView(),
         ]);
     }
