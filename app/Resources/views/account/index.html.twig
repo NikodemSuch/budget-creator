@@ -7,11 +7,11 @@
       <div class="page-section">
         <h1>List of your accounts:</h1>
 
-        {% for accountData in accountsData %}
+        {% for account_data in accounts_data %}
           <div class="col-sm-4 col-md-3">
-            <a class="item-index" href="{{ path('account_show', { 'id': accountData.0.id }) }}">
-              {{ accountData.0.name }} </br>
-              {{ accountData.1|money }} {{ accountData.0.currency }}
+            <a class="item-index" href="{{ path('account_show', { 'id': account_data.0.id }) }}">
+              {{ account_data.0.name }} </br>
+              {{ account_data.1|money }} {{ account_data.0.currency }}
             </a>
           </div>
         {% endfor %}

@@ -17,7 +17,8 @@ class CategoryGroup
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Category")
+     * @ORM\OneToOne(targetEntity="Category", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $defaultCategory;
 
@@ -26,6 +27,11 @@ class CategoryGroup
      * @Assert\NotBlank()
      */
     private $name;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
     public function setDefaultCategory(Category $defaultCategory)
     {
@@ -44,6 +50,10 @@ class CategoryGroup
 
     public function getName(): ?string
     {
+        return $this->name;
+    }
+
+    public function __toString() {
         return $this->name;
     }
 }

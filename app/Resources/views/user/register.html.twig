@@ -8,15 +8,8 @@
   </div>
 
   {{ form_start(form) }}
-    <div class="form-errors">
-      {% for label, messages in app.flashes %}
-        {% for message in messages %}
-          <div class="alert alert-danger flash-{{ label }}" role="alert">
-            {{ message }}
-          </div>
-        {% endfor %}
-      {% endfor %}
-    </div>
+
+    {% include 'default/formErrors.html.twig' %}
 
     {{ form_row(form.username) }}
     {{ form_row(form.email) }}

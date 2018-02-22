@@ -18,6 +18,7 @@ class Category
 
     /**
      * @ORM\ManyToOne(targetEntity="CategoryGroup")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $group;
 
@@ -26,6 +27,11 @@ class Category
      * @Assert\NotBlank()
      */
     private $name;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
     public function setGroup(CategoryGroup $group)
     {
@@ -44,6 +50,10 @@ class Category
 
     public function getName(): ?string
     {
+        return $this->name;
+    }
+
+    public function __toString() {
         return $this->name;
     }
 }
