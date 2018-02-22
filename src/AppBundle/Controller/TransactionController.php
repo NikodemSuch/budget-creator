@@ -30,8 +30,7 @@ class TransactionController extends Controller
         EntityManagerInterface $em,
         AccountRepository $accountRepository,
         BudgetRepository $budgetRepository,
-        TransactionRepository $transactionRepository
-    )
+        TransactionRepository $transactionRepository)
     {
         $this->em = $em;
         $this->accountRepository = $accountRepository;
@@ -134,7 +133,7 @@ class TransactionController extends Controller
             $this->em->flush();
         }
 
-        return $this->render('transaction/edit.html.twig', [
+        return $this->render('transaction/show.html.twig', [
             'transaction' => $transaction,
             'edit_form' => $editForm->createView(),
         ]);

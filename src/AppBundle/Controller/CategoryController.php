@@ -88,7 +88,7 @@ class CategoryController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('category_index', [
+            return $this->redirectToRoute('category_show', [
                 'id' => $category->getId()
             ]);
         }

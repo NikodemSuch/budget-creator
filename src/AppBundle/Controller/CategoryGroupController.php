@@ -28,8 +28,7 @@ class CategoryGroupController extends Controller
     public function __construct(
         EntityManagerInterface $em,
         CategoryRepository $categoryRepository,
-        CategoryGroupRepository $categoryGroupRepository
-    )
+        CategoryGroupRepository $categoryGroupRepository)
     {
         $this->em = $em;
         $this->categoryRepository = $categoryRepository;
@@ -101,7 +100,7 @@ class CategoryGroupController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('categorygroup_index', [
+            return $this->redirectToRoute('categorygroup_show', [
                 'id' => $categoryGroup->getId()
             ]);
         }
@@ -124,7 +123,7 @@ class CategoryGroupController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $categoriesNum = $this->categoryRepository->getCountByGroup($categoryGroup);
 
-            if ($categoriesNum != 1) {
+            if ($categoriesNum > 1) {
                 $this->addFlash('error', 'This group still contains some categories.');
 
                 return $this->redirectToRoute('categorygroup_show', ['id' => $categoryGroup->getId()]);

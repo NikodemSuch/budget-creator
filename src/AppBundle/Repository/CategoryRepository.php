@@ -22,7 +22,7 @@ class CategoryRepository extends ServiceEntityRepository
             ->getArrayResult();
     }
 
-    public function getCountByGroup($categoryGroup)
+    public function getCountByGroup($categoryGroup): int
     {
         return $this->createQueryBuilder('category')
             ->where('category.group = :group')
