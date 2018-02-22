@@ -18,7 +18,7 @@ class Category
 
     /**
      * @ORM\ManyToOne(targetEntity="CategoryGroup")
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $group;
 

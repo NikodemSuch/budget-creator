@@ -26,7 +26,12 @@ class TransactionController extends Controller
     private $budgetRepository;
     private $transactionRepository;
 
-    public function __construct(EntityManagerInterface $em, AccountRepository $accountRepository, BudgetRepository $budgetRepository, TransactionRepository $transactionRepository)
+    public function __construct(
+        EntityManagerInterface $em,
+        AccountRepository $accountRepository,
+        BudgetRepository $budgetRepository,
+        TransactionRepository $transactionRepository
+    )
     {
         $this->em = $em;
         $this->accountRepository = $accountRepository;

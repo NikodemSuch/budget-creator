@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @Route("category")
@@ -108,15 +108,15 @@ class CategoryController extends Controller
         $form = $this->createDeleteForm($category);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->em->remove($category);
-                $this->em->flush();
-            } catch (ForeignKeyConstraintViolationException $e) {
-                $this->addFlash('error', 'Default categories cannot be deleted.');
+        if ($category === $category->getGroup()->getDefaultCategory()) {
+            throw new BadRequestHttpException();
+        }
 
-                return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
-            }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->remove($category);
+            $this->em->flush();
+
+            return $this->redirectToRoute('category_index');
         }
 
         return $this->redirectToRoute('category_index');

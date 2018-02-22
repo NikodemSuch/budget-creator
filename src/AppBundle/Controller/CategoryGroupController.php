@@ -25,7 +25,11 @@ class CategoryGroupController extends Controller
     private $categoryRepository;
     private $categoryGroupRepository;
 
-    public function __construct(EntityManagerInterface $em, CategoryRepository $categoryRepository, CategoryGroupRepository $categoryGroupRepository)
+    public function __construct(
+        EntityManagerInterface $em,
+        CategoryRepository $categoryRepository,
+        CategoryGroupRepository $categoryGroupRepository
+    )
     {
         $this->em = $em;
         $this->categoryRepository = $categoryRepository;
@@ -118,22 +122,17 @@ class CategoryGroupController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $categoriesNum = $this->categoryRepository->getCountByGroup($categoryGroup);
+            $categoriesNum = $this->categoryRepository->getCountByGroup($categoryGroup);
 
-                if ($categoriesNum != 1) {
-                    throw new ExistingCategoriesException('This group still contains some categories.');
-                }
-
-                else {
-                    $this->em->remove($categoryGroup);
-                    $this->em->flush();
-                }
-
-            } catch (ExistingCategoriesException $e) {
-                $this->addFlash('error', $e->getMessage());
+            if ($categoriesNum != 1) {
+                $this->addFlash('error', 'This group still contains some categories.');
 
                 return $this->redirectToRoute('categorygroup_show', ['id' => $categoryGroup->getId()]);
+            }
+
+            else {
+                $this->em->remove($categoryGroup);
+                $this->em->flush();
             }
         }
 

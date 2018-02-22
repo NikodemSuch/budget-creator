@@ -17,7 +17,8 @@ class CategoryGroup
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Category", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Category", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $defaultCategory;
 
