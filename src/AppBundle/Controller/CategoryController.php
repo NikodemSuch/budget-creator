@@ -6,13 +6,14 @@ use AppBundle\Entity\Category;
 use AppBundle\Form\CategoryType;
 use AppBundle\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_ADMIN")
@@ -115,10 +116,15 @@ class CategoryController extends Controller
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->remove($category);
-            $this->em->flush();
 
-            return $this->redirectToRoute('category_index');
+            try {
+                $this->em->remove($category);
+                $this->em->flush();
+            } catch (ForeignKeyConstraintViolationException $e) {
+                $this->addFlash('error', 'This Category is still used in some transactions.');
+
+                return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
+            }
         }
 
         return $this->redirectToRoute('category_index');
