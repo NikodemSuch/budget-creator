@@ -30,6 +30,9 @@
       </tbody>
     </table>
 
-    <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('transaction_new') }}">Create a new transaction</a>
+    <a class="form-button btn btn-primary btn-lg btn-block"
+       href="{{ path('transaction_new') }}{% if budget %}?budget={{ budget.id }}{% endif %}{% if account %}?account={{ account.id }}{% endif %}"
+       >Create a new transaction</a>
+
   </div>
 </div>
