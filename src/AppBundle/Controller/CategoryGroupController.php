@@ -7,7 +7,6 @@ use AppBundle\Entity\CategoryGroup;
 use AppBundle\Form\CategoryGroupType;
 use AppBundle\Repository\CategoryRepository;
 use AppBundle\Repository\CategoryGroupRepository;
-use AppBundle\Exception\ExistingCategoriesException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

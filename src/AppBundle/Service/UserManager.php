@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserGroup;
+use AppBundle\Enum\UserRole;
 use AppBundle\Repository\UserRepository;
 use AppBundle\Exception\UserNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -57,6 +58,31 @@ class UserManager
 
         $newPassword = $this->passwordEncoder->encodePassword($user, $newPlainPassword);
         $user->setPassword($newPassword);
+
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+
+    public function changeRole(string $username, string $newRole)
+    {
+        $user = $this->userRepository->loadUserByUsername($username);
+
+        if (!$user) {
+            throw new UserNotFoundException('User not found.');
+        }
+
+        switch ($newRole) {
+            case "user":
+                $newRole = UserRole::USER();
+                break;
+            case "admin":
+                $newRole = UserRole::ADMIN();
+                break;
+            default:
+                throw new \InvalidArgumentException('Invalid argument, possible options: "user", "admin"');
+        }
+
+        $user->setRoles($newRole);
 
         $this->em->persist($user);
         $this->em->flush();

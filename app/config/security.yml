@@ -36,7 +36,6 @@ security:
         - { path: ^/categorygroup, roles: ROLE_ADMIN }
         - { path: ^/, roles: ROLE_USER }
 
-
     role_hierarchy:
         ROLE_PRIVILEGEUSER: [ROLE_USER]
         ROLE_ADMIN:         [ROLE_PRIVILEGEUSER]
