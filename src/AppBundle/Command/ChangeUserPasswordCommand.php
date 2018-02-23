@@ -36,7 +36,7 @@ class ChangeUserPasswordCommand extends Command
 
         try {
             $this->userManager->changePassword($username, $newPlainPassword);
-            $output->writeln("Succesfully changed password for user: $username");
+            $output->writeln("Successfully changed password for user: $username");
         } catch (UserNotFoundException $e) {
             $output->writeln($e->getMessage());
         }

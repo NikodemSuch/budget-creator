@@ -48,7 +48,7 @@ class ChangeUserRole extends Command
 
         try {
             $this->userManager->changeRole($username, $newRole);
-            $output->writeln("Succesfully changed role for user: $username");
+            $output->writeln("Successfully changed role for user: $username");
         } catch (UserNotFoundException $e) {
             $output->writeln($e->getMessage());
         }
