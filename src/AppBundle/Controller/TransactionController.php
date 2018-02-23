@@ -131,9 +131,13 @@ class TransactionController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
+
+            return $this->redirectToRoute('transaction_show', [
+                'id' => $transaction->getId()
+            ]);
         }
 
-        return $this->render('transaction/show.html.twig', [
+        return $this->render('transaction/edit.html.twig', [
             'transaction' => $transaction,
             'edit_form' => $editForm->createView(),
         ]);
