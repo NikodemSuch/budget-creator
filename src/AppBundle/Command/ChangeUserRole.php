@@ -26,7 +26,7 @@ class ChangeUserRole extends Command
             ->setName('app:change-role')
             ->setDescription('Changes role of user.')
             ->addArgument('username', InputArgument::REQUIRED, 'The username or email of the user.')
-            ->addArgument('newRole', InputArgument::REQUIRED, 'New role for user. Possible options: "user", "admin".')
+            ->addArgument('newRole', InputArgument::REQUIRED, 'New role for user. Possible options: "ROLE_USER", "ROLE_ADMIN".')
         ;
     }
 
@@ -35,20 +35,12 @@ class ChangeUserRole extends Command
         $username = $input->getArgument('username');
         $newRole = $input->getArgument('newRole');
 
-        switch ($newRole) {
-            case "user":
-                $newRole = UserRole::USER();
-                break;
-            case "admin":
-                $newRole = UserRole::ADMIN();
-                break;
-            default:
-                throw new \InvalidArgumentException('Invalid argument, possible options: "user", "admin"');
-        }
-
         try {
+            $newRole = new UserRole($newRole);
             $this->userManager->changeRole($username, $newRole);
             $output->writeln("Successfully changed role for user: $username");
+        } catch (\UnexpectedValueException $e) {
+            $output->writeln('<error>Invalid argument, possible options: "ROLE_USER", "ROLE_ADMIN".</error>');
         } catch (UserNotFoundException $e) {
             $output->writeln($e->getMessage());
         }

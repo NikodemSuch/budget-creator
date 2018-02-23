@@ -3,6 +3,7 @@
 namespace AppBundle\Security;
 
 use AppBundle\Entity\Transaction;
+use AppBundle\Entity\Owned;
 
 class TransactionVoter extends AbstractOwnedVoter
 {

@@ -124,7 +124,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->password = $password;
     }
 
-    public function getRoles(): array
+    public function getRoles(): Array
     {
         return [(string) $this->roles];
     }

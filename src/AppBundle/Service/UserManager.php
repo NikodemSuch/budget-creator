@@ -53,7 +53,7 @@ class UserManager
         $user = $this->userRepository->loadUserByUsername($username);
 
         if (!$user) {
-            throw new UserNotFoundException('User not found.');
+            throw new UserNotFoundException();
         }
 
         $newPassword = $this->passwordEncoder->encodePassword($user, $newPlainPassword);
@@ -68,7 +68,7 @@ class UserManager
         $user = $this->userRepository->loadUserByUsername($username);
 
         if (!$user) {
-            throw new UserNotFoundException('User not found.');
+            throw new UserNotFoundException();
         }
 
         $user->setRoles($newRole);
