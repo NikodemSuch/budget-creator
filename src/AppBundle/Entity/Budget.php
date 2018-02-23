@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BudgetRepository")
  */
-class Budget
+class Budget implements Owned
 {
     /**
      * @ORM\Column(type="integer")

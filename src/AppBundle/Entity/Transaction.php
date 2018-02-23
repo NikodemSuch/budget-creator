@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TransactionRepository")
  */
-class Transaction
+class Transaction implements Owned
 {
     /**
      * @ORM\Column(type="integer")
@@ -178,5 +178,10 @@ class Transaction
     public function getIsTransferHalf(): boolean
     {
         return $this->isTransferHalf;
+    }
+
+    public function getOwner(): ?UserGroup
+    {
+        return $this->getAccount()->getOwner();
     }
 }

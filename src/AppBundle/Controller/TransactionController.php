@@ -15,8 +15,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
+ * @IsGranted("ROLE_USER")
  * @Route("transaction")
  */
 class TransactionController extends Controller
@@ -95,10 +97,10 @@ class TransactionController extends Controller
 
     /**
      * @Route("/{id}", name="transaction_show")
+     * @IsGranted("view", subject="transaction")
      */
     public function showAction(Transaction $transaction)
     {
-        $this->denyAccessUnlessGranted('view', $transaction);
         $deleteForm = $this->createDeleteForm($transaction);
 
         return $this->render('transaction/show.html.twig', [
@@ -110,10 +112,10 @@ class TransactionController extends Controller
     /**
      * @param User $user
      * @Route("/{id}/edit", name="transaction_edit")
+     * @IsGranted("edit", subject="transaction")
      */
     public function editAction(Request $request, Transaction $transaction, UserInterface $user)
     {
-        $this->denyAccessUnlessGranted('edit', $transaction);
         $userGroups = $user->getUserGroups()->toArray();
 
         $accounts = $this->accountRepository->findBy([
@@ -147,11 +149,11 @@ class TransactionController extends Controller
 
     /**
      * @Route("/{id}/delete", name="transaction_delete")
+     * @IsGranted("delete", subject="transaction")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Transaction $transaction)
     {
-        $this->denyAccessUnlessGranted('delete', $transaction);
         $form = $this->createDeleteForm($transaction);
         $form->handleRequest($request);
 

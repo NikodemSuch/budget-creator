@@ -63,23 +63,12 @@ class UserManager
         $this->em->flush();
     }
 
-    public function changeRole(string $username, string $newRole)
+    public function changeRole(string $username, UserRole $newRole)
     {
         $user = $this->userRepository->loadUserByUsername($username);
 
         if (!$user) {
             throw new UserNotFoundException('User not found.');
-        }
-
-        switch ($newRole) {
-            case "user":
-                $newRole = UserRole::USER();
-                break;
-            case "admin":
-                $newRole = UserRole::ADMIN();
-                break;
-            default:
-                throw new \InvalidArgumentException('Invalid argument, possible options: "user", "admin"');
         }
 
         $user->setRoles($newRole);

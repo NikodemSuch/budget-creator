@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use AppBundle\Enum\UserRole;
@@ -123,7 +124,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->password = $password;
     }
 
-    public function getRoles(): Array
+    public function getRoles(): array
     {
         return [(string) $this->roles];
     }

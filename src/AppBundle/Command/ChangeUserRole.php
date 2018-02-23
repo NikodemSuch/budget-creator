@@ -2,6 +2,7 @@
 namespace AppBundle\Command;
 
 use AppBundle\Service\UserManager;
+use AppBundle\Enum\UserRole;
 use AppBundle\Exception\UserNotFoundException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,12 +35,21 @@ class ChangeUserRole extends Command
         $username = $input->getArgument('username');
         $newRole = $input->getArgument('newRole');
 
+        switch ($newRole) {
+            case "user":
+                $newRole = UserRole::USER();
+                break;
+            case "admin":
+                $newRole = UserRole::ADMIN();
+                break;
+            default:
+                throw new \InvalidArgumentException('Invalid argument, possible options: "user", "admin"');
+        }
+
         try {
             $this->userManager->changeRole($username, $newRole);
-            $output->writeln('Succesfuly changed role for user: '.$username);
+            $output->writeln("Succesfully changed role for user: $username");
         } catch (UserNotFoundException $e) {
-            $output->writeln($e->getMessage());
-        } catch (\InvalidArgumentException $e) {
             $output->writeln($e->getMessage());
         }
     }
