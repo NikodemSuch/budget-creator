@@ -6,6 +6,7 @@ use AppBundle\Entity\Category;
 use AppBundle\Form\CategoryType;
 use AppBundle\Repository\CategoryRepository;
 use AppBundle\Repository\TransactionRepository;
+use AppBundle\Repository\CategoryGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -25,19 +26,21 @@ class CategoryController extends Controller
     private $em;
     private $categoryRepository;
     private $transactionRepository;
+    private $categoryGroupRepository;
 
     public function __construct(
         EntityManagerInterface $em,
         CategoryRepository $categoryRepository,
-        TransactionRepository $transactionRepository)
+        TransactionRepository $transactionRepository,
+        CategoryGroupRepository $categoryGroupRepository)
     {
         $this->em = $em;
         $this->categoryRepository = $categoryRepository;
         $this->transactionRepository = $transactionRepository;
+        $this->categoryGroupRepository = $categoryGroupRepository;
     }
 
     /**
-     * @param User $user
      * @Route("/", name="category_index")
      */
     public function indexAction()
@@ -55,6 +58,12 @@ class CategoryController extends Controller
     public function newAction(Request $request)
     {
         $category = new Category();
+
+        if ($request->query->get('group')) {
+            $group = $this->categoryGroupRepository->find($request->query->get('group'));
+            $category->setGroup($group);
+        }
+
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 

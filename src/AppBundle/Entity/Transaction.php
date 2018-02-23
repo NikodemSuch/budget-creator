@@ -184,12 +184,12 @@ class Transaction implements Owned
         return $this->transferSlave;
     }
 
-    public function setIsTransferHalf(boolean $isTransferHalf)
+    public function setIsTransferHalf(bool $isTransferHalf)
     {
         $this->isTransferHalf = $isTransferHalf;
     }
 
-    public function getIsTransferHalf(): boolean
+    public function getIsTransferHalf(): bool
     {
         return $this->isTransferHalf;
     }

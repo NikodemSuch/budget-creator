@@ -43,7 +43,10 @@
 
           {% endif %}
 
-          <a href="{{ path('category_index') }}">Back to the list</a>
+          <ul class="list-unstyled">
+            <li><a href="{{ path('category_index') }}">Back to the list</a></li>
+            <li><a href="{{ path('categorygroup_show', { 'id': category.group.id }) }}">Back to the category group</a></li>
+          </ul>
 
         </div>
       </div>
