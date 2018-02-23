@@ -31,8 +31,8 @@
     </table>
 
     <a class="form-button btn btn-primary btn-lg btn-block"
-       href="{{ path('transaction_new') }}{% if budget %}?budget={{ budget.id }}{% endif %}{% if account %}?account={{ account.id }}{% endif %}"
-       >Create a new transaction</a>
+       href="{{ path('transaction_new') }}{% if account is defined %}?account={{ account.id }}{% elseif budget is defined %}?budget={{ budget.id }}{% endif %}">
+       Create a new transaction</a>
 
   </div>
 </div>
