@@ -60,13 +60,13 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="userRole")
      * @Assert\NotBlank()
      */
-    private $roles;
+    private $role;
 
     public function __construct()
     {
         $this->isActive = true;
         $this->userGroups = new ArrayCollection();
-        $this->roles = UserRole::USER();
+        $this->role = UserRole::USER();
     }
 
     public function getId(): int
@@ -124,14 +124,19 @@ class User implements AdvancedUserInterface, \Serializable
         $this->password = $password;
     }
 
-    public function getRoles(): Array
+    public function getRole(): UserRole
     {
-        return [(string) $this->roles];
+        return $this->role;
     }
 
-    public function setRoles(UserRole $roles)
+    public function setRole(UserRole $role)
     {
-        $this->roles = $roles;
+        $this->role = $role;
+    }
+
+    public function getRoles(): Array
+    {
+        return [(string) $this->getRole()];
     }
 
     public function getSalt()

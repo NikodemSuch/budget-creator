@@ -71,7 +71,7 @@ class UserManager
             throw new UserNotFoundException();
         }
 
-        $user->setRoles($newRole);
+        $user->setRole($newRole);
 
         $this->em->persist($user);
         $this->em->flush();
