@@ -69,6 +69,20 @@ class Transaction implements Owned
      */
     public function validate(ExecutionContextInterface $context, $payload)
     {
+        if (!$this->getBudget()) {
+            $context->buildViolation("This value is not valid.")
+                ->atPath('budget')
+                ->addViolation();
+
+            if (!$this->getAccount()) {
+                $context->buildViolation("This value is not valid.")
+                    ->atPath('account')
+                    ->addViolation();
+            }
+
+            return;
+        }
+
         $accountCurrency = $this->getAccount()->getCurrency();
         $budgetCurrency = $this->getBudget()->getCurrency();
 
