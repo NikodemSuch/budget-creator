@@ -12,8 +12,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
+ * @IsGranted("ROLE_USER")
  * @Route("budget")
  */
 class BudgetController extends Controller
@@ -82,6 +84,7 @@ class BudgetController extends Controller
 
     /**
      * @Route("/{id}", name="budget_show")
+     * @IsGranted("view", subject="budget")
      */
     public function showAction(UserInterface $user, Budget $budget)
     {
@@ -105,6 +108,7 @@ class BudgetController extends Controller
     /**
      * @param User $user
      * @Route("/{id}/edit", name="budget_edit")
+     * @IsGranted("edit", subject="budget")
      */
     public function editAction(Request $request, Budget $budget, UserInterface $user)
     {
@@ -129,6 +133,7 @@ class BudgetController extends Controller
 
     /**
      * @Route("/{id}/delete", name="budget_delete")
+     * @IsGranted("delete", subject="budget")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Budget $budget)

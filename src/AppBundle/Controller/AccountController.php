@@ -12,8 +12,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
+ * @IsGranted("ROLE_USER")
  * @Route("account")
  */
 class AccountController extends Controller
@@ -63,6 +65,7 @@ class AccountController extends Controller
         $form = $this->createForm(AccountType::class, $account, [
             'user' => $user,
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -83,6 +86,7 @@ class AccountController extends Controller
     /**
      * @param User $user
      * @Route("/{id}", name="account_show")
+     * @IsGranted("view", subject="account")
      */
     public function showAction(UserInterface $user, Account $account)
     {
@@ -106,6 +110,7 @@ class AccountController extends Controller
     /**
      * @param User $user
      * @Route("/{id}/edit", name="account_edit")
+     * @IsGranted("edit", subject="account")
      */
     public function editAction(Request $request, Account $account, UserInterface $user)
     {
@@ -131,6 +136,7 @@ class AccountController extends Controller
     /**
      * @Route("/{id}/delete", name="account_delete")
      * @Method("DELETE")
+     * @IsGranted("delete", subject="account")
      */
     public function deleteAction(Request $request, Account $account)
     {

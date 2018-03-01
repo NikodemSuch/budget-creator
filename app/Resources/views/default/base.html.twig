@@ -15,11 +15,15 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           {% if app.user %}
-            <li><a class="nav-button" href="{{ path('budget_index') }}">Budgets</a></li>
             <li><a class="nav-button" href="{{ path('account_index') }}">Accounts</a></li>
+            <li><a class="nav-button" href="{{ path('budget_index') }}">Budgets</a></li>
             <li><a class="nav-button" href="{{ path('transaction_index') }}">Transactions</a></li>
-            <li><a class="nav-button" href="{{ path('category_index') }}">Categories</a></li>
-            <li><a class="nav-button" href="{{ path('categorygroup_index') }}">Category Groups</a></li>
+
+            {% if is_granted('ROLE_ADMIN') %}
+              <li><a class="nav-button" href="{{ path('categorygroup_index') }}">Category Groups</a></li>
+              <li><a class="nav-button" href="{{ path('category_index') }}">Categories</a></li>
+            {% endif %}
+
             <li><a class="nav-button nav-last" href="{{ path('logout') }}">{{ app.user.username }} <i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
           {% else %}
             <li><a class="nav-button" href="{{ path('login') }}">Log in</a></li>

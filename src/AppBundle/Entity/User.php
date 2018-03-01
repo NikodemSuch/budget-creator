@@ -1,6 +1,8 @@
 <?php
+
 namespace AppBundle\Entity;
 
+use AppBundle\Enum\UserRole;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -54,10 +56,17 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $isActive;
 
+    /**
+     * @ORM\Column(type="userRole")
+     * @Assert\NotBlank()
+     */
+    private $role;
+
     public function __construct()
     {
         $this->isActive = true;
         $this->userGroups = new ArrayCollection();
+        $this->role = UserRole::USER();
     }
 
     public function getId(): int
@@ -115,14 +124,24 @@ class User implements AdvancedUserInterface, \Serializable
         $this->password = $password;
     }
 
+    public function getRole(): UserRole
+    {
+        return $this->role;
+    }
+
+    public function setRole(UserRole $role)
+    {
+        $this->role = $role;
+    }
+
+    public function getRoles(): Array
+    {
+        return [(string) $this->getRole()];
+    }
+
     public function getSalt()
     {
         return null;
-    }
-
-    public function getRoles()
-    {
-        return array('ROLE_USER');
     }
 
     public function eraseCredentials()

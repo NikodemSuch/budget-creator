@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AccountRepository")
  */
-class Account
+class Account implements Owned
 {
     /**
      * @ORM\Column(type="integer")
