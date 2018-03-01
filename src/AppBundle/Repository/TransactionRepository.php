@@ -13,6 +13,16 @@ class TransactionRepository extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
+    public function getCountByCategory($category): int
+    {
+        return $this->createQueryBuilder('transaction')
+            ->where('transaction.category = :category')
+            ->setParameter('category', $category)
+            ->select('count(transaction.category) as transactionsNumber')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function getAccountBalance($accountId)
     {
         return $this->createQueryBuilder('transaction')

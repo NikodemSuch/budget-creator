@@ -6,10 +6,10 @@ use AppBundle\Form\UserType;
 use AppBundle\Entity\User;
 use AppBundle\Service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class RegistrationController extends Controller
 {
