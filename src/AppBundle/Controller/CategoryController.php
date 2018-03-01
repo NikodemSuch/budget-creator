@@ -26,7 +26,10 @@ class CategoryController extends Controller
     private $categoryRepository;
     private $transactionRepository;
 
-    public function __construct(EntityManagerInterface $em, CategoryRepository $categoryRepository, TransactionRepository $transactionRepository)
+    public function __construct(
+        EntityManagerInterface $em,
+        CategoryRepository $categoryRepository,
+        TransactionRepository $transactionRepository)
     {
         $this->em = $em;
         $this->categoryRepository = $categoryRepository;
@@ -77,8 +80,8 @@ class CategoryController extends Controller
     {
         $deleteForm = $this->createDeleteForm($category);
 
-        $transactionsNum = $this->transactionRepository->getCountByCategory($category);
-        $displayDeleteForm = !($transactionsNum > 0);
+        $transactionsCount = $this->transactionRepository->getCountByCategory($category);
+        $displayDeleteForm = $transactionsCount == 0;
 
         return $this->render('category/show.html.twig', [
             'category' => $category,

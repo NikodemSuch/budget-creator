@@ -121,9 +121,9 @@ class CategoryGroupController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $categoriesNum = $this->categoryRepository->getCountByGroup($categoryGroup);
+            $categoriesCount = $this->categoryRepository->getCountByGroup($categoryGroup);
 
-            if ($categoriesNum > 1) {
+            if ($categoriesCount > 1) {
                 $this->addFlash('error', 'This group still contains some categories.');
 
                 return $this->redirectToRoute('categorygroup_show', ['id' => $categoryGroup->getId()]);
