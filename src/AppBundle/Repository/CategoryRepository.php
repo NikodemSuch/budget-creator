@@ -19,7 +19,7 @@ class CategoryRepository extends ServiceEntityRepository
             ->where('category.group = :group')
             ->setParameter('group', $categoryGroup)
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 
     public function getCountByGroup($categoryGroup): int

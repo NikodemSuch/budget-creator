@@ -82,8 +82,10 @@ class CategoryGroupController extends Controller
     public function showAction(CategoryGroup $categoryGroup)
     {
         $deleteForm = $this->createDeleteForm($categoryGroup);
+        $categories = $this->categoryRepository->getByGroup($categoryGroup);
 
         return $this->render('categorygroup/show.html.twig', [
+            'categories' => $categories,
             'category_group' => $categoryGroup,
             'delete_form' => $deleteForm->createView(),
         ]);

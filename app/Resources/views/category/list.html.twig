@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="page-section">
+    <h2>Categories list</h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category Group</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category in categories %}
+        <tr>
+          <td>{{ category.name }}</td>
+          <td>{{ category.group.name }}</td>
+          <td>
+            <ul class="list-inline">
+              <li><a href="{{ path('category_show', { 'id': category.id }) }}">show</a></li>
+              <li><a href="{{ path('category_edit', { 'id': category.id }) }}">edit</a></li>
+            </ul>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if category_group is defined %}
+      <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('category_new', { 'group': category_group.id }) }}">Create a new category</a>
+    {% else %}
+      <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('category_new') }}">Create a new category</a>
+    {% endif %}
+
+  </div>
+</div>

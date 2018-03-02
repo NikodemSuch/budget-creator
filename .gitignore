@@ -1,5 +1,6 @@
 /.web-server-pid
 /.idea/
+/.vscode/
 /app/config/parameters.yml
 /build/
 /phpunit.xml
