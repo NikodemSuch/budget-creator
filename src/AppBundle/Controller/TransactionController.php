@@ -66,6 +66,16 @@ class TransactionController extends Controller
         $transaction = new Transaction();
         $userGroups = $user->getUserGroups()->toArray();
 
+        if ($request->query->get('account')) {
+            $account = $this->accountRepository->find($request->query->get('account'));
+            $transaction->setAccount($account);
+        }
+
+        if ($request->query->get('budget')) {
+            $budget = $this->budgetRepository->find($request->query->get('budget'));
+            $transaction->setBudget($budget);
+        }
+
         $accounts = $this->accountRepository->findBy([
             'owner' => $userGroups
         ]);
