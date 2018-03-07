@@ -22,7 +22,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="UserGroup", inversedBy="users")
+     * @ORM\ManyToMany(targetEntity="UserGroup", inversedBy="users", cascade={"persist", "remove"})
      * @ORM\JoinTable(name="user_membership")
      */
     private $userGroups;
@@ -82,6 +82,16 @@ class User implements AdvancedUserInterface, \Serializable
     public function getUserGroups()
     {
         return $this->userGroups;
+    }
+
+    public function addUserGroup(UserGroup $userGroup)
+    {
+        $this->userGroups->add($userGroup);
+    }
+
+    public function removeUserGroup(UserGroup $userGroup)
+    {
+        $this->userGroups->removeElement($userGroup);
     }
 
     public function getEmail(): ?string

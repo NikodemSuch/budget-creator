@@ -23,6 +23,11 @@ class UserGroup
     private $users;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User")
+     */
+    private $owner;
+
+    /**
      * @ORM\Column(type="string", length=200)
      * @Assert\NotBlank()
      */
@@ -53,12 +58,39 @@ class UserGroup
         return $this->users;
     }
 
+    public function addUser(User $user)
+    {
+        $this->users->add($user);
+
+        // Simulate cascade persist on the inverse side (cascade="persist" doesn't work in here).
+        // This line provides no need to $user->removeUserGroup($userGroup) when we delete User from group.
+        // This really makes things easier in DataTransformer for UserGroup.
+
+        $user->addUserGroup($this);
+    }
+
+    public function removeUser(User $user)
+    {
+        $this->users->removeElement($user);
+        $user->removeUserGroup($this);
+    }
+
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
     public function setName(string $name)
     {
         $this->name = $name;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
