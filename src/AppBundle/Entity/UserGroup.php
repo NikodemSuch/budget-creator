@@ -35,6 +35,11 @@ class UserGroup
     private $name;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Notification", mappedBy="recipients")
+     */
+    private $notifications;
+
+    /**
      * @ORM\Column(name="is_default_group", type="boolean")
      */
     private $isDefaultGroup;
@@ -107,6 +112,28 @@ class UserGroup
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function setNotifications($notifications)
+    {
+        $this->notifications = $notifications;
+    }
+
+    public function getNotifications()
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification)
+    {
+        $this->notifications->add($notification);
+        $notification->addReceiver($this);
+    }
+
+    public function removeNotification(Notification $notification)
+    {
+        $this->notifications->removeElement($notification);
+        $notification->removeReceiver($this);
     }
 
     public function setIsDefaultGroup(bool $isDefaultGroup)

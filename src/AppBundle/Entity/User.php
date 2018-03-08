@@ -52,6 +52,12 @@ class User implements AdvancedUserInterface, \Serializable
     private $password;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Notification")
+     * @ORM\JoinTable(name="unread_notifications")
+     */
+    private $unreadNotifications;
+
+    /**
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
@@ -64,8 +70,9 @@ class User implements AdvancedUserInterface, \Serializable
 
     public function __construct()
     {
-        $this->isActive = true;
         $this->userGroups = new ArrayCollection();
+        $this->unreadNotifications = new ArrayCollection();
+        $this->isActive = true;
         $this->role = UserRole::USER();
     }
 
@@ -132,6 +139,26 @@ class User implements AdvancedUserInterface, \Serializable
     public function setPassword(string $password)
     {
         $this->password = $password;
+    }
+
+    public function setUnreadNotifications($unreadNotifications)
+    {
+        $this->unreadNotifications = $unreadNotifications;
+    }
+
+    public function getUnreadNotifications()
+    {
+        return $this->unreadNotifications;
+    }
+
+    public function addUnreadNotification(Notification $unreadNotifications)
+    {
+        $this->unreadNotifications->add($unreadNotifications);
+    }
+
+    public function removeUnreadNotification(Notification $unreadNotifications)
+    {
+        $this->unreadNotifications->removeElement($unreadNotifications);
     }
 
     public function getRole(): UserRole

@@ -23,7 +23,7 @@ class TransactionRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getAccountBalance($accountId)
+    public function getAccountBalance($accountId): int
     {
         return $this->createQueryBuilder('transaction')
             ->where('transaction.account = :account')
@@ -33,7 +33,7 @@ class TransactionRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getBudgetBalance($budgetId)
+    public function getBudgetBalance($budgetId): int
     {
         return $this->createQueryBuilder('transaction')
             ->where('transaction.budget = :budget')
