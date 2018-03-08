@@ -59,19 +59,13 @@ class UserGroupController extends Controller
 
             $userGroup->setIsDefaultGroup(false);
             $userGroup->setOwner($user);
-            $userGroup->addUser($user);
 
-            try {
-                $this->em->persist($userGroup);
-                $this->em->flush();
-            } catch (UniqueConstraintViolationException $e) {
-                $this->addFlash('error', 'One or more added users is already in group.');
-
-                return $this->render('usergroup/new.html.twig', [
-                    'userGroup' => $userGroup,
-                    'form' => $form->createView(),
-                ]);
+            if (!$userGroup->getUsers()->contains($user)) {
+                $userGroup->addUser($user);
             }
+
+            $this->em->persist($userGroup);
+            $this->em->flush();
 
             return $this->redirectToRoute('usergroup_show', [
                 'id' => $userGroup->getId()
@@ -79,7 +73,7 @@ class UserGroupController extends Controller
         }
 
         return $this->render('usergroup/new.html.twig', [
-            'userGroup' => $userGroup,
+            'user_group' => $userGroup,
             'form' => $form->createView(),
         ]);
     }
@@ -111,17 +105,8 @@ class UserGroupController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
-            try {
-                $this->em->persist($userGroup);
-                $this->em->flush();
-            } catch (UniqueConstraintViolationException $e) {
-                $this->addFlash('error', 'One or more users is already in group.');
-
-                return $this->render('usergroup/edit.html.twig', [
-                    'user_group' => $userGroup,
-                    'edit_form' => $editForm->createView(),
-                ]);
-            }
+            $this->em->persist($userGroup);
+            $this->em->flush();
 
             return $this->redirectToRoute('usergroup_show', [
                 'id' => $userGroup->getId()

@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserGroupRepository")
@@ -37,6 +38,20 @@ class UserGroup
      * @ORM\Column(name="is_default_group", type="boolean")
      */
     private $isDefaultGroup;
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        $users = $this->getUsers()->toArray();
+
+        if ($users != array_unique($users)) {
+            $context->buildViolation("Duplicate user entries. Form contains username and email of the same user.")
+                ->atPath('users')
+                ->addViolation();
+        }
+    }
 
     public function __construct()
     {

@@ -1,13 +1,14 @@
 $(document).ready(function () {
 
-    $("#user-fields-list").find(".userProperty").after('<a href="#" class="removeUserInput"><i class="fa fa-trash-o" aria-hidden="true"></i></a>');
+    const removeIcon = '<a href="#" class="removeUserInput"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+
+    $("#user-fields-list").find(".userProperty").after(removeIcon);
 
     $('.add-another-collection-widget').click(function (e) {
         e.preventDefault();
         var list = $($(this).attr('data-list'));
 
-        var counter = parseInt(list.attr('widget-counter'));
-        if (!counter) { counter = 0 }
+        var counter = list.children().length || 0;
 
         var newWidget = list.attr('data-prototype');
         newWidget = newWidget.replace(/__name__/g, counter);
@@ -16,8 +17,8 @@ $(document).ready(function () {
 
         var newElement = $(list.attr('data-widget-members')).append(newWidget);
 
-        newElement.children(":first").attr("placeholder", 'Username or user email');
-        newElement.append('<a href="#" class="removeUserInput"><i class="fa fa-trash-o" aria-hidden="true"></i></a>');
+        newElement.children(":first").prop("placeholder", 'Username or user email');
+        newElement.append(removeIcon);
         newElement.appendTo(list);
     });
 
