@@ -40,19 +40,16 @@ class UserGroupType extends AbstractType
                 ],
             ])
            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-
                $formData = $event->getData();
+               // Key 'users' doesn't exist when we create group and we won't add any users to it or we're editing it and we delete all users.
+               if (!array_key_exists('users', $formData)) {
+                   $formData['users'] = array();
+               }
 
+               // Because we disable first field in edit template ($owner should be placed right there) we don't get its value in $event->getData().
                if ($event->getForm()->getData()->getOwner()) {
-
                    $ownerEmail = $event->getForm()->getData()->getOwner()->getEmail();
 
-                   // Key 'users' doesn't exists when we create group and we won't add any users to it or we're editing it and we delete all users.
-                   if (!array_key_exists('users', $formData)) {
-                       $formData['users'] = array();
-                   }
-
-                   // Because we disable first field in edit template ($owner should be placed right there) we don't get its value in $event->getData().
                    if (!in_array($ownerEmail, $formData['users'])) {
                        array_unshift($formData['users'], $ownerEmail);
                    }
@@ -62,7 +59,6 @@ class UserGroupType extends AbstractType
                $formData['users'] = array_unique($formData['users']);
                $formData['users'] = array_values($formData['users']);
                $event->setData($formData);
-
            })
         ;
 

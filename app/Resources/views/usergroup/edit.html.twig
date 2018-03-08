@@ -22,7 +22,7 @@
           {{ form_label(edit_form.users) }}
           {{ form_errors(edit_form.users) }}
 
-          <div id="user-fields-list" widget-counter="{{ edit_form.users.children|length }}" data-prototype="{{ form_widget(edit_form.users.vars.prototype)|e }}" data-widget-members="{{ '<div class="form-group"></div>'|e }}">
+          <div id="user-fields-list" data-prototype="{{ form_widget(edit_form.users.vars.prototype)|e }}" data-widget-members="{{ '<div class="form-group"></div>'|e }}">
 
           {% for user in edit_form.users %}
 

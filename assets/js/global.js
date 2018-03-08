@@ -8,12 +8,10 @@ $(document).ready(function () {
         e.preventDefault();
         var list = $($(this).attr('data-list'));
 
-        var counter = list.children().length || 0;
+        var counter = list.children().length;
 
         var newWidget = list.attr('data-prototype');
         newWidget = newWidget.replace(/__name__/g, counter);
-
-        list.attr('widget-counter', counter + 1);
 
         var newElement = $(list.attr('data-widget-members')).append(newWidget);
 
