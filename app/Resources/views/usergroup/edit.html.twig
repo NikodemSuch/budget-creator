@@ -26,7 +26,7 @@
 
           {% for user in edit_form.users %}
 
-            {% if loop.index == 1 %}
+            {% if user.vars.value == app.user.email %}
               <div class="form-group">
                 {{ form_errors(user) }}
                 {{ form_widget(user, { 'attr':{'disabled':'disabled', 'class':'disabled'} }) }}

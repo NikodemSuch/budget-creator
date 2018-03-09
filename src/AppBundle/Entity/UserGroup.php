@@ -48,7 +48,6 @@ class UserGroup
 
         if ($users != array_unique($users)) {
             $context->buildViolation("Duplicate user entries. Form contains username and email of the same user.")
-                ->atPath('users')
                 ->addViolation();
         }
     }

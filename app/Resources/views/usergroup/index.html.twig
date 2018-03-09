@@ -16,7 +16,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for user_group in user_groups if user_group.IsDefaultGroup == false %}
+            {% for user_group in user_groups if user_group.isDefaultGroup == false %}
             <tr>
               <td>{{ user_group.name }}</td>
               <td>{{ user_group.owner.username }}</td>
