@@ -71,12 +71,10 @@ class Transaction implements Owned
     {
         if (!$this->getBudget()) {
             $context->buildViolation("This value is not valid.")
-                ->atPath('budget')
                 ->addViolation();
 
             if (!$this->getAccount()) {
                 $context->buildViolation("This value is not valid.")
-                    ->atPath('account')
                     ->addViolation();
             }
 
@@ -88,7 +86,14 @@ class Transaction implements Owned
 
         if ( $accountCurrency != $budgetCurrency ) {
             $context->buildViolation("Currency of budget ($budgetCurrency) is not the same as currency of account ($accountCurrency).")
-                ->atPath('budget')
+                ->addViolation();
+        }
+
+        $accountOwner = $this->getAccount()->getOwner();
+        $budgetOwner = $this->getBudget()->getOwner();
+
+        if ( $accountOwner != $budgetOwner ) {
+            $context->buildViolation("Owner of budget ($accountOwner) is not the same as owner of account ($budgetOwner).")
                 ->addViolation();
         }
     }

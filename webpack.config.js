@@ -6,8 +6,9 @@ Encore
     .setPublicPath('/build')
 
     .addEntry('jsDependencies', './assets/js/jsDependencies.js')
+    .addEntry('appScripts', './assets/js/global.js')
     .addStyleEntry('cssDependencies', './assets/css/cssDependencies.scss')
-    .addStyleEntry('global', './assets/css/global.scss')
+    .addStyleEntry('appStylesheets', './assets/css/global.scss')
 
     // allow sass/scss files to be processed
     .enableSassLoader()
