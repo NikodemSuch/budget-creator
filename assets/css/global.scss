@@ -128,16 +128,12 @@ section {
   margin: 20px 5% 20px 5%;
 }
 
-.main-page-item:hover {
+.main-page-item:hover, .main-page-item:active, .main-page-item:focus {
   text-decoration: none;
   color: #fff !important;
   border: 3px solid transparent;
   background: #1ABC9C !important;
   transition: all 0.2s ease-in-out;
-}
-
-.main-page-item:focus {
-  text-decoration: none;
 }
 
 .admin-items {
@@ -146,11 +142,11 @@ section {
 }
 
 .admin-items .main-page-item {
-  border: 3px solid #292961;
+  border-color: #292961;
 }
 
-.admin-items .main-page-item:hover {
-  background: #292961 !important;
+.admin-items .main-page-item:hover, .admin-items .main-page-item:active, .admin-items .main-page-item:focus {
+  background-color: #292961 !important;
 }
 
 // END MAIN PAGE

@@ -35,7 +35,7 @@ class UserGroup
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Notification", mappedBy="recipient")
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="recipient")
      */
     private $notifications;
 
@@ -60,6 +60,7 @@ class UserGroup
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): int
@@ -127,13 +128,11 @@ class UserGroup
     public function addNotification(Notification $notification)
     {
         $this->notifications->add($notification);
-        $notification->addRecipient($this);
     }
 
     public function removeNotification(Notification $notification)
     {
         $this->notifications->removeElement($notification);
-        $notification->removeRecipient($this);
     }
 
     public function setIsDefaultGroup(bool $isDefaultGroup)

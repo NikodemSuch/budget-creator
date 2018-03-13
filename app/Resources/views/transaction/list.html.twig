@@ -18,7 +18,7 @@
           <td>{{ transaction.title }}</td>
           <td>{{ transaction.creator }}</td>
           <td>{{ transaction.amount|money }} {{ transaction.account.currency }}</td>
-          <td>{{ transaction.dateTime|date('Y-m-d H:i:s') }}</td>
+          <td>{{ transaction.dateTime|localizeddate }}</td>
           <td>
             <ul class="list-inline">
               <li><a href="{{ path('transaction_show', { 'id': transaction.id }) }}">show</a></li>

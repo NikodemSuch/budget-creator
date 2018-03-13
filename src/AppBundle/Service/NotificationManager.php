@@ -5,8 +5,6 @@ namespace AppBundle\Service;
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserGroup;
 use AppBundle\Entity\Notification;
-use AppBundle\Repository\UserRepository;
-use AppBundle\Repository\UserGroupRepository;
 use AppBundle\Repository\NotificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +23,7 @@ class NotificationManager
     public function createNotification(UserGroup $userGroup, string $content)
     {
         $notification = new Notification();
-        $notification->addRecipient($userGroup);
+        $notification->setRecipient($userGroup);
         $notification->setContent($content);
         $users = $userGroup->getUsers()->toArray();
 

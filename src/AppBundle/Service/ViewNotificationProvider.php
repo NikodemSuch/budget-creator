@@ -28,7 +28,7 @@ class ViewNotificationProvider
         $notifications = array();
 
         foreach ($userGroups as $userGroup) {
-            $notifications = array_merge($notifications, $this->notificationRepository->findByUserGroup($userGroup));
+            $notifications = array_merge($notifications, $this->notificationRepository->findBy(['recipient' => $userGroup]));
         }
 
         // remove duplicates in array of objects
@@ -38,7 +38,6 @@ class ViewNotificationProvider
         // sort notifications by date
         usort($notifications, function($a, $b) {
             return $b->getCreatedOn()->getTimestamp() - $a->getCreatedOn()->getTimestamp();
-
         });
 
         // get array of viewNotification objects

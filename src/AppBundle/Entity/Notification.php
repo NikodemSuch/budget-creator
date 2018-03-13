@@ -31,15 +31,14 @@ class Notification
     private $createdOn;
 
     /**
-     * @ORM\ManyToMany(targetEntity="UserGroup", inversedBy="notifications", cascade={"persist", "remove"})
-     * @ORM\JoinTable(name="notification_membership")
+     * @ORM\ManyToOne(targetEntity="UserGroup", inversedBy="notifications", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="user_group_id", referencedColumnName="id")
      */
     private $recipient;
 
     public function __construct()
     {
         $this->createdOn = new \DateTime();
-        $this->recipient = new ArrayCollection();
     }
 
     public function getId(): int
@@ -67,23 +66,13 @@ class Notification
         return $this->createdOn;
     }
 
-    public function setRecipient($recipient)
+    public function setRecipient(UserGroup $recipient)
     {
         $this->recipient = $recipient;
     }
 
-    public function getRecipient()
+    public function getRecipient(): ?UserGroup
     {
         return $this->recipient;
-    }
-
-    public function addRecipient(UserGroup $userGroup)
-    {
-        $this->recipient->add($userGroup);
-    }
-
-    public function removeRecipient(UserGroup $userGroup)
-    {
-        $this->recipient->removeElement($userGroup);
     }
 }

@@ -17,6 +17,26 @@ $("#notifications-container .notification-unread :checkbox").prop("checked", fal
 $("#notifications-container .notification-read :checkbox").prop("checked", true);
 $('#notifications-container :checkbox').prop("disabled", true);
 
+function setNotificationStatus(setUnreadStatus, notificationId) {
+
+    if (setUnreadStatus) {
+        var url = "/notification/markAsUnread";
+    }
+    else {
+        var url = "/notification/markAsRead";
+    }
+
+    $.ajax ({
+        url: url,
+        type: "POST",
+        data: { notificationId: notificationId },
+        async: true,
+        success: function(data) {
+            console.log(data);
+        }
+    });
+}
+
 $(document).ready(function () {
 
     $('#notifications-container :checkbox').prop("disabled", false);
@@ -29,28 +49,14 @@ $(document).ready(function () {
 
             $(notification).removeClass("notification-unread");
             $(notification).addClass("notification-read");
-            var url = "/notification/markAsRead";
-            setNotificationStatus(url);
+            setNotificationStatus(true, notificationId);
 
         } else {
 
             $(notification).removeClass("notification-read");
             $(notification).addClass("notification-unread");
-            var url = "/notification/markAsUnread";
-            setNotificationStatus(url);
+            setNotificationStatus(false, notificationId);
 
-        }
-
-        function setNotificationStatus(url) {
-            $.ajax ({
-                url: url,
-                type: "POST",
-                data: { notificationId: notificationId },
-                async: true,
-                success: function(data) {
-                    console.log(data);
-                }
-            });
         }
 
         var notificationsNum = $("#notifications .notification-unread").length;
