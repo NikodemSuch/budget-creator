@@ -34,14 +34,7 @@ body {
   transition: all 0.2s ease-in-out;
 }
 
-.navbar-nav li .nav-button:hover {
-  color: #fff !important;
-  border: 3px solid transparent;
-  background: #1ABC9C !important;
-  transition: all 0.2s ease-in-out;
-}
-
-.navbar-nav li .nav-button:focus {
+.navbar-nav li .nav-button:hover, .navbar-nav li .nav-button:focus, .navbar-nav > .open > a {
   color: #fff !important;
   border: 3px solid transparent;
   background: #1ABC9C !important;
@@ -83,6 +76,11 @@ body {
 
 #notifications .checkbox:last-child {
   padding-bottom: 10px;
+}
+
+#notifications .alert {
+  padding: 30px;
+  margin: 0;
 }
 
 // END NOTIFICATIONS
@@ -140,6 +138,19 @@ section {
 
 .main-page-item:focus {
   text-decoration: none;
+}
+
+.admin-items {
+  display: inherit;
+  width: 100%;
+}
+
+.admin-items .main-page-item {
+  border: 3px solid #292961;
+}
+
+.admin-items .main-page-item:hover {
+  background: #292961 !important;
 }
 
 // END MAIN PAGE

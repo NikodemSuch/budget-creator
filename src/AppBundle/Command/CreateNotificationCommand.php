@@ -51,7 +51,7 @@ class CreateNotificationCommand extends Command
             $output->writeln("Sent notification: $content to $userGroupName.");
         }
 
-        else if ($userGroupsCount > 1 && $userGroupId) {
+        elseif ($userGroupsCount > 1 && $userGroupId) {
             $userGroup = $this->userGroupRepository->findOneBy([
                 'id' => $userGroupId,
                 'name' => $userGroupName
@@ -63,7 +63,7 @@ class CreateNotificationCommand extends Command
             }
         }
 
-        else if ($userGroupsCount > 1) {
+        elseif ($userGroupsCount > 1) {
             $output->writeln("There are multiple groups with name $userGroupName. You need to provide group id.");
         }
 

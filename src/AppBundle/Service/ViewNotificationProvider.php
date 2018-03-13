@@ -7,7 +7,7 @@ use AppBundle\Repository\NotificationRepository;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class NotificationGlobal
+class ViewNotificationProvider
 {
     private $notificationRepository;
     private $user;
@@ -37,7 +37,8 @@ class NotificationGlobal
 
         // sort notifications by date
         usort($notifications, function($a, $b) {
-            return strtotime($b->getCreatedOn()->format('Y-m-d H:i:s')) - strtotime($a->getCreatedOn()->format('Y-m-d H:i:s'));
+            return $b->getCreatedOn()->getTimestamp() - $a->getCreatedOn()->getTimestamp();
+
         });
 
         // get array of viewNotification objects
@@ -45,12 +46,7 @@ class NotificationGlobal
         $viewNotifications = array();
 
         foreach ($notifications as $notification) {
-            if ($unreadNotifications->contains($notification)) {
-                $read = false;
-            }
-            else {
-                $read = true;
-            }
+            $read = $unreadNotifications->contains($notification);
             $viewNotification = new ViewNotification($notification, $read);
             array_push($viewNotifications, $viewNotification);
         }

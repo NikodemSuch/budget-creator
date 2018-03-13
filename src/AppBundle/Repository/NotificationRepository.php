@@ -16,7 +16,7 @@ class NotificationRepository extends ServiceEntityRepository
     public function findByUserGroup($userGroup)
     {
         return $this->createQueryBuilder('notification')
-            ->innerJoin('notification.recipients', 'notification_membership', 'WITH', 'notification_membership.id = :user_group_id')
+            ->innerJoin('notification.recipient', 'notification_membership', 'WITH', 'notification_membership.id = :user_group_id')
             ->setParameter('user_group_id', $userGroup)
             ->getQuery()
             ->getResult();

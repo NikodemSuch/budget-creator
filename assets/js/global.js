@@ -17,8 +17,6 @@ $("#notifications-container .notification-unread :checkbox").prop("checked", fal
 $("#notifications-container .notification-read :checkbox").prop("checked", true);
 $('#notifications-container :checkbox').prop("disabled", true);
 
-// Zmienić wszędzie z attr na prop :D
-
 $(document).ready(function () {
 
     $('#notifications-container :checkbox').prop("disabled", false);
@@ -31,24 +29,21 @@ $(document).ready(function () {
 
             $(notification).removeClass("notification-unread");
             $(notification).addClass("notification-read");
-
-            $.ajax ({
-                url: "/notification/markAsRead",
-                type: "POST",
-                data: { notificationId: notificationId },
-                async: true,
-                success: function(data) {
-                    console.log(data);
-                }
-            });
+            var url = "/notification/markAsRead";
+            setNotificationStatus(url);
 
         } else {
 
             $(notification).removeClass("notification-read");
             $(notification).addClass("notification-unread");
+            var url = "/notification/markAsUnread";
+            setNotificationStatus(url);
 
+        }
+
+        function setNotificationStatus(url) {
             $.ajax ({
-                url: "/notification/markAsUnread",
+                url: url,
                 type: "POST",
                 data: { notificationId: notificationId },
                 async: true,

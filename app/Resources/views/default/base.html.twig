@@ -25,19 +25,27 @@
                 <div id="notifications-container">
 
                   <div id="notifications">
-                    {% for view_notification in notification_global.getNotifications() %}
-                      {% if view_notification.read %}
-                        <div class="checkbox notification-read">
-                      {% else %}
-                        <div class="checkbox notification-unread">
-                      {% endif %}
-                          <label>
-                            <input type="checkbox" data-notification-id="{{ view_notification.notification.id }}">
-                            {{ view_notification.notification.content }}
-                            {{ view_notification.notification.createdOn|date('Y-m-d H:i:s') }}
-                          </label>
-                        </div>
-                    {% endfor %}
+                    {% if view_notification_provider.getNotifications() %}
+
+                      {% for view_notification in view_notification_provider.getNotifications() %}
+                        {% if view_notification.read %}
+                          <div class="checkbox notification-read">
+                        {% else %}
+                          <div class="checkbox notification-unread">
+                        {% endif %}
+                            <label>
+                              <input type="checkbox" data-notification-id="{{ view_notification.notification.id }}">
+                              {{ view_notification.notification.content }}
+                              {{ view_notification.notification.createdOn|date('Y-m-d H:i:s') }}
+                            </label>
+                          </div>
+                      {% endfor %}
+
+                    {% else %}
+                      <div class="alert alert-info">
+                        Currently there are no notifications adressed to you.
+                      </div>
+                    {% endif %}
                   </div>
 
                 </div>

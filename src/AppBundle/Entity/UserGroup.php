@@ -35,7 +35,7 @@ class UserGroup
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Notification", mappedBy="recipients")
+     * @ORM\ManyToMany(targetEntity="Notification", mappedBy="recipient")
      */
     private $notifications;
 
@@ -53,7 +53,7 @@ class UserGroup
 
         if ($users != array_unique($users)) {
             $context->buildViolation("Duplicate user entries. Form contains username and email of the same user.")
-                ->addViolation();
+                    ->addViolation();
         }
     }
 
@@ -127,13 +127,13 @@ class UserGroup
     public function addNotification(Notification $notification)
     {
         $this->notifications->add($notification);
-        $notification->addReceiver($this);
+        $notification->addRecipient($this);
     }
 
     public function removeNotification(Notification $notification)
     {
         $this->notifications->removeElement($notification);
-        $notification->removeReceiver($this);
+        $notification->removeRecipient($this);
     }
 
     public function setIsDefaultGroup(bool $isDefaultGroup)

@@ -28,7 +28,7 @@ class NotificationController extends Controller
 
         $notificationId = $request->request->get('notificationId');
 
-        return $this->notificationManager->setUnreadStatus($notificationId, $user, false);;
+        return $this->notificationManager->setUnreadStatus($notificationId, $user, false);
     }
 
     /**
@@ -39,6 +39,6 @@ class NotificationController extends Controller
 
         $notificationId = $request->request->get('notificationId');
 
-        return $this->notificationManager->setUnreadStatus($notificationId, $user, true);;
+        return $this->notificationManager->setUnreadStatus($notificationId, $user, true);
     }
 }

@@ -15,8 +15,10 @@
             <a class="main-page-item" href="{{ path('usergroup_index') }}">Groups</a>
 
             {% if is_granted('ROLE_ADMIN') %}
-              <a class="main-page-item" href="{{ path('categorygroup_index') }}">Category Groups</a>
-              <a class="main-page-item" href="{{ path('category_index') }}">Categories</a>
+              <div class="admin-items">
+                <a class="main-page-item admin-page-item" href="{{ path('categorygroup_index') }}">Category Groups</a>
+                <a class="main-page-item admin-page-item" href="{{ path('category_index') }}">Categories</a>
+              </div>
             {% endif %}
           </div>
 
