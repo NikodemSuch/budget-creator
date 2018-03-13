@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateNotificationCommand extends Command
@@ -29,46 +30,41 @@ class CreateNotificationCommand extends Command
         $this
             ->setName('app:create-notification')
             ->setDescription('Creates notification.')
-            ->addArgument('usergroup-name', InputArgument::REQUIRED, 'User group name.')
             ->addArgument('content', InputArgument::REQUIRED, 'Contents of notification.')
-            ->addArgument('usergroup-id', InputArgument::OPTIONAL, 'User group id - required when there are more groups with the same name.')
+            ->addArgument('usergroup-name', InputArgument::OPTIONAL, 'User group name - optional when you provide usergroup-id.')
+            ->addOption('usergroup-id', 'id', InputOption::VALUE_REQUIRED, 'User group id - required when there are more groups with the same name.')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $userGroupName = $input->getArgument('usergroup-name');
         $content = $input->getArgument('content');
-        $userGroupId = $input->getArgument('usergroup-id');
+        $userGroupName = $input->getArgument('usergroup-name');
+        $userGroupId = $input->getOption('usergroup-id');
 
-        $userGroupsCount = $this->userGroupRepository->getCountByName($userGroupName);
-
-        if ($userGroupsCount == 1) {
-            $userGroup = $this->userGroupRepository->findOneBy([
-                'name' => $userGroupName
-            ]);
+        if ($userGroupId) {
+            $userGroup = $this->userGroupRepository->findOneBy(['id' => $userGroupId]);
             $this->notificationManager->createNotification($userGroup, $content);
-            $output->writeln("Sent notification: $content to $userGroupName.");
-        }
-
-        elseif ($userGroupsCount > 1 && $userGroupId) {
-            $userGroup = $this->userGroupRepository->findOneBy([
-                'id' => $userGroupId,
-                'name' => $userGroupName
-            ]);
-
-            if ($userGroup) {
-                $this->notificationManager->createNotification($userGroup, $content);
-                $output->writeln("Sent notification: $content to $userGroupName.");
-            }
-        }
-
-        elseif ($userGroupsCount > 1) {
-            $output->writeln("There are multiple groups with name $userGroupName. You need to provide group id.");
+            $output->writeln("Sent notification: $content to user with id: $userGroupId.");
         }
 
         else {
-            $output->writeln("Usergroup $userGroupName not found.");
+
+            $userGroupsCount = $this->userGroupRepository->getCountByName($userGroupName);
+
+            if ($userGroupsCount == 1) {
+                $userGroup = $this->userGroupRepository->findOneBy(['name' => $userGroupName]);
+                $this->notificationManager->createNotification($userGroup, $content);
+                $output->writeln("Sent notification: $content to $userGroupName.");
+            }
+
+            elseif ($userGroupsCount > 1) {
+                $output->writeln("There are multiple groups with name $userGroupName. You need to provide group id.");
+            }
+
+            else {
+                $output->writeln("Usergroup $userGroupName not found.");
+            }
         }
     }
 }
