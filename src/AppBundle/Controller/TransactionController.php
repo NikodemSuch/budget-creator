@@ -9,6 +9,7 @@ use AppBundle\Form\TransactionType;
 use AppBundle\Repository\TransactionRepository;
 use AppBundle\Repository\AccountRepository;
 use AppBundle\Repository\BudgetRepository;
+use AppBundle\Service\NotificationManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -27,17 +28,20 @@ class TransactionController extends Controller
     private $accountRepository;
     private $budgetRepository;
     private $transactionRepository;
+    private $notificationManager;
 
     public function __construct(
         EntityManagerInterface $em,
         AccountRepository $accountRepository,
         BudgetRepository $budgetRepository,
-        TransactionRepository $transactionRepository)
+        TransactionRepository $transactionRepository,
+        NotificationManager $notificationManager)
     {
         $this->em = $em;
         $this->accountRepository = $accountRepository;
         $this->budgetRepository = $budgetRepository;
         $this->transactionRepository = $transactionRepository;
+        $this->notificationManager = $notificationManager;
     }
 
     /**
@@ -96,6 +100,11 @@ class TransactionController extends Controller
             $this->em->persist($transaction);
             $this->em->flush();
 
+            $budgetBalance = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
+            if ($budgetBalance < 0) {
+                $this->notificationManager->createNotification($transaction->getOwner(), "Budget {$transaction->getBudget()->getName()} has been exceeded.");
+            }
+
             return $this->redirectToRoute('transaction_show', ['id' => $transaction->getId()]);
         }
 
@@ -145,6 +154,11 @@ class TransactionController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
+
+            $budgetBalance = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
+            if ($budgetBalance < 0) {
+                $this->notificationManager->createNotification($transaction->getOwner(), "Budget {$transaction->getBudget()->getName()} has been exceeded.");
+            }
 
             return $this->redirectToRoute('transaction_show', [
                 'id' => $transaction->getId()
