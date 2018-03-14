@@ -1,3 +1,9 @@
+require('bootstrap-sass/assets/javascripts/bootstrap/tooltip');
+
+$(document).ready(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
 // Notification dropdown
 
 $('.dropdown .dropdown-toggle').on('click', function (event) {
@@ -13,18 +19,15 @@ $('body').on('click', function (e) {
     }
 });
 
-$("#notifications-container .notification-unread :checkbox").prop("checked", false);
-$("#notifications-container .notification-read :checkbox").prop("checked", true);
+$("#notifications-container .notification-unread :checkbox").prop("checked", true);
+$("#notifications-container .notification-read :checkbox").prop("checked", false);
 $('#notifications-container :checkbox').prop("disabled", true);
 
-function setNotificationStatus(setUnreadStatus, notificationId) {
+// END Notification dropdown
 
-    if (setUnreadStatus) {
-        var url = "/notification/markAsUnread";
-    }
-    else {
-        var url = "/notification/markAsRead";
-    }
+function setUnreadStatus(unread, notificationId) {
+
+    var url = unread ? "/notification/markAsUnread" : "/notification/markAsRead";
 
     $.ajax ({
         url: url,
@@ -39,6 +42,8 @@ function setNotificationStatus(setUnreadStatus, notificationId) {
 
 $(document).ready(function () {
 
+    // Notification box
+
     $('#notifications-container :checkbox').prop("disabled", false);
     $('#notifications-container').on("change", ":checkbox", function() {
 
@@ -46,23 +51,22 @@ $(document).ready(function () {
         var notification = $(this).parent().parent();
 
         if (this.checked) {
-
-            $(notification).removeClass("notification-unread");
-            $(notification).addClass("notification-read");
-            setNotificationStatus(true, notificationId);
-
-        } else {
-
             $(notification).removeClass("notification-read");
             $(notification).addClass("notification-unread");
-            setNotificationStatus(false, notificationId);
+            setUnreadStatus(true, notificationId);
 
+        } else {
+            $(notification).removeClass("notification-unread");
+            $(notification).addClass("notification-read");
+            setUnreadStatus(false, notificationId);
         }
 
         var notificationsNum = $("#notifications .notification-unread").length;
         $("#notification-num").html(notificationsNum);
 
     });
+
+    // END Notification box
 
     // UserGroup dynamic form
 
@@ -92,5 +96,7 @@ $(document).ready(function () {
         e.preventDefault();
         $(this).parent().remove();
     });
+
+    // END UserGroup dynamic form
 
 });

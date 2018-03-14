@@ -32,7 +32,6 @@ class Notification
 
     /**
      * @ORM\ManyToOne(targetEntity="UserGroup", inversedBy="notifications", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="user_group_id", referencedColumnName="id")
      */
     private $recipient;
 

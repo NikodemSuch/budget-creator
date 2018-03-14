@@ -25,7 +25,6 @@ class NotificationController extends Controller
     */
     public function markAsReadAction(Request $request, UserInterface $user)
     {
-
         $notificationId = $request->request->get('notificationId');
 
         return $this->notificationManager->setUnreadStatus($notificationId, $user, false);
@@ -36,7 +35,6 @@ class NotificationController extends Controller
     */
     public function markAsUnReadAction(Request $request, UserInterface $user)
     {
-
         $notificationId = $request->request->get('notificationId');
 
         return $this->notificationManager->setUnreadStatus($notificationId, $user, true);

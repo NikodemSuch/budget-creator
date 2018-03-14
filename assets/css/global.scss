@@ -1,5 +1,5 @@
 body {
-  min-height: 800px;
+  min-height: 600px;
   padding: 50px;
 }
 
@@ -59,41 +59,65 @@ body {
   left: -120%;
   min-width: 400px;
   padding: 0;
+  max-height: 300px;
+  overflow-y: scroll;
 }
 
 #notifications-dropdown .checkbox {
   margin: 0;
   padding: 3.5px 10px;
+  border-bottom: 1px solid lightgrey;
 }
 
 #notifications-dropdown .notification-unread {
-  background: #9DA3A9;
+  background: #edf2fa;
 }
 
 #notifications .checkbox:first-child {
-  padding-top: 10px;
+  padding-top: 12px;
 }
 
 #notifications .checkbox:last-child {
-  padding-bottom: 10px;
+  padding-bottom: 12px;
+}
+
+#notifications .notification-label {
+  height: 50px;
+  padding: 5px;
+  width: 100%;
+}
+
+#notifications .notification-label > input[type="checkbox"] {
+  top: 0;
+  right: 0;
+  display: none;
+  margin: 25px;
+}
+
+#notifications .notification-label:hover > input[type="checkbox"] {
+  display: block;
+}
+
+#notifications .notification-label > .notification-date {
+  font-size: 12px;
+  margin-top: 3px;
+  color: #7d7575;
+}
+
+#notifications .notification-label > .notification-content {
+  overflow: hidden;
+  max-height: 40px;
+  width: 90%;
 }
 
 #notifications .alert {
-  padding: 30px;
+  padding: 20px;
   margin: 0;
 }
 
-// END NOTIFICATIONS
+// END NOTIFICATION
 
 // MAIN PAGE
-
-section {
-  padding: 4.25rem 0;
-}
-
-.main-page-section {
-  padding: 30px;
-}
 
 .main-page-section h1 {
   text-align: center;
@@ -109,6 +133,7 @@ section {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  padding-top: 5%;
 }
 
 .main-page-item {
@@ -119,7 +144,7 @@ section {
   overflow: hidden;
   background: transparent;
   width: 40%;
-  height: 150px;
+  height: 130px;
   border: 3px solid #1ABC9C;
   text-align: center;
   font-size: 20px;
@@ -175,7 +200,9 @@ section {
 
 .page-section .item-index {
   overflow: hidden;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   width: 100%;
   min-height: 125px;
@@ -184,7 +211,6 @@ section {
   font-size: 20px;
   font-weight: 500;
   color: #343434;
-  padding: 15px;
   margin: 20px 20px 10px 20px;
   transition: all 0.2s ease-in-out;
 }

@@ -45,7 +45,7 @@ class ViewNotificationProvider
         $viewNotifications = array();
 
         foreach ($notifications as $notification) {
-            $read = $unreadNotifications->contains($notification);
+            $read = !$unreadNotifications->contains($notification);
             $viewNotification = new ViewNotification($notification, $read);
             array_push($viewNotifications, $viewNotification);
         }
