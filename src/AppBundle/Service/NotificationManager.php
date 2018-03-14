@@ -20,7 +20,7 @@ class NotificationManager
         $this->notificationRepository = $notificationRepository;
     }
 
-    public function createNotification(UserGroup $userGroup, string $content)
+    public function createNotification(UserGroup $userGroup, string $content, array $url = [])
     {
         $notification = new Notification();
         $notification->setRecipient($userGroup);
@@ -30,6 +30,10 @@ class NotificationManager
         foreach ($users as $user) {
             $user->addUnreadNotification($notification);
             $this->em->persist($user);
+        }
+
+        if (!empty($url)) {
+            $notification->setUrl($url);
         }
 
         $this->em->persist($notification);

@@ -33,6 +33,7 @@ class CreateNotificationCommand extends Command
             ->addArgument('content', InputArgument::REQUIRED, 'Contents of notification.')
             ->addArgument('usergroup-name', InputArgument::OPTIONAL, 'User group name - optional when you provide usergroup-id.')
             ->addOption('usergroup-id', 'id', InputOption::VALUE_REQUIRED, 'User group id - required when there are more groups with the same name.')
+            ->addOption('url', 'url', InputOption::VALUE_REQUIRED, "Path and id of target url like this: 'path,id' , example: account_show,4.")
         ;
     }
 
@@ -41,10 +42,20 @@ class CreateNotificationCommand extends Command
         $content = $input->getArgument('content');
         $userGroupName = $input->getArgument('usergroup-name');
         $userGroupId = $input->getOption('usergroup-id');
+        $url = explode(',', $input->getOption('url'));
+        $url = ['path' => $url[0], 'id' => $url[1]];
 
         if ($userGroupId) {
             $userGroup = $this->userGroupRepository->findOneBy(['id' => $userGroupId]);
-            $this->notificationManager->createNotification($userGroup, $content);
+
+            if ($url) {
+                $this->notificationManager->createNotification($userGroup, $content, $url);
+            }
+
+            else {
+                $this->notificationManager->createNotification($userGroup, $content);
+            }
+
             $output->writeln("Sent notification: $content to user with id: $userGroupId.");
         }
 
@@ -54,7 +65,15 @@ class CreateNotificationCommand extends Command
 
             if ($userGroupsCount == 1) {
                 $userGroup = $this->userGroupRepository->findOneBy(['name' => $userGroupName]);
-                $this->notificationManager->createNotification($userGroup, $content);
+
+                if ($url) {
+                    $this->notificationManager->createNotification($userGroup, $content, $url);
+                }
+
+                else {
+                    $this->notificationManager->createNotification($userGroup, $content);
+                }
+
                 $output->writeln("Sent notification: $content to $userGroupName.");
             }
 

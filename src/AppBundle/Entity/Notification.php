@@ -34,6 +34,11 @@ class Notification
      * @ORM\ManyToOne(targetEntity="UserGroup", inversedBy="notifications", cascade={"persist", "remove"})
      */
     private $recipient;
+    
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $url;
 
     public function __construct()
     {
@@ -73,5 +78,15 @@ class Notification
     public function getRecipient(): ?UserGroup
     {
         return $this->recipient;
+    }
+
+     public function setUrl(array $url)
+    {
+        $this->url = $url;
+    }
+
+    public function getUrl(): ?array
+    {
+        return $this->url;
     }
 }

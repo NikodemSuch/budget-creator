@@ -28,7 +28,11 @@
                         <div class="checkbox notification{{ view_notification.read ? '' : ' notification-unread' }}">
                           <label class="notification-label">
                             <div class="notification-content">
-                              {{ view_notification.notification.content }}
+                              {% if view_notification.notification.url %}
+                                <a href="{{ path(view_notification.notification.url.path, { 'id': view_notification.notification.url.id }) }}">{{ view_notification.notification.content }}</a>
+                              {% else %}
+                                {{ view_notification.notification.content }}
+                              {% endif %}  
                             </div>
                             <div class="notification-date">
                               {{ view_notification.notification.createdOn|localizeddate }}
