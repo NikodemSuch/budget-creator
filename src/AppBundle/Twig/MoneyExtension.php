@@ -27,6 +27,11 @@ class MoneyExtension extends \Twig_Extension
         $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
         $decimalPoint = $fmt->getSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL);
 
-        return (null == $amount) ? "0${decimalPoint}00" : substr_replace($amount, $decimalPoint, -2 , 0);
+        if (!$amount) {
+            return "0${decimalPoint}00";
+        }
+
+        $amountStr = str_pad($amount, 3, '0', STR_PAD_LEFT);
+        return substr_replace($amountStr, $decimalPoint, -2 , 0);
     }
 }
