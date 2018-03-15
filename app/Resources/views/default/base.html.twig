@@ -26,8 +26,8 @@
 
                   <div id="notifications">
                     {% for view_notification in view_notification_provider.getNotifications() %}
-                      {% if view_notification.read %}
-                        <div class="checkbox notification-read">
+
+                        <div class="checkbox notification{{ view_notification.read ? '' : ' notification-unread' }}">
                           <label class="notification-label">
                             <div class="notification-content">
                               {{ view_notification.notification.content }}
@@ -35,26 +35,13 @@
                             <div class="notification-date">
                               {{ view_notification.notification.createdOn|localizeddate }}
                             </div>
-                            <input type="checkbox" data-toggle="tooltip" data-placement="left" title="Mark as unread" data-notification-id="{{ view_notification.notification.id }}">
+                            <input type="checkbox" data-toggle="tooltip" data-placement="left" title="Mark as {{ view_notification.read ? 'unread' : 'read' }}" data-notification-id="{{ view_notification.notification.id }}">
                           </label>
                         </div>
-                      {% else %}
-                        <div class="checkbox notification-unread">
-                          <label class="notification-label">
-                            <div class="notification-content">
-                              {{ view_notification.notification.content }}
-                            </div>
-                            <div class="notification-date">
-                              {{ view_notification.notification.createdOn|localizeddate }}
-                            </div>
-                            <input class="notification-checkbox" type="checkbox" data-toggle="tooltip" data-placement="left" title="Mark as read" data-notification-id="{{ view_notification.notification.id }}">
-                          </label>
-                        </div>
-                      {% endif %}
 
                     {% else %}
                       <div class="alert alert-info">
-                        Currently there are no notifications adressed to you.
+                        No notifications.
                       </div>
                     {% endfor %}
                   </div>

@@ -51,13 +51,11 @@ $(document).ready(function () {
         var notification = $(this).parent().parent();
 
         if (this.checked) {
-            $(notification).removeClass("notification-read");
             $(notification).addClass("notification-unread");
             setUnreadStatus(true, notificationId);
 
         } else {
             $(notification).removeClass("notification-unread");
-            $(notification).addClass("notification-read");
             setUnreadStatus(false, notificationId);
         }
 

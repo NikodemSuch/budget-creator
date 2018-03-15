@@ -159,12 +159,12 @@ class Transaction implements Owned
         return $this->title;
     }
 
-    public function setAmount($amount)
+    public function setAmount(int $amount)
     {
         $this->amount = $amount;
     }
 
-    public function getAmount()
+    public function getAmount(): ?int
     {
         return $this->amount;
     }
