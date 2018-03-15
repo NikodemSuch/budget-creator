@@ -16,15 +16,36 @@
         <ul class="nav navbar-nav navbar-right">
           {% if app.user %}
 
-            <li><a class="nav-button" href="{{ path('account_index') }}">Accounts</a></li>
-            <li><a class="nav-button" href="{{ path('budget_index') }}">Budgets</a></li>
-            <li><a class="nav-button" href="{{ path('transaction_index') }}">Transactions</a></li>
-            <li><a class="nav-button" href="{{ path('usergroup_index') }}">Groups</a></li>
+            <li class="dropdown">
+              <a class="nav-button dropdown-toggle" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-bell" aria-hidden="true"></i><span id="notification-num" class="badge">{{ app.user.unreadNotifications|length }}</span>
+              </a>
 
-            {% if is_granted('ROLE_ADMIN') %}
-              <li><a class="nav-button" href="{{ path('categorygroup_index') }}">Category Groups</a></li>
-              <li><a class="nav-button" href="{{ path('category_index') }}">Categories</a></li>
-            {% endif %}
+              <ul id="notifications-dropdown" class="dropdown-menu">
+                <div id="notifications-container">
+                  <div id="notifications">
+                    {% for view_notification in view_notification_provider.getNotifications() %}
+                        <div class="checkbox notification{{ view_notification.read ? '' : ' notification-unread' }}">
+                          <label class="notification-label">
+                            <div class="notification-content">
+                              {{ view_notification.notification.content }}
+                            </div>
+                            <div class="notification-date">
+                              {{ view_notification.notification.createdOn|localizeddate }}
+                            </div>
+                            <input type="checkbox" data-toggle="tooltip" data-placement="left" title="Mark as {{ view_notification.read ? 'unread' : 'read' }}" data-notification-id="{{ view_notification.notification.id }}">
+                          </label>
+                        </div>
+                    {% else %}
+                      <div class="alert alert-info">
+                        No notifications.
+                      </div>
+                    {% endfor %}
+                  </div>
+
+                </div>
+              </ul>
+            </li>
 
             <li><a class="nav-button nav-last" href="{{ path('logout') }}">{{ app.user.username }} <i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
 

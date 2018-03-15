@@ -37,7 +37,8 @@ class UserManager
         $userGroup = new UserGroup();
         $userGroup->setName($user->getUsername());
         $userGroup->setIsDefaultGroup(true);
-        $userGroup->setUsers([$user]);
+        $userGroup->setOwner($user);
+        $user->addUserGroup($userGroup);
 
         $password = $this->passwordEncoder->encodePassword($user, $user->getPlainPassword());
         $user->setPassword($password);

@@ -36,6 +36,8 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes: ['bootstrap_4_layout.html.twig']
+    globals:
+        view_notification_provider: '@AppBundle\Service\ViewNotificationProvider'
 
 # Doctrine Configuration
 doctrine:

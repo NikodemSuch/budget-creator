@@ -35,6 +35,11 @@ class UserGroup
     private $name;
 
     /**
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="recipient")
+     */
+    private $notifications;
+
+    /**
      * @ORM\Column(name="is_default_group", type="boolean")
      */
     private $isDefaultGroup;
@@ -48,13 +53,14 @@ class UserGroup
 
         if ($users != array_unique($users)) {
             $context->buildViolation("Duplicate user entries. Form contains username and email of the same user.")
-                ->addViolation();
+                    ->addViolation();
         }
     }
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): int
@@ -107,6 +113,26 @@ class UserGroup
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function setNotifications($notifications)
+    {
+        $this->notifications = $notifications;
+    }
+
+    public function getNotifications()
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification)
+    {
+        $this->notifications->add($notification);
+    }
+
+    public function removeNotification(Notification $notification)
+    {
+        $this->notifications->removeElement($notification);
     }
 
     public function setIsDefaultGroup(bool $isDefaultGroup)
