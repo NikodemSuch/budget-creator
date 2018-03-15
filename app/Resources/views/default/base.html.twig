@@ -23,10 +23,8 @@
 
               <ul id="notifications-dropdown" class="dropdown-menu">
                 <div id="notifications-container">
-
                   <div id="notifications">
                     {% for view_notification in view_notification_provider.getNotifications() %}
-
                         <div class="checkbox notification{{ view_notification.read ? '' : ' notification-unread' }}">
                           <label class="notification-label">
                             <div class="notification-content">
@@ -38,7 +36,6 @@
                             <input type="checkbox" data-toggle="tooltip" data-placement="left" title="Mark as {{ view_notification.read ? 'unread' : 'read' }}" data-notification-id="{{ view_notification.notification.id }}">
                           </label>
                         </div>
-
                     {% else %}
                       <div class="alert alert-info">
                         No notifications.
