@@ -33,7 +33,7 @@
                             <div class="notification-date">
                               {{ view_notification.notification.createdOn|localizeddate }}
                             </div>
-                            <input type="checkbox" data-toggle="tooltip" data-placement="left" title="Mark as {{ view_notification.read ? 'unread' : 'read' }}" data-notification-id="{{ view_notification.notification.id }}">
+                            <input class="notification-checkbox" data-trigger="hover" type="checkbox" data-toggle="tooltip" data-placement="left" title="Mark as {{ view_notification.read ? 'unread' : 'read' }}" data-notification-id="{{ view_notification.notification.id }}">
                           </label>
                         </div>
                     {% else %}
@@ -42,7 +42,6 @@
                       </div>
                     {% endfor %}
                   </div>
-
                 </div>
               </ul>
             </li>
