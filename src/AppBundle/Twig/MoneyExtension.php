@@ -26,7 +26,6 @@ class MoneyExtension extends \Twig_Extension
         $locale = $request->getLocale();
         $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
         $decimalPoint = $fmt->getSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL);
-        $amount = ($amount < 100 && $amount > -100) ? substr_replace($amount, 0, -2 , 0) : $amount;
 
         if ($amount < 100 && $amount > -100) {
 

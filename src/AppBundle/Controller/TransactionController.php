@@ -102,7 +102,7 @@ class TransactionController extends Controller
 
             $budgetBalance = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
             if ($budgetBalance < 0) {
-                $this->notificationManager->createNotification($transaction->getOwner(), "Budget {$transaction->getBudget()->getName()} has been exceeded.", ['path' => 'budget_show', 'id' => $transaction->getBudget()->getId()]);
+                $this->notificationManager->createNotification($transaction->getOwner(), "Budget {$transaction->getBudget()->getName()} has been exceeded.", 'budget_show', ['id' => $transaction->getBudget()->getId()]);
             }
 
             return $this->redirectToRoute('transaction_show', ['id' => $transaction->getId()]);
@@ -157,7 +157,7 @@ class TransactionController extends Controller
 
             $budgetBalance = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
             if ($budgetBalance < 0) {
-                $this->notificationManager->createNotification($transaction->getOwner(), "Budget {$transaction->getBudget()->getName()} has been exceeded.");
+                $this->notificationManager->createNotification($transaction->getOwner(), "Budget {$transaction->getBudget()->getName()} has been exceeded.", 'budget_show', ['id' => $transaction->getBudget()->getId()]);
             }
 
             return $this->redirectToRoute('transaction_show', [

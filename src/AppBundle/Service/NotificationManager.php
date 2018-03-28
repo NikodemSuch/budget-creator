@@ -8,32 +8,37 @@ use AppBundle\Entity\Notification;
 use AppBundle\Repository\NotificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 
 class NotificationManager
 {
     private $em;
     private $notificationRepository;
+    private $router;
 
-    public function __construct(EntityManagerInterface $em, NotificationRepository $notificationRepository)
+    public function __construct(EntityManagerInterface $em, NotificationRepository $notificationRepository, RouterInterface $router)
     {
         $this->em = $em;
         $this->notificationRepository = $notificationRepository;
+        $this->router = $router;
     }
 
-    public function createNotification(UserGroup $userGroup, string $content, array $url = [])
+    public function createNotification(UserGroup $userGroup, string $content, $urlPath = null, array $urlParameters = null)
     {
         $notification = new Notification();
         $notification->setRecipient($userGroup);
         $notification->setContent($content);
         $users = $userGroup->getUsers()->toArray();
 
+
         foreach ($users as $user) {
             $user->addUnreadNotification($notification);
             $this->em->persist($user);
         }
 
-        if (!empty($url)) {
-            $notification->setUrl($url);
+        if (!empty($urlPath)) {
+            $notification->setUrlPath($urlPath);
+            $notification->setUrlParameters($urlParameters);
         }
 
         $this->em->persist($notification);

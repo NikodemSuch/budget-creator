@@ -2,15 +2,20 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\RouterInterface;
+
 class ViewNotification
 {
     private $notification;
     private $read;
+    private $url;
 
-    public function __construct(Notification $notification, bool $read)
+    public function __construct(Notification $notification, bool $read, string $url = null)
     {
         $this->notification = $notification;
         $this->read = $read;
+        $this->url = $url;
     }
 
     public function setNotification(Notification $notification)
@@ -31,5 +36,15 @@ class ViewNotification
     public function isRead(): ?bool
     {
         return $this->read;
+    }
+
+    public function setUrl(string $url)
+    {
+        $this->url = $url;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
     }
 }
