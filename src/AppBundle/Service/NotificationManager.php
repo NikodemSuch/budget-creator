@@ -8,19 +8,16 @@ use AppBundle\Entity\Notification;
 use AppBundle\Repository\NotificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
 
 class NotificationManager
 {
     private $em;
     private $notificationRepository;
-    private $router;
 
-    public function __construct(EntityManagerInterface $em, NotificationRepository $notificationRepository, RouterInterface $router)
+    public function __construct(EntityManagerInterface $em, NotificationRepository $notificationRepository)
     {
         $this->em = $em;
         $this->notificationRepository = $notificationRepository;
-        $this->router = $router;
     }
 
     public function createNotification(UserGroup $userGroup, string $content, $routeName = null, array $routeParameters = null)

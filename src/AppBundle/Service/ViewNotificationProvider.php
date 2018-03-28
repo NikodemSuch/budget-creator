@@ -4,7 +4,6 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\ViewNotification;
 use AppBundle\Repository\NotificationRepository;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -12,12 +11,8 @@ class ViewNotificationProvider
 {
     private $notificationRepository;
     private $user;
-    private $router;
 
-    public function __construct(
-        TokenStorageInterface $tokenStorage, 
-        NotificationRepository $notificationRepository, 
-        RouterInterface $router)
+    public function __construct(TokenStorageInterface $tokenStorage, NotificationRepository $notificationRepository)
     {
         if ($tokenStorage->getToken() instanceOf AnonymousToken || !$tokenStorage->getToken()) {
             $this->user = null;
@@ -25,7 +20,6 @@ class ViewNotificationProvider
         }
         $this->notificationRepository = $notificationRepository;
         $this->user = $tokenStorage->getToken()->getUser();
-        $this->router = $router;
     }
 
     public function getNotifications()
@@ -52,12 +46,8 @@ class ViewNotificationProvider
 
         foreach ($notifications as $notification) {
             $read = !$unreadNotifications->contains($notification);
-            if ($notification->getRouteName()) {
-                $url = $this->router->generate($notification->getRouteName(), $notification->getRouteParameters());
-                $viewNotification = new ViewNotification($notification, $read, $url);
-            } else {
-                $viewNotification = new ViewNotification($notification, $read);
-            }
+            $viewNotification = new ViewNotification($notification, $read);
+            
             array_push($viewNotifications, $viewNotification);
         }
 

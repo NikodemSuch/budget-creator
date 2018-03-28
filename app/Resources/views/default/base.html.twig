@@ -29,7 +29,7 @@
                           <label class="notification-label">
                             <div class="notification-content">
                               {% if view_notification.notification.routeName %}
-                                <a href="{{ view_notification.url }}">{{ view_notification.notification.content }}</a>
+                                <a href="{{ path('notification_redirect', { 'id': view_notification.notification.id }) }}">{{ view_notification.notification.content }}</a>
                               {% else %}
                                 {{ view_notification.notification.content }}
                               {% endif %}

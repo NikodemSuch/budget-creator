@@ -42,8 +42,8 @@ class CreateNotificationCommand extends Command
             ->addArgument('content', InputArgument::REQUIRED, 'Contents of notification.')
             ->addArgument('usergroup-name', InputArgument::OPTIONAL, 'User group name - optional when you provide usergroup-id.')
             ->addOption('usergroup-id', 'id', InputOption::VALUE_REQUIRED, 'User group id - required when there are more groups with the same name.')
-            ->addOption('route-name', 'rn', InputOption::VALUE_REQUIRED, "Path of target url, example: --rn=account_show.")
-            ->addOption('route-parameters', 'rp', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "Parameters of target url (in order) as array, example: --rp=20 --rp=43.")
+            ->addOption('route-name', 'r', InputOption::VALUE_REQUIRED, "Path of target url, example: -r account_show.")
+            ->addOption('route-parameter', 'p', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "Parameters of target url (in order) as array, example: -p 20.")
         ;
     }
 
@@ -53,7 +53,7 @@ class CreateNotificationCommand extends Command
         $userGroupName = $input->getArgument('usergroup-name');
         $userGroupId = $input->getOption('usergroup-id');
         $routeName = $input->getOption('route-name');
-        $routeParameters = $input->getOption('route-parameters');
+        $routeParameters = $input->getOption('route-parameter');
 
         // Route validation + getting keys for route parameters.
 
