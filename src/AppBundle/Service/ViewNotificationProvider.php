@@ -14,7 +14,10 @@ class ViewNotificationProvider
     private $user;
     private $router;
 
-    public function __construct(TokenStorageInterface $tokenStorage, NotificationRepository $notificationRepository, RouterInterface $router)
+    public function __construct(
+        TokenStorageInterface $tokenStorage, 
+        NotificationRepository $notificationRepository, 
+        RouterInterface $router)
     {
         if ($tokenStorage->getToken() instanceOf AnonymousToken || !$tokenStorage->getToken()) {
             $this->user = null;

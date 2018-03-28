@@ -55,6 +55,8 @@ class CreateNotificationCommand extends Command
         $routeName = $input->getOption('route-name');
         $routeParameters = $input->getOption('route-parameters');
 
+        // Route validation + getting keys for route parameters.
+
         if ($routeName) {
             $routes = $this->router->getRouteCollection();
             // check if path exists
@@ -78,45 +80,40 @@ class CreateNotificationCommand extends Command
             }
         }
 
+        // Get UserGroup entity by id or name, validate if one exists.
+
         if ($userGroupId) {
             $userGroup = $this->userGroupRepository->findOneBy(['id' => $userGroupId]);
-
-            if ($routeName) {
-                $this->notificationManager->createNotification($userGroup, $content, $routeName, $routeParameters);
-            }
-
-            else {
-                $this->notificationManager->createNotification($userGroup, $content);
-            }
-
-            $output->writeln("Sent notification: $content to user with id: $userGroupId.");
-        }
-
+        } 
+        
         else {
-
             $userGroupsCount = $this->userGroupRepository->getCountByName($userGroupName);
 
             if ($userGroupsCount == 1) {
                 $userGroup = $this->userGroupRepository->findOneBy(['name' => $userGroupName]);
-
-                if ($routeNameurl) {
-                    $this->notificationManager->createNotification($userGroup, $content, $routeName, $routeParameters);
-                }
-
-                else {
-                    $this->notificationManager->createNotification($userGroup, $content);
-                }
-
-                $output->writeln("Sent notification: $content to $userGroupName.");
             }
 
             elseif ($userGroupsCount > 1) {
                 $output->writeln("<error>There are multiple groups with name $userGroupName. You need to provide group id.</error>");
+                return;
             }
 
             else {
                 $output->writeln("<error>Usergroup $userGroupName not found.</error>");
+                return;
             }
         }
+
+        // Create Notification
+
+        if ($routeName) {
+            $this->notificationManager->createNotification($userGroup, $content, $routeName, $routeParameters);
+        }
+
+        else {
+            $this->notificationManager->createNotification($userGroup, $content);
+        }
+
+        $output->writeln("Sent notification: $content to ".$userGroup->getName().".");
     }
 }

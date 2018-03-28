@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * Add route_name and route_parameters fields to notification table
  */
 class Version20180328100612 extends AbstractMigration
 {
