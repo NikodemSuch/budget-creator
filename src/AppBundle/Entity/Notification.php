@@ -36,19 +36,14 @@ class Notification
     private $recipient;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
-     */
-    private $url;
-
-    /**
      * @ORM\Column(type="string", length=200, nullable=true)
      */
-    private $urlPath;
+    private $routeName;
 
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private $urlParameters;
+    private $routeParameters;
 
     public function __construct()
     {
@@ -90,24 +85,23 @@ class Notification
         return $this->recipient;
     }
 
-
-    public function setUrlPath(string $urlPath)
+    public function setRouteName(string $routeName)
     {
-        $this->urlPath = $urlPath;
+        $this->routeName = $routeName;
     }
 
-    public function getUrlPath(): ?string
+    public function getRouteName(): ?string
     {
-        return $this->urlPath;
+        return $this->routeName;
     }
 
-     public function setUrlParameters(array $urlParameters)
+     public function setRouteParameters(array $routeParameters)
     {
-        $this->urlParameters = $urlParameters;
+        $this->routeParameters = $routeParameters;
     }
 
-    public function getUrlParameters(): ?array
+    public function getRouteParameters(): ?array
     {
-        return $this->urlParameters;
+        return $this->routeParameters;
     }
 }

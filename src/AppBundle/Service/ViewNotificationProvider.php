@@ -49,8 +49,8 @@ class ViewNotificationProvider
 
         foreach ($notifications as $notification) {
             $read = !$unreadNotifications->contains($notification);
-            if ($notification->getUrlPath()) {
-                $url = $this->router->generate($notification->getUrlPath(), $notification->getUrlParameters());
+            if ($notification->getRouteName()) {
+                $url = $this->router->generate($notification->getRouteName(), $notification->getRouteParameters());
                 $viewNotification = new ViewNotification($notification, $read, $url);
             } else {
                 $viewNotification = new ViewNotification($notification, $read);

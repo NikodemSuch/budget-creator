@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Command;
 
 use AppBundle\Repository\UserGroupRepository;
@@ -41,7 +42,8 @@ class CreateNotificationCommand extends Command
             ->addArgument('content', InputArgument::REQUIRED, 'Contents of notification.')
             ->addArgument('usergroup-name', InputArgument::OPTIONAL, 'User group name - optional when you provide usergroup-id.')
             ->addOption('usergroup-id', 'id', InputOption::VALUE_REQUIRED, 'User group id - required when there are more groups with the same name.')
-            ->addOption('url', 'url', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "Path and parameters of target url (in order) as array, example: --url=account_show --url=20.")
+            ->addOption('route-name', 'rn', InputOption::VALUE_REQUIRED, "Path of target url, example: --rn=account_show.")
+            ->addOption('route-parameters', 'rp', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "Parameters of target url (in order) as array, example: --rp=20 --rp=43.")
         ;
     }
 
@@ -50,45 +52,37 @@ class CreateNotificationCommand extends Command
         $content = $input->getArgument('content');
         $userGroupName = $input->getArgument('usergroup-name');
         $userGroupId = $input->getOption('usergroup-id');
-        $url = $input->getOption('url');
+        $routeName = $input->getOption('route-name');
+        $routeParameters = $input->getOption('route-parameters');
 
-        if ($url) {
-            $urlPath = $url[0];
-            unset($url[0]);
-            // since path is unset, rest of elements are url parameters
-            $urlParameters = $url;
+        if ($routeName) {
             $routes = $this->router->getRouteCollection();
-
             // check if path exists
-            if ($routes->get($urlPath)) {
-                $route = $routes->get($urlPath);
+            if ($route = $routes->get($routeName)) {
                 $path = $route->getPath();
-
                 // prepare array of parameter keys for url
                 preg_match_all('/{(.*?)}/', $path,$parameterKeys);
-                $urlParameters = array_combine($parameterKeys[1], $urlParameters);
-
+                $routeParameters = array_combine($parameterKeys[1], $routeParameters);
                 // since we have path and parameters, we can try to generate url
                 try {
-                    $this->router->generate($urlPath, $urlParameters);
+                    $this->router->generate($routeName, $routeParameters);
                 } catch (RouteNotFoundException $e) {
-                    $output->writeln("Url parameters $urlParameters are not valid.");
+                    $output->writeln("<error>Url parameters $routeParameters are not valid.</error>");
                     return;
                 }
             }
 
             else {
-                $output->writeln("Path $urlPath not found.");
+                $output->writeln("<error>Path $routeName not found.</error>");
                 return;
             }
         }
 
-
         if ($userGroupId) {
             $userGroup = $this->userGroupRepository->findOneBy(['id' => $userGroupId]);
 
-            if ($url) {
-                $this->notificationManager->createNotification($userGroup, $content, $urlPath, $urlParameters);
+            if ($routeName) {
+                $this->notificationManager->createNotification($userGroup, $content, $routeName, $routeParameters);
             }
 
             else {
@@ -105,8 +99,8 @@ class CreateNotificationCommand extends Command
             if ($userGroupsCount == 1) {
                 $userGroup = $this->userGroupRepository->findOneBy(['name' => $userGroupName]);
 
-                if ($url) {
-                    $this->notificationManager->createNotification($userGroup, $content, $urlPath, $urlParameters);
+                if ($routeNameurl) {
+                    $this->notificationManager->createNotification($userGroup, $content, $routeName, $routeParameters);
                 }
 
                 else {
@@ -117,11 +111,11 @@ class CreateNotificationCommand extends Command
             }
 
             elseif ($userGroupsCount > 1) {
-                $output->writeln("There are multiple groups with name $userGroupName. You need to provide group id.");
+                $output->writeln("<error>There are multiple groups with name $userGroupName. You need to provide group id.</error>");
             }
 
             else {
-                $output->writeln("Usergroup $userGroupName not found.");
+                $output->writeln("<error>Usergroup $userGroupName not found.</error>");
             }
         }
     }

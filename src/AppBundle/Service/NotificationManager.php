@@ -23,22 +23,21 @@ class NotificationManager
         $this->router = $router;
     }
 
-    public function createNotification(UserGroup $userGroup, string $content, $urlPath = null, array $urlParameters = null)
+    public function createNotification(UserGroup $userGroup, string $content, $routeName = null, array $routeParameters = null)
     {
         $notification = new Notification();
         $notification->setRecipient($userGroup);
         $notification->setContent($content);
         $users = $userGroup->getUsers()->toArray();
 
-
         foreach ($users as $user) {
             $user->addUnreadNotification($notification);
             $this->em->persist($user);
         }
 
-        if (!empty($urlPath)) {
-            $notification->setUrlPath($urlPath);
-            $notification->setUrlParameters($urlParameters);
+        if (!empty($routeName)) {
+            $notification->setRouteName($routeName);
+            $notification->setRouteParameters($routeParameters);
         }
 
         $this->em->persist($notification);
