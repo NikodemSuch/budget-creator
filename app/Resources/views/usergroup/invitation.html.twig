@@ -1,0 +1,40 @@
+{% extends 'default/base.html.twig' %}
+
+{% block page %}
+
+  <div class="container">
+    <div class="row">
+      <div class="page-section">
+        <div class="col-md-6 col-md-offset-3">
+
+          <div class="row">
+            <div class="error-container">
+              {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ label }} flash-{{ label }}" role="alert">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          </div>
+
+          {% if group_invitation is defined %}
+            <div class="col-md-6">
+              <a class="item-index" href="{{ path('group_invitation_accept', { 'id': group_invitation.id }) }}">
+                Accept invitation
+              </a>
+            </div>
+            <div class="col-md-6">
+              <a class="item-index" href="{{ path('group_invitation_decline', { 'id': group_invitation.id }) }}">
+                Decline invitation
+              </a>
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

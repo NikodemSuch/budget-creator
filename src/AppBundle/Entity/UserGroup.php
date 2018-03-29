@@ -24,6 +24,11 @@ class UserGroup
     private $users;
 
     /**
+     * @ORM\OneToMany(targetEntity="GroupInvitation", mappedBy="userGroup")
+     */
+    private $invitations;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User")
      */
     private $owner;
@@ -61,6 +66,7 @@ class UserGroup
     {
         $this->users = new ArrayCollection();
         $this->notifications = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
     }
 
     public function getId(): int
@@ -93,6 +99,26 @@ class UserGroup
     {
         $this->users->removeElement($user);
         $user->removeUserGroup($this);
+    }
+
+    public function setInvitations($invitations)
+    {
+        $this->invitations = $invitations;
+    }
+
+    public function getInvitations()
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(GroupInvitation $invitation)
+    {
+        $this->invitations->add($invitation);
+    }
+
+    public function removeInvitation(GroupInvitation $invitation)
+    {
+        $this->invitations->removeElement($invitation);
     }
 
     public function setOwner(User $owner)

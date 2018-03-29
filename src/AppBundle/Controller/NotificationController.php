@@ -6,6 +6,7 @@ use AppBundle\Entity\Notification;
 use AppBundle\Repository\NotificationRepository;
 use AppBundle\Service\NotificationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
+ * @IsGranted("ROLE_USER")
  * @Route("notification")
  */
 class NotificationController extends Controller

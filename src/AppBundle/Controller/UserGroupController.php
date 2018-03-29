@@ -6,6 +6,7 @@ use AppBundle\Entity\UserGroup;
 use AppBundle\Form\UserGroupType;
 use AppBundle\Repository\UserRepository;
 use AppBundle\Repository\UserGroupRepository;
+use AppBundle\Service\GroupInvitationManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -25,11 +26,16 @@ class UserGroupController extends Controller
     private $userRepository;
     private $userGroupRepository;
 
-    public function __construct(EntityManagerInterface $em, UserRepository $userRepository, UserGroupRepository $userGroupRepository)
+    public function __construct(
+        EntityManagerInterface $em,
+        UserRepository $userRepository,
+        UserGroupRepository $userGroupRepository,
+        GroupInvitationManager $groupInvitationManager)
     {
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->userGroupRepository = $userGroupRepository;
+        $this->groupInvitationManager = $groupInvitationManager;
     }
 
     /**
@@ -64,6 +70,7 @@ class UserGroupController extends Controller
                 $userGroup->addUser($user);
             }
 
+            $this->groupInvitationManager->sendInvitations($userGroup, $form->get('users')->getData()->toArray());
             $this->em->persist($userGroup);
             $this->em->flush();
 
@@ -105,6 +112,7 @@ class UserGroupController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
+            $this->groupInvitationManager->sendInvitations($userGroup, $editForm->get('users')->getData()->toArray());
             $this->em->persist($userGroup);
             $this->em->flush();
 

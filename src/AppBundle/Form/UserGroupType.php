@@ -28,6 +28,9 @@ class UserGroupType extends AbstractType
             ->add('users', CollectionType::class, [
                 'label' => 'Members:',
                 'label_attr' => ['class' => 'form-control-label'],
+                'data' => $builder->getData()->getUsers(),
+                'data_class' => null,
+                'mapped' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,

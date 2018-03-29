@@ -8,7 +8,20 @@
 
         {% if app.user %}
 
+          <div class="row">
+            <div class="error-container col-sm-6 col-sm-offset-3">
+              {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ label }} flash-{{ label }}" role="alert">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          </div>
+
           <div class="main-page-item-container">
+
             <a class="main-page-item" href="{{ path('account_index') }}">Accounts</a>
             <a class="main-page-item" href="{{ path('budget_index') }}">Budgets</a>
             <a class="main-page-item" href="{{ path('transaction_index') }}">Transactions</a>
