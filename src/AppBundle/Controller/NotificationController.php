@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
@@ -35,18 +36,13 @@ class NotificationController extends Controller
     public function redirectAction(Request $request, UserInterface $user, Notification $notification)
     {
         if ($notification->getRouteName()) {
-            $unreadNotifications = $user->getUnreadNotifications();
-            $read = !$unreadNotifications->contains($notification);
+            $this->notificationManager->setUnreadStatus($notification->getId(), $user, false);
             
-            if (!$read) {
-                $this->notificationManager->setUnreadStatus($notification->getId(), $user, false);
-            }
-
             return $this->redirectToRoute($notification->getRouteName(), $notification->getRouteParameters());
         }
 
         else {
-            return $this->redirectToRoute('homepage');
+            throw new RouteNotFoundException();
         }
     }
 
