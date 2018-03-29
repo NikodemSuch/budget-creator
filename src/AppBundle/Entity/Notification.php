@@ -35,6 +35,16 @@ class Notification
      */
     private $recipient;
 
+    /**
+     * @ORM\Column(type="string", length=200, nullable=true)
+     */
+    private $routeName;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $routeParameters;
+
     public function __construct()
     {
         $this->createdOn = new \DateTime();
@@ -73,5 +83,25 @@ class Notification
     public function getRecipient(): ?UserGroup
     {
         return $this->recipient;
+    }
+
+    public function setRouteName(string $routeName)
+    {
+        $this->routeName = $routeName;
+    }
+
+    public function getRouteName(): ?string
+    {
+        return $this->routeName;
+    }
+
+     public function setRouteParameters(array $routeParameters)
+    {
+        $this->routeParameters = $routeParameters;
+    }
+
+    public function getRouteParameters(): ?array
+    {
+        return $this->routeParameters;
     }
 }

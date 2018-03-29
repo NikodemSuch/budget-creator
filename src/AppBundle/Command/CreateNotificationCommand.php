@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Command;
 
 use AppBundle\Repository\UserGroupRepository;
@@ -9,19 +10,27 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\RouterInterface;
 
 class CreateNotificationCommand extends Command
 {
     private $em;
     private $userGroupRepository;
     private $notificationManager;
+    private $router;
     protected static $defaultName = 'app:create-notification';
 
-    public function __construct(NotificationManager $notificationManager, EntityManagerInterface $em, UserGroupRepository $userGroupRepository)
+    public function __construct(
+        NotificationManager $notificationManager,
+        EntityManagerInterface $em,
+        UserGroupRepository $userGroupRepository,
+        RouterInterface $router)
     {
         $this->em = $em;
         $this->userGroupRepository = $userGroupRepository;
         $this->notificationManager = $notificationManager;
+        $this->router = $router;
         parent::__construct();
     }
 
@@ -33,6 +42,8 @@ class CreateNotificationCommand extends Command
             ->addArgument('content', InputArgument::REQUIRED, 'Contents of notification.')
             ->addArgument('usergroup-name', InputArgument::OPTIONAL, 'User group name - optional when you provide usergroup-id.')
             ->addOption('usergroup-id', 'id', InputOption::VALUE_REQUIRED, 'User group id - required when there are more groups with the same name.')
+            ->addOption('route-name', 'r', InputOption::VALUE_REQUIRED, "Path of target url, example: -r account_show.")
+            ->addOption('route-parameter', 'p', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "Parameters of target url (in order) as array, example: -p 20.")
         ;
     }
 
@@ -41,30 +52,68 @@ class CreateNotificationCommand extends Command
         $content = $input->getArgument('content');
         $userGroupName = $input->getArgument('usergroup-name');
         $userGroupId = $input->getOption('usergroup-id');
+        $routeName = $input->getOption('route-name');
+        $routeParameters = $input->getOption('route-parameter');
+
+        // Route validation + getting keys for route parameters.
+
+        if ($routeName) {
+            $routes = $this->router->getRouteCollection();
+            // check if path exists
+            if ($route = $routes->get($routeName)) {
+                $path = $route->getPath();
+                // prepare array of parameter keys for url
+                preg_match_all('/{(.*?)}/', $path,$parameterKeys);
+                $routeParameters = array_combine($parameterKeys[1], $routeParameters);
+                // since we have path and parameters, we can try to generate url
+                try {
+                    $this->router->generate($routeName, $routeParameters);
+                } catch (RouteNotFoundException $e) {
+                    $output->writeln("<error>Url parameters $routeParameters are not valid.</error>");
+                    return;
+                }
+            }
+
+            else {
+                $output->writeln("<error>Path $routeName not found.</error>");
+                return;
+            }
+        }
+
+        // Get UserGroup entity by id or name, validate if one exists.
 
         if ($userGroupId) {
             $userGroup = $this->userGroupRepository->findOneBy(['id' => $userGroupId]);
-            $this->notificationManager->createNotification($userGroup, $content);
-            $output->writeln("Sent notification: $content to user with id: $userGroupId.");
-        }
-
+        } 
+        
         else {
-
             $userGroupsCount = $this->userGroupRepository->getCountByName($userGroupName);
 
             if ($userGroupsCount == 1) {
                 $userGroup = $this->userGroupRepository->findOneBy(['name' => $userGroupName]);
-                $this->notificationManager->createNotification($userGroup, $content);
-                $output->writeln("Sent notification: $content to $userGroupName.");
             }
 
             elseif ($userGroupsCount > 1) {
-                $output->writeln("There are multiple groups with name $userGroupName. You need to provide group id.");
+                $output->writeln("<error>There are multiple groups with name $userGroupName. You need to provide group id.</error>");
+                return;
             }
 
             else {
-                $output->writeln("Usergroup $userGroupName not found.");
+                $output->writeln("<error>Usergroup $userGroupName not found.</error>");
+                return;
             }
         }
+
+        // Create Notification
+
+        if ($routeName) {
+            $this->notificationManager->createNotification($userGroup, $content, $routeName, $routeParameters);
+        }
+
+        else {
+            $this->notificationManager->createNotification($userGroup, $content);
+        }
+
+        $output->writeln("Sent notification: $content to ".$userGroup->getName().".");
     }
 }
