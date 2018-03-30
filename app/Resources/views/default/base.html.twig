@@ -37,7 +37,7 @@
                             <div class="notification-date">
                               {{ view_notification.notification.createdOn|localizeddate }}
                             </div>
-                            {% if not (view_notification.notification.routeName == 'group_invitation_show') %}
+                            {% if view_notification.notification.userCanChangeUnreadStatus %}
                               <input class="notification-checkbox" data-trigger="hover" type="checkbox" data-toggle="tooltip" data-placement="left" title="Mark as {{ view_notification.read ? 'unread' : 'read' }}" data-notification-id="{{ view_notification.notification.id }}">
                             {% endif %}
                           </label>

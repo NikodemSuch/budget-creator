@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\UserGroup;
 use AppBundle\Form\DataTransformer\EmailToUserTransformer;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
@@ -29,7 +30,7 @@ class UserGroupType extends AbstractType
                 'label' => 'Members:',
                 'label_attr' => ['class' => 'form-control-label'],
                 'data' => $builder->getData()->getUsers(),
-                'data_class' => null,
+                'data_class' => Collection::class,
                 'mapped' => false,
                 'allow_add' => true,
                 'allow_delete' => true,

@@ -45,6 +45,11 @@ class Notification
      */
     private $routeParameters;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $userCanChangeUnreadStatus;
+
     public function __construct()
     {
         $this->createdOn = new \DateTime();
@@ -103,5 +108,15 @@ class Notification
     public function getRouteParameters(): ?array
     {
         return $this->routeParameters;
+    }
+
+    public function setUserCanChangeUnreadStatus(bool $userCanChangeUnreadStatus)
+    {
+        $this->userCanChangeUnreadStatus = $userCanChangeUnreadStatus;
+    }
+
+    public function isUserCanChangeUnreadStatus()
+    {
+        return $this->userCanChangeUnreadStatus;
     }
 }

@@ -20,11 +20,17 @@ class NotificationManager
         $this->notificationRepository = $notificationRepository;
     }
 
-    public function createNotification(UserGroup $userGroup, string $content, $routeName = null, array $routeParameters = null)
+    public function createNotification(
+        UserGroup $userGroup,
+        string $content,
+        string $routeName = null,
+        array $routeParameters = null,
+        bool $userCanChangeUnreadStatus = true)
     {
         $notification = new Notification();
         $notification->setRecipient($userGroup);
         $notification->setContent($content);
+        $notification->setUserCanChangeUnreadStatus($userCanChangeUnreadStatus);
         $users = $userGroup->getUsers()->toArray();
 
         foreach ($users as $user) {

@@ -107,6 +107,14 @@ class User implements AdvancedUserInterface, \Serializable
         $this->userGroups->removeElement($userGroup);
     }
 
+    public function getDefaultGroup()
+    {
+        return $this->getUserGroups()
+                    ->filter(function(UserGroup $userGroup) {
+                        return $userGroup->getIsDefaultGroup() == true;
+                    })->first();
+    }
+
     public function setInvitations($invitations)
     {
         $this->invitations = $invitations;

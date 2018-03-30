@@ -21,15 +21,12 @@ class GroupInvitationManager
         $this->notificationManager = $notificationManager;
     }
 
-    public function sendInvitations(UserGroup $userGroup, $postChangesUsers)
+    public function sendInvitations(UserGroup $userGroup, $wantedMembers)
     {
-        $preChangesUsers = $userGroup->getUsers()->toArray();
-        $usersToInvite = array_diff($postChangesUsers, $preChangesUsers);
+        $currentMembers = $userGroup->getUsers()->toArray();
+        $usersToInvite = array_diff($wantedMembers, $currentMembers);
 
         foreach ($usersToInvite as $user) {
-            $groupInvitation = new GroupInvitation();
-            $groupInvitation->setUser($user);
-            $groupInvitation->setUserGroup($userGroup);
 
             $userAlreadyInGroup = $user->getUserGroups()->contains($userGroup);
             $invitationAlreadySent = $this->groupInvitationRepository->findBy([
@@ -39,6 +36,8 @@ class GroupInvitationManager
             ]);
 
             if (!$invitationAlreadySent && !$userAlreadyInGroup) {
+                $groupInvitation = new GroupInvitation($user, $userGroup);
+
                 $this->em->persist($groupInvitation);
                 $this->em->flush();
                 $this->sendInvitationNotification($groupInvitation);
@@ -48,15 +47,10 @@ class GroupInvitationManager
 
     public function sendInvitationNotification($groupInvitation)
     {
-        $userDefaultUserGroup = $groupInvitation->getUser()->getUserGroups()
-                    ->filter(function(UserGroup $userGroup) {
-                        return $userGroup->getIsDefaultGroup() == true;
-                    })->first();
-
         $this->notificationManager->createNotification(
-                    $userDefaultUserGroup,
+                    $groupInvitation->getUser()->getDefaultGroup(),
                     "Invitation to group {$groupInvitation->getUserGroup()->getName()}",
-                    'group_invitation_show', ['id' => $groupInvitation->getId()]);
+                    'group_invitation_show', ['id' => $groupInvitation->getId()], false);
     }
 
     public function acceptInvitation($groupInvitation)

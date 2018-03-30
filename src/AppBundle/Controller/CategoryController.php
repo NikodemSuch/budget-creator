@@ -140,7 +140,7 @@ class CategoryController extends Controller
                 $this->em->remove($category);
                 $this->em->flush();
             } catch (ForeignKeyConstraintViolationException $e) {
-                $this->addFlash('error', 'This Category is still used in some transactions.');
+                $this->addFlash('danger', 'This Category is still used in some transactions.');
 
                 return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
             }

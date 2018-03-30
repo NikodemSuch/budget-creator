@@ -126,7 +126,7 @@ class CategoryGroupController extends Controller
             $categoriesCount = $this->categoryRepository->getCountByGroup($categoryGroup);
 
             if ($categoriesCount > 1) {
-                $this->addFlash('error', 'This group still contains some categories.');
+                $this->addFlash('danger', 'This group still contains some categories.');
 
                 return $this->redirectToRoute('categorygroup_show', ['id' => $categoryGroup->getId()]);
             }

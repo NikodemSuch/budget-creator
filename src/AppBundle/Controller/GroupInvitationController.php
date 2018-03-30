@@ -31,23 +31,15 @@ class GroupInvitationController extends Controller
      */
     public function showAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
-        if (!$user->getUserGroups()->contains($groupInvitation->getUserGroup()) && $groupInvitation->isActive()) {
-
-            return $this->render('usergroup/invitation.html.twig', [
-                'group_invitation' => $groupInvitation,
-            ]);
-        }
-
-        else {
-            $this->addFlash('warning', 'Invitation is no more active!');
-
-            return $this->render('usergroup/invitation.html.twig');
-        }
+        return $this->render('usergroup/invitation.html.twig', [
+            'invitation_active' => !$user->getUserGroups()->contains($groupInvitation->getUserGroup()) && $groupInvitation->isActive(),
+            'group_invitation' => $groupInvitation,
+        ]);
     }
 
     /**
      * @Route("/{id}/accept", name="group_invitation_accept")
-     * @IsGranted("accept", subject="groupInvitation")
+     * @IsGranted("invitation_respond", subject="groupInvitation")
      */
     public function acceptAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
@@ -59,7 +51,7 @@ class GroupInvitationController extends Controller
         }
 
         else {
-            $this->addFlash('warning', 'Invitation already accepted!');
+            $this->addFlash('warning', 'Invitation is no more active!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -67,7 +59,7 @@ class GroupInvitationController extends Controller
 
     /**
      * @Route("/{id}/decline", name="group_invitation_decline")
-     * @IsGranted("accept", subject="groupInvitation")
+     * @IsGranted("invitation_respond", subject="groupInvitation")
      */
     public function declineAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
@@ -79,7 +71,7 @@ class GroupInvitationController extends Controller
         }
 
         else {
-            $this->addFlash('warning', 'Invitation already declined!');
+            $this->addFlash('warning', 'Invitation is no more active!');
 
             return $this->redirectToRoute('homepage');
         }

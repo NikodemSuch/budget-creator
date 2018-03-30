@@ -34,12 +34,14 @@ class GroupInvitation
     private $createdOn;
 
     /**
-     * @ORM\Column(name="active", type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $active;
 
-    public function __construct()
+    public function __construct(User $user = null, UserGroup $userGroup = null)
     {
+        $this->user = $user;
+        $this->userGroup = $userGroup;
         $this->createdOn = new \DateTime();
         $this->active = true;
     }
