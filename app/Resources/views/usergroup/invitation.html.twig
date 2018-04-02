@@ -10,7 +10,7 @@
           {% if invitation_active %}
             <div class="row">
               <div class="invitation-title">{{group_invitation.userGroup.owner}} invites you to join {{group_invitation.userGroup.name}} group.</div>
-              <div class="invitation-date">Invitation expires at {{group_invitation.createdOn|date_modify("+7 days")|localizeddate}}</div>
+              <div class="invitation-date">Invitation expires at {{ group_invitation.getExpirationDate()|localizeddate }}</div>
               <div class="col-md-6">
                 <a class="item-index invitation-item" href="{{ path('group_invitation_accept', { 'id': group_invitation.id }) }}">
                   Accept invitation
@@ -25,7 +25,8 @@
           {% else %}
             <div class="error-container">
               <div class="alert alert-info" role="alert">
-                <strong>Invitation is no more active!</strong>
+                <strong>You have already responded to this invitation:</strong>
+                </br>{{group_invitation.userGroup.owner}} invites you to join {{group_invitation.userGroup.name}} group.
               </div>
             </div>
           {% endif %}

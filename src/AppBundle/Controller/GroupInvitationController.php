@@ -3,8 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\GroupInvitation;
-use AppBundle\Repository\GroupInvitationRepository;
+use AppBundle\Service\NotificationManager;
 use AppBundle\Service\GroupInvitationManager;
+use AppBundle\Repository\GroupInvitationRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -17,11 +18,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class GroupInvitationController extends Controller
 {
+    private $notificationManager;
     private $groupInvitationManager;
     private $groupInvitationRepository;
 
-    public function __construct(GroupInvitationManager $groupInvitationManager, GroupInvitationRepository $groupInvitationRepository)
+    public function __construct(NotificationManager $notificationManager, GroupInvitationManager $groupInvitationManager, GroupInvitationRepository $groupInvitationRepository)
     {
+        $this->notificationManager = $notificationManager;
         $this->groupInvitationManager = $groupInvitationManager;
         $this->groupInvitationRepository = $groupInvitationRepository;
     }
@@ -43,15 +46,24 @@ class GroupInvitationController extends Controller
      */
     public function acceptAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
-        if (!$user->getUserGroups()->contains($groupInvitation->getUserGroup()) && $groupInvitation->isActive()) {
-            $this->groupInvitationManager->acceptInvitation($groupInvitation);
-            $this->addFlash('success', 'Invitation accepted!');
+        // Mark Invitation notification as read
+        $this->notificationManager->setUnreadStatus($groupInvitation->getNotification()->getId(), $user, false);
+
+        if ($groupInvitation->hasExpired()) {
+            $this->addFlash('warning', 'Invitation has expired!');
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        elseif ($user->getUserGroups()->contains($groupInvitation->getUserGroup()) || !$groupInvitation->isActive()) {
+            $this->addFlash('warning', 'You have already responded to this invitation!');
 
             return $this->redirectToRoute('homepage');
         }
 
         else {
-            $this->addFlash('warning', 'Invitation is no more active!');
+            $this->groupInvitationManager->acceptInvitation($groupInvitation);
+            $this->addFlash('success', 'Invitation accepted!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -63,15 +75,24 @@ class GroupInvitationController extends Controller
      */
     public function declineAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
-        if (!$user->getUserGroups()->contains($groupInvitation->getUserGroup()) && $groupInvitation->isActive()) {
-            $this->groupInvitationManager->declineInvitation($groupInvitation);
-            $this->addFlash('success', 'Invitation declined!');
+        // Mark Invitation notification as read
+        $this->notificationManager->setUnreadStatus($groupInvitation->getNotification()->getId(), $user, false);
+
+        if ($groupInvitation->hasExpired()) {
+            $this->addFlash('warning', 'Invitation has expired!');
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        elseif ($user->getUserGroups()->contains($groupInvitation->getUserGroup()) || !$groupInvitation->isActive()) {
+            $this->addFlash('warning', 'You have already responded to this invitation!');
 
             return $this->redirectToRoute('homepage');
         }
 
         else {
-            $this->addFlash('warning', 'Invitation is no more active!');
+            $this->groupInvitationManager->declineInvitation($groupInvitation);
+            $this->addFlash('success', 'Invitation declined!');
 
             return $this->redirectToRoute('homepage');
         }

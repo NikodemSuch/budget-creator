@@ -25,12 +25,12 @@ class NotificationManager
         string $content,
         string $routeName = null,
         array $routeParameters = null,
-        bool $userCanChangeUnreadStatus = true)
+        bool $preventMarkingAsRead = false)
     {
         $notification = new Notification();
         $notification->setRecipient($userGroup);
         $notification->setContent($content);
-        $notification->setUserCanChangeUnreadStatus($userCanChangeUnreadStatus);
+        $notification->setPreventMarkingAsRead($preventMarkingAsRead);
         $users = $userGroup->getUsers()->toArray();
 
         foreach ($users as $user) {
@@ -45,6 +45,10 @@ class NotificationManager
 
         $this->em->persist($notification);
         $this->em->flush();
+
+        if ($routeName = 'group_invitation_show') {
+            return $notification;
+        }
     }
 
     public function setUnreadStatus(int $notificationId, User $user, bool $unreadStatus) {

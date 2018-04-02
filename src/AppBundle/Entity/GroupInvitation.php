@@ -28,6 +28,12 @@ class GroupInvitation
     private $userGroup;
 
     /**
+     * @ORM\OneToOne(targetEntity="Notification")
+     * @Assert\NotBlank()
+     */
+    private $notification;
+
+    /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank()
      */
@@ -71,6 +77,16 @@ class GroupInvitation
         return $this->userGroup;
     }
 
+    public function setNotification(Notification $notification)
+    {
+        $this->notification = $notification;
+    }
+
+    public function getNotification(): ?Notification
+    {
+        return $this->notification;
+    }
+
     public function setCreatedOn(\DateTime $createdOn)
     {
         $this->createdOn = $createdOn;
@@ -86,8 +102,20 @@ class GroupInvitation
         $this->active = $active;
     }
 
-    public function isActive()
+    public function isActive(): ?bool
     {
         return $this->active;
+    }
+
+    public function getExpirationDate(): \DateTime
+    {
+        return $this->getCreatedOn()->add(new \DateInterval('P7D'));
+    }
+
+    public function hasExpired(): bool
+    {
+        $now = new \DateTime();
+
+        return $now > $this->getExpirationDate();
     }
 }

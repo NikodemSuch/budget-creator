@@ -24,7 +24,7 @@ class UserGroup
     private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity="GroupInvitation", mappedBy="userGroup")
+     * @ORM\OneToMany(targetEntity="GroupInvitation", mappedBy="userGroup", cascade={"persist", "remove"})
      */
     private $invitations;
 
@@ -174,5 +174,4 @@ class UserGroup
     public function __toString() {
         return $this->name;
     }
-
 }

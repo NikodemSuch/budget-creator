@@ -48,7 +48,7 @@ class Notification
     /**
      * @ORM\Column(type="boolean")
      */
-    private $userCanChangeUnreadStatus;
+    private $preventMarkingAsRead;
 
     public function __construct()
     {
@@ -110,13 +110,13 @@ class Notification
         return $this->routeParameters;
     }
 
-    public function setUserCanChangeUnreadStatus(bool $userCanChangeUnreadStatus)
+    public function setPreventMarkingAsRead(bool $preventMarkingAsRead)
     {
-        $this->userCanChangeUnreadStatus = $userCanChangeUnreadStatus;
+        $this->preventMarkingAsRead = $preventMarkingAsRead;
     }
 
-    public function isUserCanChangeUnreadStatus()
+    public function getPreventMarkingAsRead()
     {
-        return $this->userCanChangeUnreadStatus;
+        return $this->preventMarkingAsRead;
     }
 }

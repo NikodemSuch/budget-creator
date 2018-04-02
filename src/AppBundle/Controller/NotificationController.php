@@ -23,8 +23,8 @@ class NotificationController extends Controller
     private $router;
 
     public function __construct(
-        NotificationManager $notificationManager, 
-        NotificationRepository $notificationRepository, 
+        NotificationManager $notificationManager,
+        NotificationRepository $notificationRepository,
         RouterInterface $router)
     {
         $this->notificationManager = $notificationManager;
@@ -38,8 +38,11 @@ class NotificationController extends Controller
     public function redirectAction(Request $request, UserInterface $user, Notification $notification)
     {
         if ($notification->getRouteName()) {
-            $this->notificationManager->setUnreadStatus($notification->getId(), $user, false);
-            
+
+            if (!$notification->getPreventMarkingAsRead()) {
+                $this->notificationManager->setUnreadStatus($notification->getId(), $user, false);
+            }
+
             return $this->redirectToRoute($notification->getRouteName(), $notification->getRouteParameters());
         }
 

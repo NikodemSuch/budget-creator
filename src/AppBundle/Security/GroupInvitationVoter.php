@@ -9,11 +9,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class GroupInvitationVoter extends Voter
 {
-    const INVITATION_RESPOND = 'invitation_respond';
+    const SUPPORTED_ATTRIBUTE = 'invitation_respond';
 
     protected function supports($attribute, $subject): bool
     {
-        if (!in_array($attribute, array(self::INVITATION_RESPOND))) {
+        if (!in_array($attribute, array(self::SUPPORTED_ATTRIBUTE))) {
             return false;
         }
 
@@ -33,7 +33,7 @@ class GroupInvitationVoter extends Voter
         }
 
         switch ($attribute) {
-            case self::INVITATION_RESPOND:
+            case self::SUPPORTED_ATTRIBUTE:
                 return $this->canRespond($subject, $user);
             default:
                 throw new \LogicException('This code should not be reached!');

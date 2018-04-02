@@ -40,6 +40,7 @@ class GroupInvitationManager
 
                 $this->em->persist($groupInvitation);
                 $this->em->flush();
+                // This needs to be here, because we need id of groupInvitation entity, and it's setting after flush().
                 $this->sendInvitationNotification($groupInvitation);
             }
         }
@@ -47,10 +48,14 @@ class GroupInvitationManager
 
     public function sendInvitationNotification($groupInvitation)
     {
-        $this->notificationManager->createNotification(
+        $notification = $this->notificationManager->createNotification(
                     $groupInvitation->getUser()->getDefaultGroup(),
                     "Invitation to group {$groupInvitation->getUserGroup()->getName()}",
-                    'group_invitation_show', ['id' => $groupInvitation->getId()], false);
+                    'group_invitation_show', ['id' => $groupInvitation->getId()], true);
+
+        $groupInvitation->setNotification($notification);
+        $this->em->persist($groupInvitation);
+        $this->em->flush();
     }
 
     public function acceptInvitation($groupInvitation)
@@ -61,6 +66,7 @@ class GroupInvitationManager
         $user->addUserGroup($userGroup);
         $groupInvitation->setActive(false);
 
+        $this->notificationManager->setUnreadStatus($notification->getId(), $user, false);
         $this->em->persist($groupInvitation);
         $this->em->persist($user);
         $this->em->flush();
@@ -74,4 +80,16 @@ class GroupInvitationManager
         $this->em->flush();
     }
 
+    public function deleteExpiredInvitations()
+    {
+        $invitations = $this->groupInvitationRepository->findAll();
+
+        foreach ($invitations as $invitation) {
+            if ($invitation->hasExpired()) {
+                $this->em->delete($invitation);
+            }
+        }
+
+        $this->em->flush();
+    }
 }
