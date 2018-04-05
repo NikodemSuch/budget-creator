@@ -41,6 +41,7 @@ class GroupInvitation
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\NotBlank()
      */
     private $active;
 
@@ -82,7 +83,7 @@ class GroupInvitation
         $this->notification = $notification;
     }
 
-    public function getNotification(): ?Notification
+    public function getNotification(): Notification
     {
         return $this->notification;
     }
@@ -102,7 +103,7 @@ class GroupInvitation
         $this->active = $active;
     }
 
-    public function isActive(): ?bool
+    public function isActive(): bool
     {
         return $this->active;
     }

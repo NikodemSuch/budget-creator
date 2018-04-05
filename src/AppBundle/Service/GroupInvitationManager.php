@@ -66,7 +66,8 @@ class GroupInvitationManager
         $user->addUserGroup($userGroup);
         $groupInvitation->setActive(false);
 
-        $this->notificationManager->setUnreadStatus($notification->getId(), $user, false);
+        // Mark Invitation notification as read
+        $this->notificationManager->setUnreadStatus($groupInvitation->getNotification()->getId(), $user, false);
         $this->em->persist($groupInvitation);
         $this->em->persist($user);
         $this->em->flush();
@@ -76,7 +77,24 @@ class GroupInvitationManager
     {
         $groupInvitation->setActive(false);
 
+        // Mark Invitation notification as read
+        $this->notificationManager->setUnreadStatus($groupInvitation->getNotification()->getId(), $groupInvitation->getUser(), false);
         $this->em->persist($groupInvitation);
+        $this->em->flush();
+    }
+
+    public function deactivateExpiredInvitations()
+    {
+        $invitations = $this->groupInvitationRepository->findAll();
+
+        foreach ($invitations as $invitation) {
+            if ($invitation->hasExpired()) {
+                $invitation->setActive(false);
+                $this->notificationManager->setUnreadStatus($invitation->getNotification()->getId(), $invitation->getUser(), false);
+                $this->em->persist($invitation);
+            }
+        }
+
         $this->em->flush();
     }
 

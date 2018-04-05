@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_USER")
- * @Route("GroupInvitation")
+ * @Route("groupinvitation")
  */
 class GroupInvitationController extends Controller
 {
@@ -36,6 +36,7 @@ class GroupInvitationController extends Controller
     {
         return $this->render('usergroup/invitation.html.twig', [
             'invitation_active' => !$user->getUserGroups()->contains($groupInvitation->getUserGroup()) && $groupInvitation->isActive(),
+            'invitation_expired' => $groupInvitation->hasExpired(),
             'group_invitation' => $groupInvitation,
         ]);
     }
@@ -46,9 +47,6 @@ class GroupInvitationController extends Controller
      */
     public function acceptAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
-        // Mark Invitation notification as read
-        $this->notificationManager->setUnreadStatus($groupInvitation->getNotification()->getId(), $user, false);
-
         if ($groupInvitation->hasExpired()) {
             $this->addFlash('warning', 'Invitation has expired!');
 
@@ -75,9 +73,6 @@ class GroupInvitationController extends Controller
      */
     public function declineAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
-        // Mark Invitation notification as read
-        $this->notificationManager->setUnreadStatus($groupInvitation->getNotification()->getId(), $user, false);
-
         if ($groupInvitation->hasExpired()) {
             $this->addFlash('warning', 'Invitation has expired!');
 
