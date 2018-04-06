@@ -20,7 +20,7 @@ class DeactivateExpiredInvitationsCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:deactivate-expired-invitations')
+            ->setName(self::$defaultName)
             ->setDescription('Deactivates expired invitations.')
         ;
     }

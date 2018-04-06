@@ -35,6 +35,8 @@ class GroupInvitationController extends Controller
     public function showAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
         return $this->render('UserGroup/invitation.html.twig', [
+            'expiration_date' => $this->groupInvitationManager->getExpirationDate($groupInvitation),
+            'invitation_expired' => $this->groupInvitationManager->hasExpired($groupInvitation),
             'group_invitation' => $groupInvitation,
         ]);
     }
@@ -45,7 +47,7 @@ class GroupInvitationController extends Controller
      */
     public function acceptAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
-        if ($groupInvitation->hasExpired()) {
+        if ($this->groupInvitationManager->hasExpired($groupInvitation)) {
             $this->addFlash('warning', 'Invitation has expired!');
 
             return $this->redirectToRoute('homepage');
@@ -71,7 +73,7 @@ class GroupInvitationController extends Controller
      */
     public function declineAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
-        if ($groupInvitation->hasExpired()) {
+        if ($this->groupInvitationManager->hasExpired($groupInvitation)) {
             $this->addFlash('warning', 'Invitation has expired!');
 
             return $this->redirectToRoute('homepage');

@@ -37,7 +37,7 @@ class CreateNotificationCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:create-notification')
+            ->setName(self::$defaultName)
             ->setDescription('Creates notification.')
             ->addArgument('content', InputArgument::REQUIRED, 'Contents of notification.')
             ->addArgument('usergroup-name', InputArgument::OPTIONAL, 'User group name - optional when you provide usergroup-id.')
@@ -84,8 +84,8 @@ class CreateNotificationCommand extends Command
 
         if ($userGroupId) {
             $userGroup = $this->userGroupRepository->findOneBy(['id' => $userGroupId]);
-        } 
-        
+        }
+
         else {
             $userGroupsCount = $this->userGroupRepository->getCountByName($userGroupName);
 

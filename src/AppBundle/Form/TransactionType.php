@@ -25,7 +25,7 @@ class TransactionType extends AbstractType
                 'currency' => false,
                 'divisor' => 100,
             ))
-            ->add('dateTime', DateTimeType::class, [
+            ->add('createdOn', DateTimeType::class, [
                  'label' => 'Date and Time:',
                  'label_attr' => ['class' => 'form-control-label'],
              ])

@@ -22,7 +22,7 @@ class ChangeUserPasswordCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:change-password')
+            ->setName(self::$defaultName)
             ->setDescription('Changes password of user.')
             ->addArgument('username', InputArgument::REQUIRED, 'The username or email of the user.')
             ->addArgument('newPassword', InputArgument::REQUIRED, 'New password for account.')

@@ -13,12 +13,31 @@ class GroupInvitationManager
 {
     private $em;
     private $groupInvitationRepository;
+    private $invitationDays;
+    private $expirationTime;
 
     public function __construct(EntityManagerInterface $em, GroupInvitationRepository $groupInvitationRepository, NotificationManager $notificationManager)
     {
         $this->em = $em;
         $this->groupInvitationRepository = $groupInvitationRepository;
         $this->notificationManager = $notificationManager;
+    }
+
+    public function setConfig($configInvitation)
+    {
+        $this->expirationTime = \DateInterval::createFromDateString($configInvitation);
+    }
+
+    public function getExpirationDate(GroupInvitation $groupInvitation): \DateTimeImmutable
+    {
+        return $groupInvitation->getCreatedOn()->add($this->expirationTime);
+    }
+
+    public function hasExpired(GroupInvitation $groupInvitation): bool
+    {
+        $now = new \DateTimeImmutable();
+
+        return $now > $this->getExpirationDate($groupInvitation);
     }
 
     public function sendInvitations(UserGroup $userGroup, $wantedMembers)

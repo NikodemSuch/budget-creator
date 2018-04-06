@@ -25,7 +25,7 @@ class Notification
     private $content;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      * @Assert\NotBlank()
      */
     private $createdOn;
@@ -52,7 +52,7 @@ class Notification
 
     public function __construct()
     {
-        $this->createdOn = new \DateTime();
+        $this->createdOn = new \DateTimeImmutable();
     }
 
     public function getId(): int
@@ -70,12 +70,12 @@ class Notification
         return $this->content;
     }
 
-    public function setCreatedOn(\DateTime $createdOn)
+    public function setCreatedOn(\DateTimeImmutable $createdOn)
     {
         $this->createdOn = $createdOn;
     }
 
-    public function getCreatedOn(): \DateTime
+    public function getCreatedOn(): \DateTimeImmutable
     {
         return $this->createdOn;
     }
