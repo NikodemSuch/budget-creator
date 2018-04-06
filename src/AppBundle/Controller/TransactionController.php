@@ -96,15 +96,17 @@ class TransactionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $budgetBalanceBefore = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
+
             $transaction->setCreator($user);
             $this->em->persist($transaction);
             $this->em->flush();
 
-            $budgetBalance = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
-            if ($budgetBalance < 0) {
+            $budgetBalanceAfter = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
+            if ($budgetBalanceAfter < 0 && $budgetBalanceBefore >= 0) {
                 $this->notificationManager->createNotification(
-                    $transaction->getOwner(), 
-                    "Budget {$transaction->getBudget()->getName()} has been exceeded.", 
+                    $transaction->getOwner(),
+                    "Budget {$transaction->getBudget()->getName()} has been exceeded.",
                     'budget_show', ['id' => $transaction->getBudget()->getId()]);
             }
 
@@ -156,13 +158,15 @@ class TransactionController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $budgetBalanceBefore = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
+
             $this->em->flush();
 
-            $budgetBalance = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
-            if ($budgetBalance < 0) {
+            $budgetBalanceAfter = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
+            if ($budgetBalanceAfter < 0 && $budgetBalanceBefore >= 0) {
                 $this->notificationManager->createNotification(
-                    $transaction->getOwner(), 
-                    "Budget {$transaction->getBudget()->getName()} has been exceeded.", 
+                    $transaction->getOwner(),
+                    "Budget {$transaction->getBudget()->getName()} has been exceeded.",
                     'budget_show', ['id' => $transaction->getBudget()->getId()]);
             }
 
