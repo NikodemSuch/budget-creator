@@ -46,9 +46,7 @@ class NotificationManager
         $this->em->persist($notification);
         $this->em->flush();
 
-        if ($routeName = 'group_invitation_show') {
-            return $notification;
-        }
+        return $notification;
     }
 
     public function setUnreadStatus(int $notificationId, User $user, bool $unreadStatus) {
