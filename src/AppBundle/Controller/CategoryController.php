@@ -9,7 +9,6 @@ use AppBundle\Repository\TransactionRepository;
 use AppBundle\Repository\CategoryGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -87,15 +86,12 @@ class CategoryController extends Controller
      */
     public function showAction(Category $category)
     {
-        $deleteForm = $this->createDeleteForm($category);
-
         $transactionsCount = $this->transactionRepository->getCountByCategory($category);
-        $displayDeleteForm = $transactionsCount == 0;
+        $displayDeleteButton = $transactionsCount == 0;
 
         return $this->render('Category/show.html.twig', [
             'category' => $category,
-            'delete_form' => $deleteForm->createView(),
-            'display_delete_form' => $displayDeleteForm,
+            'display_delete_button' => $displayDeleteButton,
         ]);
     }
 
@@ -123,42 +119,22 @@ class CategoryController extends Controller
 
     /**
      * @Route("/{id}/delete", name="category_delete")
-     * @Method("DELETE")
      */
-    public function deleteAction(Request $request, Category $category)
+    public function deleteAction(Category $category)
     {
-        $form = $this->createDeleteForm($category);
-        $form->handleRequest($request);
-
         if ($category === $category->getGroup()->getDefaultCategory()) {
             throw new BadRequestHttpException();
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        try {
+            $this->em->remove($category);
+            $this->em->flush();
+        } catch (ForeignKeyConstraintViolationException $e) {
+            $this->addFlash('danger', 'This Category is still used in some transactions.');
 
-            try {
-                $this->em->remove($category);
-                $this->em->flush();
-            } catch (ForeignKeyConstraintViolationException $e) {
-                $this->addFlash('danger', 'This Category is still used in some transactions.');
-
-                return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
-            }
+            return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
         }
 
         return $this->redirectToRoute('category_index');
-    }
-
-    /**
-     * @param Category $category
-     * @return \Symfony\Component\Form\Form
-     */
-    private function createDeleteForm(Category $category)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('category_delete', ['id' => $category->getId()]))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

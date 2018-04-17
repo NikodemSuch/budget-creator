@@ -32,10 +32,8 @@
 
           {% if category.group.defaultCategory.id != category.id %}
 
-            {% if display_delete_form %}
-              {{ form_start(delete_form) }}
-                <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Delete</button>
-              {{ form_end(delete_form) }}
+            {% if display_delete_button %}
+              <a class="form-button btn btn-primary btn-lg btn-block delete-url" href="{{ path('category_delete', { 'id': category.id }) }}">Delete</a>
             {% else %}
               <div class="alert alert-info" role="alert">
                 <strong>Category is in use.</strong>

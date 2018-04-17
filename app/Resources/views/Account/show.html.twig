@@ -37,9 +37,7 @@
           {% include 'Default/flashes.html.twig' %}
 
           <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('account_edit', { 'id': account.id }) }}">Edit</a>
-          {{ form_start(delete_form) }}
-            <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Delete</button>
-          {{ form_end(delete_form) }}
+          <a class="form-button btn btn-primary btn-lg btn-block delete-url" href="{{ path('account_delete', { 'id': account.id }) }}">Delete</a>
           <a href="{{ path('account_index') }}">Back to the list</a>
 
         </div>

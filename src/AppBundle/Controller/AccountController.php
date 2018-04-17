@@ -8,7 +8,6 @@ use AppBundle\Form\AccountType;
 use AppBundle\Repository\AccountRepository;
 use AppBundle\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -93,16 +92,13 @@ class AccountController extends Controller
      */
     public function showAction(UserInterface $user, Account $account)
     {
-        $deleteForm = $this->createDeleteForm($account);
         $accountBalance = $this->transactionRepository->getAccountBalance($account);
-
         $transactions = $this->transactionRepository->getByAccount($account);
 
         return $this->render('Account/show.html.twig', [
             'transactions' => $transactions,
             'account' => $account,
             'account_balance' => $accountBalance,
-            'delete_form' => $deleteForm->createView(),
         ]);
     }
 
@@ -136,34 +132,15 @@ class AccountController extends Controller
 
     /**
      * @Route("/{id}/delete", name="account_delete")
-     * @Method("DELETE")
      * @IsGranted("delete", subject="account")
      */
-    public function deleteAction(Request $request, Account $account)
+    public function deleteAction(Account $account)
     {
-        $form = $this->createDeleteForm($account);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->remove($account);
-            $this->em->flush();
-        }
+        $this->em->remove($account);
+        $this->em->flush();
 
         $this->addFlash('success', 'Account deleted!');
 
         return $this->redirectToRoute('account_index');
-    }
-
-    /**
-     * @param Account $account
-     * @return \Symfony\Component\Form\Form
-     */
-    private function createDeleteForm(Account $account)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('account_delete', ['id' => $account->getId()]))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

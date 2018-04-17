@@ -8,7 +8,6 @@ use AppBundle\Service\NotificationManager;
 use AppBundle\Service\GroupInvitationManager;
 use AppBundle\Repository\GroupInvitationRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -92,8 +91,6 @@ class UserGroupController extends Controller
      */
     public function showAction(UserInterface $user, UserGroup $userGroup)
     {
-        $deleteForm = $this->createDeleteForm($userGroup);
-
         if ($userGroup->getOwner() == $user) {
 
             $invitations = $this->groupInvitationRepository->findBy([
@@ -109,7 +106,6 @@ class UserGroupController extends Controller
         return $this->render('UserGroup/show.html.twig', [
             'user_group' => $userGroup,
             'invitations' => $invitations,
-            'delete_form' => $deleteForm->createView(),
         ]);
     }
 
@@ -154,32 +150,13 @@ class UserGroupController extends Controller
 
     /**
      * @Route("/{id}/delete", name="user-group_delete")
-     * @Method("DELETE")
      * @IsGranted("delete", subject="userGroup")
      */
     public function deleteAction(Request $request, UserGroup $userGroup)
     {
-        $form = $this->createDeleteForm($userGroup);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->remove($userGroup);
-            $this->em->flush();
-        }
+        $this->em->remove($userGroup);
+        $this->em->flush();
 
         return $this->redirectToRoute('user-group_index');
-    }
-
-    /**
-     * @param UserGroup $userGroup
-     * @return \Symfony\Component\Form\Form
-     */
-    private function createDeleteForm(UserGroup $userGroup)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('user-group_delete', ['id' => $userGroup->getId()]))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

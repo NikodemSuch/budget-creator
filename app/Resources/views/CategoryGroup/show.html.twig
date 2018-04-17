@@ -29,9 +29,7 @@
           {% include 'Default/flashes.html.twig' %}
 
           <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('category-group_edit', { 'id': category_group.id }) }}">Edit</a>
-          {{ form_start(delete_form) }}
-            <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Delete</button>
-          {{ form_end(delete_form) }}
+          <a class="form-button btn btn-primary btn-lg btn-block delete-url" href="{{ path('category-group_delete', { 'id': category_group.id }) }}">Delete</a>
           <a href="{{ path('category-group_index') }}">Back to the list</a>
 
         </div>
