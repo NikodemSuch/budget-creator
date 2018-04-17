@@ -1,4 +1,4 @@
-{% extends "user/base.html.twig" %}
+{% extends "User/base.html.twig" %}
 
 {% block form %}
 
@@ -9,7 +9,7 @@
 
   {{ form_start(form) }}
 
-    {% include 'default/formErrors.html.twig' %}
+    {% include 'Default/formErrors.html.twig' %}
 
     {{ form_row(form.username) }}
     {{ form_row(form.email) }}

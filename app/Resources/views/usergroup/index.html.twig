@@ -1,4 +1,4 @@
-{% extends 'default/base.html.twig' %}
+{% extends 'Default/base.html.twig' %}
 
 {% block page %}
 
@@ -22,10 +22,10 @@
               <td>{{ user_group.owner.username }}</td>
               <td>
                 <ul class="list-inline">
-                  <li><a href="{{ path('usergroup_show', { 'id': user_group.id }) }}">show</a></li>
+                  <li><a href="{{ path('user-group_show', { 'id': user_group.id }) }}">show</a></li>
 
                   {% if app.user.id == user_group.owner.id %}
-                    <li><a href="{{ path('usergroup_edit', { 'id': user_group.id }) }}">edit</a></li>
+                    <li><a href="{{ path('user-group_edit', { 'id': user_group.id }) }}">edit</a></li>
                   {% endif %}
 
                 </ul>
@@ -35,7 +35,7 @@
           </tbody>
         </table>
 
-        <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('usergroup_new') }}">Create a new user group</a>
+        <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('user-group_new') }}">Create a new user group</a>
       </div>
     </div>
   </div>

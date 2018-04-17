@@ -1,4 +1,4 @@
-{% extends 'default/base.html.twig' %}
+{% extends 'Default/base.html.twig' %}
 
 {% block page %}
 
@@ -25,7 +25,7 @@
             </tbody>
           </table>
 
-          {% include 'default/formErrors.html.twig' %}
+          {% include 'Default/formErrors.html.twig' %}
 
           <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('category_edit', { 'id': category.id }) }}">Edit</a>
 
@@ -45,7 +45,7 @@
 
           <ul class="list-unstyled">
             <li><a href="{{ path('category_index') }}">Back to the list</a></li>
-            <li><a href="{{ path('categorygroup_show', { 'id': category.group.id }) }}">Back to the category group</a></li>
+            <li><a href="{{ path('category-group_show', { 'id': category.group.id }) }}">Back to the category group</a></li>
           </ul>
 
         </div>

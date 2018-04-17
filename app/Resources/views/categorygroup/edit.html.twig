@@ -1,4 +1,4 @@
-{% extends 'default/base.html.twig' %}
+{% extends 'Default/base.html.twig' %}
 
 {% block page %}
 
@@ -12,14 +12,14 @@
 
         {{ form_start(edit_form) }}
 
-          {% include 'default/formErrors.html.twig' %}
+          {% include 'Default/formErrors.html.twig' %}
 
           {{ form_widget(edit_form) }}
           <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Save changes</button>
         {{ form_end(edit_form) }}
 
         <div class="form-footer">
-          <p><a href="{{ path('categorygroup_index') }}">Back to the list</a></p>
+          <p><a href="{{ path('category-group_index') }}">Back to the list</a></p>
         </div>
 
       </div>

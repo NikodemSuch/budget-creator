@@ -1,4 +1,4 @@
-{% extends 'default/base.html.twig' %}
+{% extends 'Default/base.html.twig' %}
 
 {% block page %}
 
@@ -24,7 +24,7 @@
               </tr>
               <tr>
                 <th>Datetime</th>
-                <td>{{ transaction.dateTime|date('Y-m-d H:i:s') }}</td>
+                <td>{{ transaction.dateTime|localizeddate }}</td>
               </tr>
               <tr>
                 <th>Creator</th>

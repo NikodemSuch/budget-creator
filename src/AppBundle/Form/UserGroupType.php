@@ -30,6 +30,7 @@ class UserGroupType extends AbstractType
                 'label' => 'Members:',
                 'label_attr' => ['class' => 'form-control-label'],
                 'data' => $builder->getData()->getUsers(),
+                // Without next line, there's an internal error - not our fault.
                 'data_class' => Collection::class,
                 'mapped' => false,
                 'allow_add' => true,

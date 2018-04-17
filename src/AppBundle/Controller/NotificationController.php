@@ -52,7 +52,7 @@ class NotificationController extends Controller
     }
 
     /**
-    * @Route("/markAsRead", name="notification_mark_as_read")
+    * @Route("/mark-as-read", name="notification_mark-as-read")
     */
     public function markAsReadAction(Request $request, UserInterface $user)
     {
@@ -62,7 +62,7 @@ class NotificationController extends Controller
     }
 
     /**
-    * @Route("/markAsUnread", name="notification_mark_as_unread")
+    * @Route("/mark-as-unread", name="notification_mark-as-unread")
     */
     public function markAsUnReadAction(Request $request, UserInterface $user)
     {

@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_USER")
- * @Route("groupinvitation")
+ * @Route("group-invitation")
  */
 class GroupInvitationController extends Controller
 {
@@ -30,19 +30,17 @@ class GroupInvitationController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="group_invitation_show")
+     * @Route("/{id}", name="group-invitation_show")
      */
     public function showAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
-        return $this->render('usergroup/invitation.html.twig', [
-            'invitation_active' => !$user->getUserGroups()->contains($groupInvitation->getUserGroup()) && $groupInvitation->isActive(),
-            'invitation_expired' => $groupInvitation->hasExpired(),
+        return $this->render('Usergroup/invitation.html.twig', [
             'group_invitation' => $groupInvitation,
         ]);
     }
 
     /**
-     * @Route("/{id}/accept", name="group_invitation_accept")
+     * @Route("/{id}/accept", name="group-invitation_accept")
      * @IsGranted("invitation_respond", subject="groupInvitation")
      */
     public function acceptAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
@@ -68,7 +66,7 @@ class GroupInvitationController extends Controller
     }
 
     /**
-     * @Route("/{id}/decline", name="group_invitation_decline")
+     * @Route("/{id}/decline", name="group-invitation_decline")
      * @IsGranted("invitation_respond", subject="groupInvitation")
      */
     public function declineAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)

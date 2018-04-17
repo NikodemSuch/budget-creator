@@ -51,7 +51,7 @@ class GroupInvitationManager
         $notification = $this->notificationManager->createNotification(
                     $groupInvitation->getUser()->getDefaultGroup(),
                     "Invitation to group {$groupInvitation->getUserGroup()->getName()}",
-                    'group_invitation_show', ['id' => $groupInvitation->getId()], true);
+                    'group-invitation_show', ['id' => $groupInvitation->getId()], true);
 
         $groupInvitation->setNotification($notification);
         $this->em->persist($groupInvitation);

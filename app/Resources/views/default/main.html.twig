@@ -1,4 +1,4 @@
-{% extends 'default/base.html.twig' %}
+{% extends 'Default/base.html.twig' %}
 
 {% block page %}
 
@@ -10,7 +10,7 @@
 
           <div class="row">
             <div class="error-container col-sm-6 col-sm-offset-3">
-              {% include 'default/formErrors.html.twig' %}
+              {% include 'Default/formErrors.html.twig' %}
             </div>
           </div>
 
@@ -19,11 +19,11 @@
             <a class="main-page-item" href="{{ path('account_index') }}">Accounts</a>
             <a class="main-page-item" href="{{ path('budget_index') }}">Budgets</a>
             <a class="main-page-item" href="{{ path('transaction_index') }}">Transactions</a>
-            <a class="main-page-item" href="{{ path('usergroup_index') }}">Groups</a>
+            <a class="main-page-item" href="{{ path('user-group_index') }}">Groups</a>
 
             {% if is_granted('ROLE_ADMIN') %}
               <div class="admin-items">
-                <a class="main-page-item admin-page-item" href="{{ path('categorygroup_index') }}">Category Groups</a>
+                <a class="main-page-item admin-page-item" href="{{ path('category-group_index') }}">Category Groups</a>
                 <a class="main-page-item admin-page-item" href="{{ path('category_index') }}">Categories</a>
               </div>
             {% endif %}

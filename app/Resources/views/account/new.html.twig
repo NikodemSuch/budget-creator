@@ -1,4 +1,4 @@
-{% extends 'default/base.html.twig' %}
+{% extends 'Default/base.html.twig' %}
 
 {% block page %}
 
@@ -12,7 +12,7 @@
 
         {{ form_start(form) }}
 
-          {% include 'default/formErrors.html.twig' %}
+          {% include 'Default/formErrors.html.twig' %}
 
           {{ form_widget(form) }}
           <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Create New</button>

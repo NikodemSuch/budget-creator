@@ -56,7 +56,7 @@ class TransactionController extends Controller
             'creator' => $userGroups,
         ]);
 
-        return $this->render('transaction/index.html.twig', [
+        return $this->render('Transaction/index.html.twig', [
             'transactions' => $transactions,
         ]);
     }
@@ -103,15 +103,15 @@ class TransactionController extends Controller
             $budgetBalance = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
             if ($budgetBalance < 0) {
                 $this->notificationManager->createNotification(
-                    $transaction->getOwner(), 
-                    "Budget {$transaction->getBudget()->getName()} has been exceeded.", 
+                    $transaction->getOwner(),
+                    "Budget {$transaction->getBudget()->getName()} has been exceeded.",
                     'budget_show', ['id' => $transaction->getBudget()->getId()]);
             }
 
             return $this->redirectToRoute('transaction_show', ['id' => $transaction->getId()]);
         }
 
-        return $this->render('transaction/new.html.twig', [
+        return $this->render('Transaction/new.html.twig', [
             'transaction' => $transaction,
             'form' => $form->createView(),
         ]);
@@ -125,7 +125,7 @@ class TransactionController extends Controller
     {
         $deleteForm = $this->createDeleteForm($transaction);
 
-        return $this->render('transaction/show.html.twig', [
+        return $this->render('Transaction/show.html.twig', [
             'transaction' => $transaction,
             'delete_form' => $deleteForm->createView(),
         ]);
@@ -161,8 +161,8 @@ class TransactionController extends Controller
             $budgetBalance = $this->transactionRepository->getBudgetBalance($transaction->getBudget());
             if ($budgetBalance < 0) {
                 $this->notificationManager->createNotification(
-                    $transaction->getOwner(), 
-                    "Budget {$transaction->getBudget()->getName()} has been exceeded.", 
+                    $transaction->getOwner(),
+                    "Budget {$transaction->getBudget()->getName()} has been exceeded.",
                     'budget_show', ['id' => $transaction->getBudget()->getId()]);
             }
 
@@ -171,7 +171,7 @@ class TransactionController extends Controller
             ]);
         }
 
-        return $this->render('transaction/edit.html.twig', [
+        return $this->render('Transaction/edit.html.twig', [
             'transaction' => $transaction,
             'edit_form' => $editForm->createView(),
         ]);

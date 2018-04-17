@@ -1,4 +1,4 @@
-{% extends 'default/base.html.twig' %}
+{% extends 'Default/base.html.twig' %}
 
 {% block page %}
 
@@ -13,7 +13,7 @@
         {{ form_start(form) }}
           {{ form_errors(form) }}
 
-          {% include 'default/formErrors.html.twig' %}
+          {% include 'Default/formErrors.html.twig' %}
 
           {{ form_label(form.name) }}
           {{ form_errors(form.name) }}
@@ -32,7 +32,7 @@
         {{ form_end(form) }}
 
         <div class="form-footer">
-          <p><a href="{{ path('usergroup_index') }}">Back to the list</a></p>
+          <p><a href="{{ path('user-group_index') }}">Back to the list</a></p>
         </div>
 
       </div>
