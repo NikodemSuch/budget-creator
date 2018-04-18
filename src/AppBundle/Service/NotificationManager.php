@@ -20,11 +20,17 @@ class NotificationManager
         $this->notificationRepository = $notificationRepository;
     }
 
-    public function createNotification(UserGroup $userGroup, string $content, $routeName = null, array $routeParameters = null)
+    public function createNotification(
+        UserGroup $userGroup,
+        string $content,
+        string $routeName = null,
+        array $routeParameters = null,
+        bool $preventMarkingAsRead = false)
     {
         $notification = new Notification();
         $notification->setRecipient($userGroup);
         $notification->setContent($content);
+        $notification->setPreventMarkingAsRead($preventMarkingAsRead);
         $users = $userGroup->getUsers()->toArray();
 
         foreach ($users as $user) {
@@ -39,6 +45,8 @@ class NotificationManager
 
         $this->em->persist($notification);
         $this->em->flush();
+
+        return $notification;
     }
 
     public function setUnreadStatus(int $notificationId, User $user, bool $unreadStatus) {

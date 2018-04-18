@@ -1,0 +1,72 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+
+  {% block navbar %}
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation-bar" aria-expanded="false">
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="navigation-bar">
+        <ul class="nav navbar-nav navbar-left">
+          <li><a class="nav-button" id="nav-homepage" href="{{ path('homepage') }}">Home</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if app.user %}
+
+            <li class="dropdown">
+              <a class="nav-button dropdown-toggle" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-bell" aria-hidden="true"></i><span id="notification-num" class="badge">{{ app.user.unreadNotifications|length }}</span>
+              </a>
+
+              <ul id="notifications-dropdown" class="dropdown-menu">
+                <div id="notifications-container">
+                  <div id="notifications">
+                    {% for view_notification in view_notification_provider.getNotifications() %}
+                        <div class="checkbox notification{{ view_notification.read ? '' : ' notification-unread' }}">
+                          <label class="notification-label">
+                            <div class="notification-content">
+                              {% if view_notification.notification.routeName %}
+                                <a href="{{ path('notification_redirect', { 'id': view_notification.notification.id }) }}">{{ view_notification.notification.content }}</a>
+                              {% else %}
+                                {{ view_notification.notification.content }}
+                              {% endif %}
+                            </div>
+                            <div class="notification-date">
+                              {{ view_notification.notification.createdOn|localizeddate }}
+                            </div>
+                            {% if not view_notification.notification.preventMarkingAsRead %}
+                              <input class="notification-checkbox" data-trigger="hover" type="checkbox" data-toggle="tooltip" data-placement="left" title="Mark as {{ view_notification.read ? 'unread' : 'read' }}" data-notification-id="{{ view_notification.notification.id }}">
+                            {% endif %}
+                          </label>
+                        </div>
+                    {% else %}
+                      <div class="alert alert-info">
+                        No notifications.
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </ul>
+            </li>
+
+            <li><a class="nav-button nav-last" href="{{ path('logout') }}">{{ app.user.username }} <i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
+
+          {% else %}
+            <li><a class="nav-button" href="{{ path('login') }}">Log in</a></li>
+            <li><a class="nav-button nav-last" href="{{ path('user_registration') }}">Sign up</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  {% endblock %}
+
+  {% block page %}
+  {% endblock %}
+
+  {% block footer %}
+  {% endblock %}
+
+{% endblock %}

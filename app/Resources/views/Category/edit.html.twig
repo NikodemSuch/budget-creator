@@ -1,0 +1,29 @@
+{% extends 'Default/base.html.twig' %}
+
+{% block page %}
+
+  <div class="container">
+    <div class="row">
+      <div class="form-container col-sm-6 col-sm-offset-3">
+
+        <div class="form-header">
+          <h2 class="form-title">Category edit</h2>
+        </div>
+
+        {{ form_start(edit_form) }}
+
+          {% include 'Default/formErrors.html.twig' %}
+
+          {{ form_widget(edit_form) }}
+          <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Save changes</button>
+        {{ form_end(edit_form) }}
+
+        <div class="form-footer">
+          <p><a href="{{ path('category_index') }}">Back to the list</a></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

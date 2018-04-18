@@ -1,0 +1,42 @@
+{% extends 'Default/base.html.twig' %}
+
+{% block page %}
+
+  <div class="container">
+    <div class="row">
+      <div class="form-container col-sm-6 col-sm-offset-3">
+
+        <div class="form-header">
+          <h2 class="form-title">User Group creation</h2>
+        </div>
+
+        {{ form_start(form) }}
+          {{ form_errors(form) }}
+
+          {% include 'Default/formErrors.html.twig' %}
+
+          {{ form_label(form.name) }}
+          {{ form_errors(form.name) }}
+          {{ form_widget(form.name) }}
+
+          {{ form_label(form.users) }}
+          {{ form_errors(form.users) }}
+
+          <div id="user-fields-list" data-prototype="{{ form_widget(form.users.vars.prototype)|e }}" data-widget-members="{{ '<div class="form-group"></div>'|e }}">
+            {{ form_widget(form.users) }}
+          </div>
+
+          <a href="#" class="form-button btn btn-primary btn-lg btn-block add-another-collection-widget" data-list="#user-fields-list">Add another user</a>
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Create New</button>
+
+        {{ form_end(form) }}
+
+        <div class="form-footer">
+          <p><a href="{{ path('user-group_index') }}">Back to the list</a></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

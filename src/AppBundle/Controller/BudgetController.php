@@ -50,7 +50,7 @@ class BudgetController extends Controller
 
         $budgetsData = array_map(null, $budgets, $budgetsBalances);
 
-        return $this->render('budget/index.html.twig', [
+        return $this->render('Budget/index.html.twig', [
             'budgets_data' => $budgetsData,
         ]);
     }
@@ -76,7 +76,7 @@ class BudgetController extends Controller
             ]);
         }
 
-        return $this->render('budget/new.html.twig', [
+        return $this->render('Budget/new.html.twig', [
             'budget' => $budget,
             'form' => $form->createView(),
         ]);
@@ -97,7 +97,7 @@ class BudgetController extends Controller
             'budget' => $budget->getId(),
         ]);
 
-        return $this->render('budget/show.html.twig', [
+        return $this->render('Budget/show.html.twig', [
             'transactions' => $transactions,
             'budget' => $budget,
             'budget_balance' => $budgetBalance,
@@ -125,7 +125,7 @@ class BudgetController extends Controller
             ]);
         }
 
-        return $this->render('budget/edit.html.twig', [
+        return $this->render('Budget/edit.html.twig', [
             'budget' => $budget,
             'edit_form' => $editForm->createView(),
         ]);

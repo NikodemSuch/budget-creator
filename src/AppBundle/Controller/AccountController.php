@@ -50,7 +50,7 @@ class AccountController extends Controller
 
         $accountsData = array_map(null, $accounts, $accountsBalances);
 
-        return $this->render('account/index.html.twig', [
+        return $this->render('Account/index.html.twig', [
             'accounts_data' => $accountsData,
         ]);
     }
@@ -77,7 +77,7 @@ class AccountController extends Controller
             ]);
         }
 
-        return $this->render('account/new.html.twig', [
+        return $this->render('Account/new.html.twig', [
             'account' => $account,
             'form' => $form->createView(),
         ]);
@@ -99,7 +99,7 @@ class AccountController extends Controller
             'account' => $account->getId(),
         ]);
 
-        return $this->render('account/show.html.twig', [
+        return $this->render('Account/show.html.twig', [
             'transactions' => $transactions,
             'account' => $account,
             'account_balance' => $accountBalance,
@@ -127,7 +127,7 @@ class AccountController extends Controller
             ]);
         }
 
-        return $this->render('account/edit.html.twig', [
+        return $this->render('Account/edit.html.twig', [
             'account' => $account,
             'edit_form' => $editForm->createView(),
         ]);

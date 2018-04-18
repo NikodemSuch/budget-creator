@@ -47,7 +47,7 @@ class CategoryController extends Controller
     {
         $categories = $this->categoryRepository->findAll();
 
-        return $this->render('category/index.html.twig', [
+        return $this->render('Category/index.html.twig', [
             'categories' => $categories,
         ]);
     }
@@ -76,7 +76,7 @@ class CategoryController extends Controller
             ]);
         }
 
-        return $this->render('category/new.html.twig', [
+        return $this->render('Category/new.html.twig', [
             'category' => $category,
             'form' => $form->createView(),
         ]);
@@ -92,7 +92,7 @@ class CategoryController extends Controller
         $transactionsCount = $this->transactionRepository->getCountByCategory($category);
         $displayDeleteForm = $transactionsCount == 0;
 
-        return $this->render('category/show.html.twig', [
+        return $this->render('Category/show.html.twig', [
             'category' => $category,
             'delete_form' => $deleteForm->createView(),
             'display_delete_form' => $displayDeleteForm,
@@ -115,7 +115,7 @@ class CategoryController extends Controller
             ]);
         }
 
-        return $this->render('category/edit.html.twig', [
+        return $this->render('Category/edit.html.twig', [
             'category' => $category,
             'edit_form' => $editForm->createView(),
         ]);
@@ -140,7 +140,7 @@ class CategoryController extends Controller
                 $this->em->remove($category);
                 $this->em->flush();
             } catch (ForeignKeyConstraintViolationException $e) {
-                $this->addFlash('error', 'This Category is still used in some transactions.');
+                $this->addFlash('danger', 'This Category is still used in some transactions.');
 
                 return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
             }

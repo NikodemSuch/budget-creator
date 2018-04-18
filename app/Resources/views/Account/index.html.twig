@@ -1,0 +1,27 @@
+{% extends 'Default/base.html.twig' %}
+
+{% block page %}
+
+  <div class="container">
+    <div class="row">
+      <div class="page-section">
+        <h1>List of your accounts:</h1>
+
+        {% for account_data in accounts_data %}
+          <div class="col-sm-4 col-md-3">
+            <a class="item-index" href="{{ path('account_show', { 'id': account_data.0.id }) }}">
+              {{ account_data.0.name }} </br>
+              {{ account_data.1|money }} {{ account_data.0.currency }}
+            </a>
+          </div>
+        {% endfor %}
+
+        <div class="col-sm-4 col-md-3">
+          <p><a class="item-index" href="{{ path('account_new') }}">Create new account...</a></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

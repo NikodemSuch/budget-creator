@@ -121,6 +121,12 @@ body {
 
 // MAIN PAGE
 
+.error-container {
+  padding-top: 3em;
+  font-size: 18px;
+  text-align: center;
+}
+
 .main-page-section h1 {
   text-align: center;
   font-weight: 600;
@@ -135,7 +141,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  padding-top: 5%;
+  padding-top: 2em;
 }
 
 .main-page-item {
@@ -174,6 +180,10 @@ body {
 
 .admin-items .main-page-item:hover, .admin-items .main-page-item:active, .admin-items .main-page-item:focus {
   background-color: #292961 !important;
+}
+
+.text-highlight {
+  font-weight: bold;
 }
 
 // END MAIN PAGE
@@ -242,10 +252,6 @@ body {
   margin-bottom: 15px;
 }
 
-.form-errors {
-  color: #EB0202;
-}
-
 .form-group {
   margin: 0;
 }
@@ -284,6 +290,21 @@ body {
 
 // END FORMS
 
+.invitation-title {
+  font-size: 26px;
+  text-align: center;
+  font-weight: 600;
+  padding: 20px 10px 05px 10px;
+}
+
+.invitation-date {
+  text-align: center;
+  font-size: 18px;
+}
+
+.invitation-item {
+  margin: 20px 0 0 0;
+}
 
 @media (max-width: 768px) {
 

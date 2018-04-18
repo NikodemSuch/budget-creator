@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_ADMIN")
- * @Route("categorygroup")
+ * @Route("category-group")
  */
 class CategoryGroupController extends Controller
 {
@@ -36,19 +36,19 @@ class CategoryGroupController extends Controller
     }
 
     /**
-     * @Route("/", name="categorygroup_index")
+     * @Route("/", name="category-group_index")
      */
     public function indexAction()
     {
         $categoryGroups = $this->categoryGroupRepository->findAll();
 
-        return $this->render('categorygroup/index.html.twig', [
+        return $this->render('CategoryGroup/index.html.twig', [
             'category_groups' => $categoryGroups,
         ]);
     }
 
     /**
-     * @Route("/new", name="categorygroup_new")
+     * @Route("/new", name="category-group_new")
      */
     public function newAction(Request $request)
     {
@@ -65,26 +65,26 @@ class CategoryGroupController extends Controller
             $this->em->persist($categoryGroup);
             $this->em->flush();
 
-            return $this->redirectToRoute('categorygroup_show', [
+            return $this->redirectToRoute('category-group_show', [
                 'id' => $categoryGroup->getId()
             ]);
         }
 
-        return $this->render('categorygroup/new.html.twig', [
+        return $this->render('CategoryGroup/new.html.twig', [
             'category_group' => $categoryGroup,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="categorygroup_show")
+     * @Route("/{id}", name="category-group_show")
      */
     public function showAction(CategoryGroup $categoryGroup)
     {
         $deleteForm = $this->createDeleteForm($categoryGroup);
         $categories = $this->categoryRepository->getByGroup($categoryGroup);
 
-        return $this->render('categorygroup/show.html.twig', [
+        return $this->render('CategoryCroup/show.html.twig', [
             'categories' => $categories,
             'category_group' => $categoryGroup,
             'delete_form' => $deleteForm->createView(),
@@ -92,7 +92,7 @@ class CategoryGroupController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="categorygroup_edit")
+     * @Route("/{id}/edit", name="category-group_edit")
      */
     public function editAction(Request $request, CategoryGroup $categoryGroup)
     {
@@ -102,19 +102,19 @@ class CategoryGroupController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('categorygroup_show', [
+            return $this->redirectToRoute('category-group_show', [
                 'id' => $categoryGroup->getId()
             ]);
         }
 
-        return $this->render('categorygroup/edit.html.twig', [
+        return $this->render('CategoryGroup/edit.html.twig', [
             'category_group' => $categoryGroup,
             'edit_form' => $editForm->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/delete", name="categorygroup_delete")
+     * @Route("/{id}/delete", name="category-group_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, CategoryGroup $categoryGroup)
@@ -126,9 +126,9 @@ class CategoryGroupController extends Controller
             $categoriesCount = $this->categoryRepository->getCountByGroup($categoryGroup);
 
             if ($categoriesCount > 1) {
-                $this->addFlash('error', 'This group still contains some categories.');
+                $this->addFlash('danger', 'This group still contains some categories.');
 
-                return $this->redirectToRoute('categorygroup_show', ['id' => $categoryGroup->getId()]);
+                return $this->redirectToRoute('category-group_show', ['id' => $categoryGroup->getId()]);
             }
 
             else {
@@ -137,7 +137,7 @@ class CategoryGroupController extends Controller
             }
         }
 
-        return $this->redirectToRoute('categorygroup_index');
+        return $this->redirectToRoute('category-group_index');
     }
 
     /**
@@ -147,7 +147,7 @@ class CategoryGroupController extends Controller
     private function createDeleteForm(CategoryGroup $categoryGroup)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('categorygroup_delete', ['id' => $categoryGroup->getId()]))
+            ->setAction($this->generateUrl('category-group_delete', ['id' => $categoryGroup->getId()]))
             ->setMethod('DELETE')
             ->getForm()
         ;

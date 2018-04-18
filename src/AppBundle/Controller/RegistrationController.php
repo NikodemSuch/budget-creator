@@ -34,10 +34,10 @@ class RegistrationController extends Controller
             try {
                 $this->userManager->persistUserWithCredentials($user);
             } catch (UniqueConstraintViolationException $e) {
-                $this->addFlash('error', 'Username already taken.');
+                $this->addFlash('danger', 'Username already taken.');
 
                 return $this->render(
-                    'user/register.html.twig',
+                    'User/register.html.twig',
                     ['form' => $form->createView()]
                 );
             }
@@ -46,7 +46,7 @@ class RegistrationController extends Controller
         }
 
         return $this->render(
-            'user/register.html.twig',
+            'User/register.html.twig',
             ['form' => $form->createView()]
         );
     }

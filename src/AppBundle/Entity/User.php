@@ -28,6 +28,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $userGroups;
 
     /**
+     * @ORM\OneToMany(targetEntity="GroupInvitation", mappedBy="user")
+     */
+    private $invitations;
+
+    /**
      * @ORM\Column(type="string", length=60, unique=true)
      * @Assert\Email()
      * @Assert\NotBlank()
@@ -72,6 +77,7 @@ class User implements AdvancedUserInterface, \Serializable
     {
         $this->userGroups = new ArrayCollection();
         $this->unreadNotifications = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
         $this->isActive = true;
         $this->role = UserRole::USER();
     }
@@ -99,6 +105,34 @@ class User implements AdvancedUserInterface, \Serializable
     public function removeUserGroup(UserGroup $userGroup)
     {
         $this->userGroups->removeElement($userGroup);
+    }
+
+    public function getDefaultGroup()
+    {
+        return $this->getUserGroups()
+                    ->filter(function(UserGroup $userGroup) {
+                        return $userGroup->getIsDefaultGroup() == true;
+                    })->first();
+    }
+
+    public function setInvitations($invitations)
+    {
+        $this->invitations = $invitations;
+    }
+
+    public function getInvitations()
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(GroupInvitation $invitation)
+    {
+        $this->invitations->add($invitation);
+    }
+
+    public function removeInvitation(GroupInvitation $invitation)
+    {
+        $this->invitations->removeElement($invitation);
     }
 
     public function getEmail(): ?string

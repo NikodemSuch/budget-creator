@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\UserGroup;
 use AppBundle\Form\DataTransformer\EmailToUserTransformer;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
@@ -28,6 +29,10 @@ class UserGroupType extends AbstractType
             ->add('users', CollectionType::class, [
                 'label' => 'Members:',
                 'label_attr' => ['class' => 'form-control-label'],
+                'data' => $builder->getData()->getUsers(),
+                // Without next line, there's an internal error - not our fault.
+                'data_class' => Collection::class,
+                'mapped' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
