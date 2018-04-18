@@ -34,7 +34,7 @@ class GroupInvitationController extends Controller
      */
     public function showAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
     {
-        return $this->render('Usergroup/invitation.html.twig', [
+        return $this->render('UserGroup/invitation.html.twig', [
             'group_invitation' => $groupInvitation,
         ]);
     }
