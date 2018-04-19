@@ -85,6 +85,11 @@ class GroupInvitationManager
         $user->addUserGroup($userGroup);
         $groupInvitation->setActive(false);
 
+        $this->notificationManager->createNotification(
+                $groupInvitation->getUserGroup()->getOwner()->getDefaultGroup(),
+                "{$groupInvitation->getUser()} has accepted your invitation to {$groupInvitation->getUserGroup()} group.",
+                'user-group_show', ['id' => $groupInvitation->getUserGroup()->getId()]);
+
         // Mark Invitation notification as read
         $this->notificationManager->setUnreadStatus($groupInvitation->getNotification()->getId(), $user, false);
         $this->em->persist($groupInvitation);
@@ -95,6 +100,11 @@ class GroupInvitationManager
     public function declineInvitation($groupInvitation)
     {
         $groupInvitation->setActive(false);
+
+        $this->notificationManager->createNotification(
+            $groupInvitation->getUserGroup()->getOwner()->getDefaultGroup(),
+            "{$groupInvitation->getUser()} has declined your invitation to {$groupInvitation->getUserGroup()} group.",
+            'user-group_show', ['id' => $groupInvitation->getUserGroup()->getId()]);
 
         // Mark Invitation notification as read
         $this->notificationManager->setUnreadStatus($groupInvitation->getNotification()->getId(), $groupInvitation->getUser(), false);

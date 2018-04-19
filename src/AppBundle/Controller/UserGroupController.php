@@ -7,6 +7,7 @@ use AppBundle\Form\UserGroupType;
 use AppBundle\Repository\UserRepository;
 use AppBundle\Repository\UserGroupRepository;
 use AppBundle\Service\GroupInvitationManager;
+use AppBundle\Service\NotificationManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -30,12 +31,14 @@ class UserGroupController extends Controller
         EntityManagerInterface $em,
         UserRepository $userRepository,
         UserGroupRepository $userGroupRepository,
-        GroupInvitationManager $groupInvitationManager)
+        GroupInvitationManager $groupInvitationManager,
+        NotificationManager $notificationManager)
     {
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->userGroupRepository = $userGroupRepository;
         $this->groupInvitationManager = $groupInvitationManager;
+        $this->notificationManager = $notificationManager;
     }
 
     /**
@@ -113,6 +116,18 @@ class UserGroupController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
             $this->groupInvitationManager->sendInvitations($userGroup, $editForm->get('users')->getData()->toArray());
+
+            $formUsers = $editForm->get('users')->getData()->toArray();
+            $groupUsers = $userGroup->getUsers()->toArray();
+            $usersToDelete = array_diff($groupUsers, $formUsers);
+
+            foreach ($usersToDelete as $userToDelete) {
+                $userGroup->removeUser($userToDelete);
+                $this->notificationManager->createNotification(
+                    $userToDelete->getDefaultGroup(),
+                    "You were deleted from {$userGroup->getName()} group.");
+            }
+
             $this->em->persist($userGroup);
             $this->em->flush();
 
