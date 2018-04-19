@@ -34,6 +34,16 @@ class Budget implements Owned
      */
     private $currency;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $archived;
+
+    public function __construct()
+    {
+        $this->archived = false;
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -67,6 +77,16 @@ class Budget implements Owned
     public function getCurrency(): ?string
     {
         return $this->currency;
+    }
+
+    public function setArchived(bool $archived)
+    {
+        $this->archived = $archived;
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->archived;
     }
 
     public function __toString() {

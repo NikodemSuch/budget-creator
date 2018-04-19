@@ -122,6 +122,10 @@ class TransactionController extends Controller
      */
     public function showAction(Transaction $transaction)
     {
+        if ($transaction->getAccount()->isArchived() && $transaction->getBudget()->isArchived()) {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render('Transaction/show.html.twig', [
             'transaction' => $transaction,
         ]);
@@ -134,6 +138,10 @@ class TransactionController extends Controller
      */
     public function editAction(Request $request, Transaction $transaction, UserInterface $user)
     {
+        if ($transaction->getAccount()->isArchived() && $transaction->getBudget()->isArchived()) {
+            throw $this->createNotFoundException();
+        }
+
         $userGroups = $user->getUserGroups()->toArray();
 
         $accounts = $this->accountRepository->findBy([
@@ -181,6 +189,10 @@ class TransactionController extends Controller
      */
     public function deleteAction(Request $request, Transaction $transaction)
     {
+        if ($transaction->getAccount()->isArchived() && $transaction->getBudget()->isArchived()) {
+            throw $this->createNotFoundException();
+        }
+        
         $this->em->remove($transaction);
         $this->em->flush();
 
