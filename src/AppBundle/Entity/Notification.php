@@ -119,4 +119,9 @@ class Notification
     {
         return $this->preventMarkingAsRead;
     }
+
+    public function __toString()
+    {
+        return $this->content;
+    }
 }

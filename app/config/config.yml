@@ -72,3 +72,4 @@ swiftmailer:
 
 app:
     invitation_expiration_time: '%invitation_expiration_time%'
+    notification_visibility_time: '%notification_visibility_time%'

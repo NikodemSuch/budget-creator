@@ -12,4 +12,14 @@ class NotificationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Notification::class);
     }
+
+     public function getByGroups($userGroups)
+    {
+        return $this->createQueryBuilder('notification')
+            ->where('notification.recipient IN (:userGroups)')
+            ->setParameter('userGroups', $userGroups)
+            ->getQuery()
+            ->getResult();
+    }
+
 }

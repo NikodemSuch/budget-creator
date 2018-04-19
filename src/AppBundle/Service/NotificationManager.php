@@ -13,11 +13,29 @@ class NotificationManager
 {
     private $em;
     private $notificationRepository;
+    private $visibilityTime;
 
     public function __construct(EntityManagerInterface $em, NotificationRepository $notificationRepository)
     {
         $this->em = $em;
         $this->notificationRepository = $notificationRepository;
+    }
+
+    public function setConfig($configNotification)
+    {
+        $this->visibilityTime = \DateInterval::createFromDateString($configNotification);
+    }
+
+    public function getExpirationDate(Notification $notification): \DateTimeImmutable
+    {
+        return $notification->getCreatedOn()->add($this->visibilityTime);
+    }
+
+    public function hasExpired(Notification $notification): bool
+    {
+        $now = new \DateTimeImmutable();
+
+        return $now > $this->getExpirationDate($notification);
     }
 
     public function createNotification(

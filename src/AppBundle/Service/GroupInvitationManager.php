@@ -13,7 +13,7 @@ class GroupInvitationManager
 {
     private $em;
     private $groupInvitationRepository;
-    private $invitationDays;
+    private $notificationManager;
     private $expirationTime;
 
     public function __construct(EntityManagerInterface $em, GroupInvitationRepository $groupInvitationRepository, NotificationManager $notificationManager)

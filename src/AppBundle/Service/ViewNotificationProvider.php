@@ -3,21 +3,27 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\ViewNotification;
+use AppBundle\Service\NotificationManager;
 use AppBundle\Repository\NotificationRepository;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ViewNotificationProvider
 {
+    private $notificationManager;
     private $notificationRepository;
     private $user;
 
-    public function __construct(TokenStorageInterface $tokenStorage, NotificationRepository $notificationRepository)
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        NotificationManager $notificationManager,
+        NotificationRepository $notificationRepository)
     {
         if ($tokenStorage->getToken() instanceOf AnonymousToken || !$tokenStorage->getToken()) {
             $this->user = null;
             return;
         }
+        $this->notificationManager = $notificationManager;
         $this->notificationRepository = $notificationRepository;
         $this->user = $tokenStorage->getToken()->getUser();
     }
@@ -25,10 +31,19 @@ class ViewNotificationProvider
     public function getNotifications()
     {
         $userGroups = $this->user->getUserGroups()->toArray();
-        $notifications = array();
+        $unreadNotifications = $this->user->getUnreadNotifications();
 
-        foreach ($userGroups as $userGroup) {
-            $notifications = array_merge($notifications, $this->notificationRepository->findBy(['recipient' => $userGroup]));
+        $notifications = $this->notificationRepository->getByGroups($userGroups);
+
+        foreach ($notifications as $notification) {
+
+            if ($unreadNotifications->contains($notification)) {
+                continue;
+            }
+
+            elseif ($this->notificationManager->hasExpired($notification)) {
+                $notifications = array_diff($notifications, [$notification]);
+            }
         }
 
         // remove duplicates in array of objects
@@ -41,13 +56,12 @@ class ViewNotificationProvider
         });
 
         // get array of viewNotification objects
-        $unreadNotifications = $this->user->getUnreadNotifications();
         $viewNotifications = array();
 
         foreach ($notifications as $notification) {
             $read = !$unreadNotifications->contains($notification);
             $viewNotification = new ViewNotification($notification, $read);
-            
+
             array_push($viewNotifications, $viewNotification);
         }
 

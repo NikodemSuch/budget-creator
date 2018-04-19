@@ -17,6 +17,9 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('invitation_expiration_time')
                     ->defaultValue('7 days')
                 ->end()
+                ->scalarNode('notification_visibility_time')
+                    ->defaultValue('30 days')
+                ->end()
             ->end()
         ;
 
