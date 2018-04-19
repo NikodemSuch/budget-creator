@@ -107,7 +107,7 @@ class GroupInvitationManager
         $invitations = $this->groupInvitationRepository->findAll();
 
         foreach ($invitations as $invitation) {
-            if ($invitation->hasExpired()) {
+            if ($this->hasExpired($invitation)) {
                 $invitation->setActive(false);
                 $this->notificationManager->setUnreadStatus($invitation->getNotification()->getId(), $invitation->getUser(), false);
                 $this->em->persist($invitation);
@@ -122,7 +122,7 @@ class GroupInvitationManager
         $invitations = $this->groupInvitationRepository->findAll();
 
         foreach ($invitations as $invitation) {
-            if ($invitation->hasExpired()) {
+            if ($this->hasExpired($invitation)) {
                 $this->em->delete($invitation);
             }
         }
