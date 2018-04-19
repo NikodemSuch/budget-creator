@@ -34,7 +34,7 @@ class GroupInvitation
     private $notification;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      * @Assert\NotBlank()
      */
     private $createdOn;
@@ -45,11 +45,13 @@ class GroupInvitation
      */
     private $active;
 
+    private $invitation_days;
+
     public function __construct(User $user = null, UserGroup $userGroup = null)
     {
         $this->user = $user;
         $this->userGroup = $userGroup;
-        $this->createdOn = new \DateTime();
+        $this->createdOn = new \DateTimeImmutable();
         $this->active = true;
     }
 
@@ -88,12 +90,12 @@ class GroupInvitation
         return $this->notification;
     }
 
-    public function setCreatedOn(\DateTime $createdOn)
+    public function setCreatedOn(\DateTimeImmutable $createdOn)
     {
         $this->createdOn = $createdOn;
     }
 
-    public function getCreatedOn(): \DateTime
+    public function getCreatedOn(): \DateTimeImmutable
     {
         return $this->createdOn;
     }
@@ -106,17 +108,5 @@ class GroupInvitation
     public function isActive(): bool
     {
         return $this->active;
-    }
-
-    public function getExpirationDate(): \DateTime
-    {
-        return $this->getCreatedOn()->add(new \DateInterval('P7D'));
-    }
-
-    public function hasExpired(): bool
-    {
-        $now = new \DateTime();
-
-        return $now > $this->getExpirationDate();
     }
 }

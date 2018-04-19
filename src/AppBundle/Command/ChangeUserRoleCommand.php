@@ -23,7 +23,7 @@ class ChangeUserRoleCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:change-role')
+            ->setName(self::$defaultName)
             ->setDescription('Changes role of user.')
             ->addArgument('username', InputArgument::REQUIRED, 'The username or email of the user.')
             ->addArgument('newRole', InputArgument::REQUIRED, 'New role for user. Possible options: "ROLE_USER", "ROLE_ADMIN".')

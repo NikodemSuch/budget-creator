@@ -7,17 +7,17 @@
       <div class="page-section invitation">
         <div class="col-md-6 col-md-offset-3">
 
-          {% if group_invitation.expired %}
+          {% if invitation_expired %}
             <div class="error-container">
               <div class="alert alert-info" role="alert">
                 <p class="text-highlight">Invitation has expired:</p>
-                <p>{{ group_invitation.userGroup.owner }}invites you to join{{ group_invitation.userGroup.name }}group.</p>
+                <p>{{ group_invitation.userGroup.owner }} invites you to join {{ group_invitation.userGroup.name }} group.</p>
               </div>
             </div>
           {% elseif group_invitation.active %}
             <div class="row">
-              <p class="invitation-title">{{group_invitation.userGroup.owner}} invites you to join {{group_invitation.userGroup.name}} group.</p>
-              <p class="invitation-date">Invitation expires at {{ group_invitation.expirationDate()|localizeddate }}</p>
+              <p class="invitation-title">{{ group_invitation.userGroup.owner }} invites you to join {{ group_invitation.userGroup.name }} group.</p>
+              <p class="invitation-date">Invitation expires at {{ expiration_date|localizeddate }}</p>
               <div class="col-md-6">
                 <a class="item-index invitation-item" href="{{ path('group-invitation_accept', { 'id': group_invitation.id }) }}">
                   Accept invitation

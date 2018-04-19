@@ -20,7 +20,7 @@ class DeleteExpiredInvitationsCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:delete-expired-invitations')
+            ->setName(self::$defaultName)
             ->setDescription('Deletes expired invitations.')
         ;
     }

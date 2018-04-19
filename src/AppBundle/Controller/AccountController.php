@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Account;
+use AppBundle\Service\GroupInvitationManager;
 use AppBundle\Form\AccountType;
 use AppBundle\Repository\AccountRepository;
 use AppBundle\Repository\TransactionRepository;
@@ -35,7 +36,7 @@ class AccountController extends Controller
      * @param User $user
      * @Route("/", name="account_index")
      */
-    public function indexAction(UserInterface $user)
+    public function indexAction(UserInterface $user, GroupInvitationManager $groupInvitationManager)
     {
         $userGroups = $user->getUserGroups()->toArray();
         $accounts = $this->accountRepository->findBy([

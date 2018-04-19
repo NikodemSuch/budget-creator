@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Entity;
 
+use AppBundle\Utils\EntityHelper;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -49,10 +50,10 @@ class Transaction implements Owned
     private $amount;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      * @Assert\NotBlank()
      */
-    private $dateTime;
+    private $createdOn;
 
     /**
      * @ORM\OneToOne(targetEntity="Transaction")
@@ -100,7 +101,7 @@ class Transaction implements Owned
 
     public function __construct()
     {
-        $this->dateTime = new \DateTime();
+        $this->createdOn = new \DateTimeImmutable();
         $this->isTransferHalf = false;
     }
 
@@ -169,14 +170,14 @@ class Transaction implements Owned
         return $this->amount;
     }
 
-    public function setDateTime(\DateTime $dateTime)
+    public function setCreatedOn($createdOn)
     {
-        $this->dateTime = $dateTime;
+        $this->createdOn = EntityHelper::SetCreatedOn($createdOn);
     }
 
-    public function getDateTime(): \DateTime
+    public function getCreatedOn(): \DateTimeImmutable
     {
-        return $this->dateTime;
+        return $this->createdOn;
     }
 
     public function setTransferSlave(Transaction $transferSlave)
