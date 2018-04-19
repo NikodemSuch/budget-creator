@@ -71,4 +71,4 @@ swiftmailer:
     spool: { type: memory }
 
 app:
-    invitation_expiration_time: '7 days'
+    invitation_expiration_time: '%invitation_expiration_time%'
