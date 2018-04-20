@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\GroupInvitation;
 use AppBundle\Service\NotificationManager;
 use AppBundle\Service\GroupInvitationManager;
-use AppBundle\Repository\GroupInvitationRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,13 +19,11 @@ class GroupInvitationController extends Controller
 {
     private $notificationManager;
     private $groupInvitationManager;
-    private $groupInvitationRepository;
 
-    public function __construct(NotificationManager $notificationManager, GroupInvitationManager $groupInvitationManager, GroupInvitationRepository $groupInvitationRepository)
+    public function __construct(NotificationManager $notificationManager, GroupInvitationManager $groupInvitationManager)
     {
         $this->notificationManager = $notificationManager;
         $this->groupInvitationManager = $groupInvitationManager;
-        $this->groupInvitationRepository = $groupInvitationRepository;
     }
 
     /**

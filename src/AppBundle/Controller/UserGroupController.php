@@ -4,10 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\UserGroup;
 use AppBundle\Form\UserGroupType;
-use AppBundle\Repository\UserRepository;
-use AppBundle\Repository\UserGroupRepository;
-use AppBundle\Repository\AccountRepository;
-use AppBundle\Repository\BudgetRepository;
 use AppBundle\Service\GroupInvitationManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -24,22 +20,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class UserGroupController extends Controller
 {
     private $em;
-    private $userRepository;
-    private $userGroupRepository;
-
-    public function __construct(
-        EntityManagerInterface $em,
-        UserRepository $userRepository,
-        UserGroupRepository $userGroupRepository,
-        AccountRepository $accountRepository,
-        BudgetRepository $budgetRepository,
-        GroupInvitationManager $groupInvitationManager)
+    public function __construct(EntityManagerInterface $em, GroupInvitationManager $groupInvitationManager)
     {
         $this->em = $em;
-        $this->userRepository = $userRepository;
-        $this->userGroupRepository = $userGroupRepository;
-        $this->accountRepository = $accountRepository;
-        $this->budgetRepository = $budgetRepository;
         $this->groupInvitationManager = $groupInvitationManager;
     }
 

@@ -23,25 +23,19 @@ class TransactionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getByAccount($userGroups, $account)
+    public function getByAccount($account)
     {
         return $this->createQueryBuilder('transaction')
-            ->innerJoin('transaction.account', 'account')
-            ->where('account.owner IN (:userGroup)')
-            ->andWhere('transaction.account = :account')
-            ->setParameter('userGroup', $userGroups)
+            ->where('transaction.account = :account')
             ->setParameter('account', $account)
             ->getQuery()
             ->getResult();
     }
 
-    public function getByBudget($userGroups, $budget)
+    public function getByBudget($budget)
     {
         return $this->createQueryBuilder('transaction')
-            ->innerJoin('transaction.account', 'account')
-            ->where('account.owner IN (:userGroup)')
-            ->andWhere('transaction.budget = :budget')
-            ->setParameter('userGroup', $userGroups)
+            ->where('transaction.budget = :budget')
             ->setParameter('budget', $budget)
             ->getQuery()
             ->getResult();

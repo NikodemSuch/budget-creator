@@ -93,11 +93,10 @@ class AccountController extends Controller
      */
     public function showAction(UserInterface $user, Account $account)
     {
-        $userGroups = $user->getUserGroups()->toArray();
         $deleteForm = $this->createDeleteForm($account);
         $accountBalance = $this->transactionRepository->getAccountBalance($account);
 
-        $transactions = $this->transactionRepository->getByAccount($userGroups, $account);
+        $transactions = $this->transactionRepository->getByAccount($account);
 
         return $this->render('Account/show.html.twig', [
             'transactions' => $transactions,

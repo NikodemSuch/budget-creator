@@ -90,11 +90,10 @@ class BudgetController extends Controller
      */
     public function showAction(UserInterface $user, Budget $budget)
     {
-        $userGroups = $user->getUserGroups()->toArray();
         $deleteForm = $this->createDeleteForm($budget);
         $budgetBalance = $this->transactionRepository->getBudgetBalance($budget);
 
-        $transactions = $this->transactionRepository->getByBudget($userGroups, $budget);
+        $transactions = $this->transactionRepository->getByBudget($budget);
 
         return $this->render('Budget/show.html.twig', [
             'transactions' => $transactions,
