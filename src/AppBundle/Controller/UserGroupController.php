@@ -20,6 +20,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class UserGroupController extends Controller
 {
     private $em;
+    private $groupInvitationManager;
+
     public function __construct(EntityManagerInterface $em, GroupInvitationManager $groupInvitationManager)
     {
         $this->em = $em;
@@ -101,6 +103,18 @@ class UserGroupController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
             $this->groupInvitationManager->sendInvitations($userGroup, $editForm->get('users')->getData()->toArray());
+
+            $formUsers = $editForm->get('users')->getData()->toArray();
+            $groupUsers = $userGroup->getUsers()->toArray();
+            $usersToDelete = array_diff($groupUsers, $formUsers);
+
+            foreach ($usersToDelete as $userToDelete) {
+                $userGroup->removeUser($userToDelete);
+                $this->notificationManager->createNotification(
+                    $userToDelete->getDefaultGroup(),
+                    "You were deleted from {$userGroup->getName()} group.");
+            }
+
             $this->em->persist($userGroup);
             $this->em->flush();
 
