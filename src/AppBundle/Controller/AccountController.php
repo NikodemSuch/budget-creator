@@ -45,7 +45,7 @@ class AccountController extends Controller
         $accountsBalances = array();
 
         foreach ($accounts as $account) {
-            $accountBalance = $this->transactionRepository->getAccountBalance($account->getId());
+            $accountBalance = $this->transactionRepository->getAccountBalance($account);
             array_push($accountsBalances, $accountBalance);
         }
 
@@ -73,6 +73,8 @@ class AccountController extends Controller
             $this->em->persist($account);
             $this->em->flush();
 
+            $this->addFlash('success', 'Account created!');
+
             return $this->redirectToRoute('account_show', [
                 'id' => $account->getId()
             ]);
@@ -93,12 +95,9 @@ class AccountController extends Controller
     {
         $userGroups = $user->getUserGroups()->toArray();
         $deleteForm = $this->createDeleteForm($account);
-        $accountBalance = $this->transactionRepository->getAccountBalance($account->getId());
+        $accountBalance = $this->transactionRepository->getAccountBalance($account);
 
-        $transactions = $this->transactionRepository->findBy([
-            'creator' => $userGroups,
-            'account' => $account->getId(),
-        ]);
+        $transactions = $this->transactionRepository->getByAccount($userGroups, $account);
 
         return $this->render('Account/show.html.twig', [
             'transactions' => $transactions,
@@ -122,6 +121,8 @@ class AccountController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
+
+            $this->addFlash('success', 'Account updated!');
 
             return $this->redirectToRoute('account_show', [
                 'id' => $account->getId()
@@ -148,6 +149,8 @@ class AccountController extends Controller
             $this->em->remove($account);
             $this->em->flush();
         }
+
+        $this->addFlash('success', 'Account deleted!');
 
         return $this->redirectToRoute('account_index');
     }

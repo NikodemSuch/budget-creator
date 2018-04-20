@@ -6,8 +6,9 @@ use AppBundle\Entity\UserGroup;
 use AppBundle\Form\UserGroupType;
 use AppBundle\Repository\UserRepository;
 use AppBundle\Repository\UserGroupRepository;
+use AppBundle\Repository\AccountRepository;
+use AppBundle\Repository\BudgetRepository;
 use AppBundle\Service\GroupInvitationManager;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -30,11 +31,15 @@ class UserGroupController extends Controller
         EntityManagerInterface $em,
         UserRepository $userRepository,
         UserGroupRepository $userGroupRepository,
+        AccountRepository $accountRepository,
+        BudgetRepository $budgetRepository,
         GroupInvitationManager $groupInvitationManager)
     {
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->userGroupRepository = $userGroupRepository;
+        $this->accountRepository = $accountRepository;
+        $this->budgetRepository = $budgetRepository;
         $this->groupInvitationManager = $groupInvitationManager;
     }
 

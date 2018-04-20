@@ -44,7 +44,7 @@ class BudgetController extends Controller
         $budgetsBalances = array();
 
         foreach ($budgets as $budget) {
-            $budgetBalance = $this->transactionRepository->getBudgetBalance($budget->getId());
+            $budgetBalance = $this->transactionRepository->getBudgetBalance($budget);
             array_push($budgetsBalances, $budgetBalance);
         }
 
@@ -71,6 +71,8 @@ class BudgetController extends Controller
             $this->em->persist($budget);
             $this->em->flush();
 
+            $this->addFlash('success', 'Budget created!');
+
             return $this->redirectToRoute('budget_show', [
                 'id' => $budget->getId()
             ]);
@@ -90,12 +92,9 @@ class BudgetController extends Controller
     {
         $userGroups = $user->getUserGroups()->toArray();
         $deleteForm = $this->createDeleteForm($budget);
-        $budgetBalance = $this->transactionRepository->getBudgetBalance($budget->getId());
+        $budgetBalance = $this->transactionRepository->getBudgetBalance($budget);
 
-        $transactions = $this->transactionRepository->findBy([
-            'creator' => $userGroups,
-            'budget' => $budget->getId(),
-        ]);
+        $transactions = $this->transactionRepository->getByBudget($userGroups, $budget);
 
         return $this->render('Budget/show.html.twig', [
             'transactions' => $transactions,
@@ -119,6 +118,8 @@ class BudgetController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
+
+            $this->addFlash('success', 'Budget updated!');
 
             return $this->redirectToRoute('budget_show', [
                 'id' => $budget->getId()
@@ -145,6 +146,8 @@ class BudgetController extends Controller
             $this->em->remove($budget);
             $this->em->flush();
         }
+
+        $this->addFlash('success', 'Budget deleted!');
 
         return $this->redirectToRoute('budget_index');
     }

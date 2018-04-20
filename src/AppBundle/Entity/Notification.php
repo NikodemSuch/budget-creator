@@ -31,7 +31,7 @@ class Notification
     private $createdOn;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserGroup", inversedBy="notifications", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="UserGroup", inversedBy="notifications", cascade={"persist"})
      */
     private $recipient;
 

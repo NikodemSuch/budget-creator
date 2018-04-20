@@ -52,9 +52,7 @@ class TransactionController extends Controller
     {
         $userGroups = $user->getUserGroups()->toArray();
 
-        $transactions = $this->transactionRepository->findBy([
-            'creator' => $userGroups,
-        ]);
+        $transactions = $this->transactionRepository->getByGroups($userGroups);
 
         return $this->render('Transaction/index.html.twig', [
             'transactions' => $transactions,

@@ -12,4 +12,14 @@ class BudgetRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Budget::class);
     }
+
+    public function getCountByGroup($userGroup): int
+    {
+        return $this->createQueryBuilder('budget')
+            ->where('budget.owner = :owner')
+            ->setParameter('owner', $userGroup)
+            ->select('count(budget.owner) as budgetsNumber')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

@@ -25,11 +25,13 @@ class Transaction implements Owned
 
     /**
      * @ORM\ManyToOne(targetEntity="Account")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $account;
 
     /**
      * @ORM\ManyToOne(targetEntity="Budget")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $budget;
 

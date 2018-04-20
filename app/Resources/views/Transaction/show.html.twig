@@ -6,6 +6,7 @@
     <div class="row">
       <div class="col-sm-6 col-sm-offset-3">
         <div class="page-section">
+
           <h2>Transaction Data</h2>
 
           <table class="table">
@@ -40,6 +41,8 @@
               </tr>
             </tbody>
           </table>
+
+          {% include 'Default/formErrors.html.twig' %}
 
           <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('transaction_edit', { 'id': transaction.id }) }}">Edit</a>
           {{ form_start(delete_form) }}
