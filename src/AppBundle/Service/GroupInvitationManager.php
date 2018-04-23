@@ -23,7 +23,7 @@ class GroupInvitationManager
         $this->notificationManager = $notificationManager;
     }
 
-    public function setConfig($configInvitation)
+    public function setExpirationTime($configInvitation)
     {
         $this->expirationTime = \DateInterval::createFromDateString($configInvitation);
     }

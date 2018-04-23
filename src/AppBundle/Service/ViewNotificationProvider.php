@@ -31,20 +31,11 @@ class ViewNotificationProvider
     public function getNotifications()
     {
         $userGroups = $this->user->getUserGroups()->toArray();
+        $notifications = $this->notificationRepository->getByGroups($userGroups, $this->notificationManager->getEarliestCreatedOn());
         $unreadNotifications = $this->user->getUnreadNotifications();
 
-        $notifications = $this->notificationRepository->getByGroups($userGroups);
-
-        foreach ($notifications as $notification) {
-
-            if ($unreadNotifications->contains($notification)) {
-                continue;
-            }
-
-            elseif ($this->notificationManager->hasExpired($notification)) {
-                $notifications = array_diff($notifications, [$notification]);
-            }
-        }
+        // merge all notifications from period of time with all unread notifications
+        $notifications = array_merge($notifications, $unreadNotifications->toArray());
 
         // remove duplicates in array of objects
         $notifications = array_unique($notifications, SORT_REGULAR);

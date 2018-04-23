@@ -21,21 +21,28 @@ class NotificationManager
         $this->notificationRepository = $notificationRepository;
     }
 
-    public function setConfig($configNotification)
+    public function setVisibilityTime($configNotification)
     {
         $this->visibilityTime = \DateInterval::createFromDateString($configNotification);
     }
 
-    public function getExpirationDate(Notification $notification): \DateTimeImmutable
+    public function getVisibilityTime(Notification $notification): \DateTimeImmutable
     {
         return $notification->getCreatedOn()->add($this->visibilityTime);
     }
 
-    public function hasExpired(Notification $notification): bool
+    public function getEarliestCreatedOn(): \DateTimeImmutable
+    {
+        $now = new \DateTimeImmutable();
+        
+        return $now->sub($this->visibilityTime);
+    }
+
+    public function isInvisible(Notification $notification): bool
     {
         $now = new \DateTimeImmutable();
 
-        return $now > $this->getExpirationDate($notification);
+        return $now > $this->getVisibilityTime($notification);
     }
 
     public function createNotification(

@@ -13,11 +13,13 @@ class NotificationRepository extends ServiceEntityRepository
         parent::__construct($registry, Notification::class);
     }
 
-     public function getByGroups($userGroups)
+    public function getByGroups($userGroups, $earliestCreatedOn)
     {
         return $this->createQueryBuilder('notification')
             ->where('notification.recipient IN (:userGroups)')
+            ->andWhere('notification.createdOn > :earliestCreatedOn')
             ->setParameter('userGroups', $userGroups)
+            ->setParameter('earliestCreatedOn', $earliestCreatedOn)
             ->getQuery()
             ->getResult();
     }
