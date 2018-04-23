@@ -18,12 +18,12 @@ class GroupInvitation
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="invitations", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="invitations", cascade={"persist"})
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserGroup", inversedBy="invitations", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="UserGroup", inversedBy="invitations", cascade={"persist"})
      */
     private $userGroup;
 

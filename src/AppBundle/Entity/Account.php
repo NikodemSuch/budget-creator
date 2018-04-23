@@ -19,6 +19,7 @@ class Account implements Owned
 
     /**
      * @ORM\ManyToOne(targetEntity="UserGroup")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $owner;
 

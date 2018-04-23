@@ -22,13 +22,9 @@ class NotificationController extends Controller
     private $notificationManager;
     private $router;
 
-    public function __construct(
-        NotificationManager $notificationManager,
-        NotificationRepository $notificationRepository,
-        RouterInterface $router)
+    public function __construct(NotificationManager $notificationManager, RouterInterface $router)
     {
         $this->notificationManager = $notificationManager;
-        $this->notificationRepository = $notificationRepository;
         $this->router = $router;
     }
 

@@ -12,4 +12,14 @@ class AccountRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Account::class);
     }
+
+    public function getCountByGroup($userGroup): int
+    {
+        return $this->createQueryBuilder('account')
+            ->where('account.owner = :owner')
+            ->setParameter('owner', $userGroup)
+            ->select('count(account.owner) as accountsNumber')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

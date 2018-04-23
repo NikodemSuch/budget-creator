@@ -40,7 +40,7 @@ class UserGroup
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="Notification", mappedBy="recipient")
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="recipient", cascade={"persist", "remove"})
      */
     private $notifications;
 

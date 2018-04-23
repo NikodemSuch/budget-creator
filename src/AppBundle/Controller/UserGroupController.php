@@ -4,11 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\UserGroup;
 use AppBundle\Form\UserGroupType;
-use AppBundle\Repository\UserRepository;
-use AppBundle\Repository\UserGroupRepository;
 use AppBundle\Service\GroupInvitationManager;
-use AppBundle\Service\NotificationManager;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,21 +20,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class UserGroupController extends Controller
 {
     private $em;
-    private $userRepository;
-    private $userGroupRepository;
+    private $groupInvitationManager;
 
-    public function __construct(
-        EntityManagerInterface $em,
-        UserRepository $userRepository,
-        UserGroupRepository $userGroupRepository,
-        GroupInvitationManager $groupInvitationManager,
-        NotificationManager $notificationManager)
+    public function __construct(EntityManagerInterface $em, GroupInvitationManager $groupInvitationManager)
     {
         $this->em = $em;
-        $this->userRepository = $userRepository;
-        $this->userGroupRepository = $userGroupRepository;
         $this->groupInvitationManager = $groupInvitationManager;
-        $this->notificationManager = $notificationManager;
     }
 
     /**
