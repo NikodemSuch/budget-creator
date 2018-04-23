@@ -13,6 +13,7 @@ use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -66,6 +67,7 @@ class AccountController extends Controller
     public function newAction(Request $request, UserInterface $user)
     {
         $account = new Account();
+
         $form = $this->createForm(AccountType::class, $account, [
             'user' => $user,
         ]);
@@ -129,12 +131,25 @@ class AccountController extends Controller
             throw $this->createNotFoundException();
         }
 
+        $owner = $account->getOwner();
+        $hasTransactions = !empty($this->transactionRepository->findBy([
+            'account' => $account,
+        ]));
+
         $editForm = $this->createForm(AccountType::class, $account, [
             'user' => $user,
+            'owner' => $owner,
+            'has_transactions' => $hasTransactions,
         ]);
+
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            if ($hasTransactions && $account->getOwner() != $owner) {
+                throw new BadRequestHttpException();
+            }
+
             $this->em->flush();
 
             $this->addFlash('success', 'Account updated!');

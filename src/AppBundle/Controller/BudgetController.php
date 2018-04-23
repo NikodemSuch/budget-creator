@@ -126,12 +126,25 @@ class BudgetController extends Controller
             throw $this->createNotFoundException();
         }
 
+        $owner = $budget->getOwner();
+        $hasTransactions = !empty($this->transactionRepository->findBy([
+            'budget' => $budget,
+        ]));
+
         $editForm = $this->createForm(BudgetType::class, $budget, [
             'user' => $user,
+            'owner' => $owner,
+            'has_transactions' => $hasTransactions,
         ]);
+
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            if ($hasTransactions && $budget->getOwner() != $owner) {
+                throw new BadRequestHttpException();
+            }
+
             $this->em->flush();
 
             $this->addFlash('success', 'Budget updated!');
