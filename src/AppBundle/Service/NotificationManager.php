@@ -13,11 +13,36 @@ class NotificationManager
 {
     private $em;
     private $notificationRepository;
+    private $visibilityTime;
 
     public function __construct(EntityManagerInterface $em, NotificationRepository $notificationRepository)
     {
         $this->em = $em;
         $this->notificationRepository = $notificationRepository;
+    }
+
+    public function setVisibilityTime($configNotification)
+    {
+        $this->visibilityTime = \DateInterval::createFromDateString($configNotification);
+    }
+
+    public function getVisibilityTime(Notification $notification): \DateTimeImmutable
+    {
+        return $notification->getCreatedOn()->add($this->visibilityTime);
+    }
+
+    public function getEarliestCreatedOn(): \DateTimeImmutable
+    {
+        $now = new \DateTimeImmutable();
+        
+        return $now->sub($this->visibilityTime);
+    }
+
+    public function isInvisible(Notification $notification): bool
+    {
+        $now = new \DateTimeImmutable();
+
+        return $now > $this->getVisibilityTime($notification);
     }
 
     public function createNotification(

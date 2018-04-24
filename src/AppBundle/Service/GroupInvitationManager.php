@@ -13,7 +13,7 @@ class GroupInvitationManager
 {
     private $em;
     private $groupInvitationRepository;
-    private $invitationDays;
+    private $notificationManager;
     private $expirationTime;
 
     public function __construct(EntityManagerInterface $em, GroupInvitationRepository $groupInvitationRepository, NotificationManager $notificationManager)
@@ -23,7 +23,7 @@ class GroupInvitationManager
         $this->notificationManager = $notificationManager;
     }
 
-    public function setConfig($configInvitation)
+    public function setExpirationTime($configInvitation)
     {
         $this->expirationTime = \DateInterval::createFromDateString($configInvitation);
     }

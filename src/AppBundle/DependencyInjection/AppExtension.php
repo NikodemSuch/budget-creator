@@ -19,6 +19,9 @@ class AppExtension extends Extension
         $loader->load('services.yml');
 
         $definition = $container->getDefinition('AppBundle\Service\GroupInvitationManager');
-        $definition->addMethodCall('setConfig', [$config['invitation_expiration_time']]);
+        $definition->addMethodCall('setExpirationTime', [$config['invitation_expiration_time']]);
+
+        $definition = $container->getDefinition('AppBundle\Service\NotificationManager');
+        $definition->addMethodCall('setVisibilityTime', [$config['notification_visibility_time']]);
     }
 }

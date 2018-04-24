@@ -20,3 +20,4 @@ parameters:
     secret: ThisTokenIsNotSoSecretChangeIt
 
     invitation_expiration_time: 7 days
+    notification_visibility_time: 30 days
