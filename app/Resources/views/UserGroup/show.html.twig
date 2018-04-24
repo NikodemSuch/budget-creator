@@ -31,6 +31,13 @@
                 </tr>
               {% endfor %}
 
+              {% for invitation in invitations %}
+                <tr>
+                  <th>Invitation sent to:</th>
+                  <td>{{ invitation.user }}</td>
+                </tr>
+              {% endfor %}
+
             </tbody>
           </table>
 

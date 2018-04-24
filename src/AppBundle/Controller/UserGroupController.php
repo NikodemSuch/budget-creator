@@ -4,7 +4,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\UserGroup;
 use AppBundle\Form\UserGroupType;
+use AppBundle\Service\NotificationManager;
 use AppBundle\Service\GroupInvitationManager;
+use AppBundle\Repository\GroupInvitationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,12 +22,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class UserGroupController extends Controller
 {
     private $em;
+    private $notificationManager;
     private $groupInvitationManager;
+    private $groupInvitationRepository;
 
-    public function __construct(EntityManagerInterface $em, GroupInvitationManager $groupInvitationManager)
+    public function __construct(
+        EntityManagerInterface $em,
+        NotificationManager $notificationManager,
+        GroupInvitationManager $groupInvitationManager,
+        GroupInvitationRepository $groupInvitationRepository)
     {
         $this->em = $em;
+        $this->notificationManager = $notificationManager;
         $this->groupInvitationManager = $groupInvitationManager;
+        $this->groupInvitationRepository = $groupInvitationRepository;
     }
 
     /**
@@ -84,8 +94,21 @@ class UserGroupController extends Controller
     {
         $deleteForm = $this->createDeleteForm($userGroup);
 
+        if ($userGroup->getOwner() == $user) {
+
+            $invitations = $this->groupInvitationRepository->findBy([
+                'userGroup' => $userGroup,
+                'active' => true,
+            ]);
+        }
+
+        else {
+            $invitations = [];
+        }
+
         return $this->render('UserGroup/show.html.twig', [
             'user_group' => $userGroup,
+            'invitations' => $invitations,
             'delete_form' => $deleteForm->createView(),
         ]);
     }
