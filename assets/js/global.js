@@ -27,7 +27,7 @@ $('#notifications-container :checkbox').prop("disabled", true);
 
 function setUnreadStatus(unread, notificationId) {
 
-    var url = unread ? "/notification/markAsUnread" : "/notification/markAsRead";
+    var url = unread ? "/notification/mark-as-unread" : "/notification/mark-as-read";
 
     $.ajax ({
         url: url,

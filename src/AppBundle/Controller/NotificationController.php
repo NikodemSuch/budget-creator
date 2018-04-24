@@ -33,25 +33,6 @@ class NotificationController extends Controller
     }
 
     /**
-    * @Route("/{id}", name="notification_redirect")
-    */
-    public function redirectAction(Request $request, UserInterface $user, Notification $notification)
-    {
-        if ($notification->getRouteName()) {
-
-            if (!$notification->getPreventMarkingAsRead()) {
-                $this->notificationManager->setUnreadStatus($notification->getId(), $user, false);
-            }
-
-            return $this->redirectToRoute($notification->getRouteName(), $notification->getRouteParameters());
-        }
-
-        else {
-            throw new RouteNotFoundException();
-        }
-    }
-
-    /**
     * @Route("/mark-as-read", name="notification_mark-as-read")
     */
     public function markAsReadAction(Request $request, UserInterface $user)
@@ -69,5 +50,24 @@ class NotificationController extends Controller
         $notificationId = $request->request->get('notificationId');
 
         return $this->notificationManager->setUnreadStatus($notificationId, $user, true);
+    }
+
+    /**
+    * @Route("/{id}", name="notification_redirect")
+    */
+    public function redirectAction(Request $request, UserInterface $user, Notification $notification)
+    {
+        if ($notification->getRouteName()) {
+
+            if (!$notification->getPreventMarkingAsRead()) {
+                $this->notificationManager->setUnreadStatus($notification->getId(), $user, false);
+            }
+
+            return $this->redirectToRoute($notification->getRouteName(), $notification->getRouteParameters());
+        }
+
+        else {
+            throw new RouteNotFoundException();
+        }
     }
 }
