@@ -21,25 +21,6 @@ $('.delete-url').confirm({
     }
 });
 
-$('.delete-button').click(function (e) {
-    $.confirm({
-        title: 'Confirm Delete',
-        content: 'Are you sure?',
-        buttons: {
-            cancel: {
-                text: 'Cancel',
-                action: function () {}
-            },
-            confirm: {
-                text: 'Confirm',
-                btnClass: 'btn-blue',
-                keys: ['enter'],
-                action: function () {}
-            }
-        }
-    });
-});
-
 // Enable tooltips
 
 require('bootstrap-sass/assets/javascripts/bootstrap/tooltip');

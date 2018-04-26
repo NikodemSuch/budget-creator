@@ -17,5 +17,8 @@
     "webpack-notifier": "^1.5.0"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "resolutions": {
+    "jquery": "3.3.1"
+  }
 }
