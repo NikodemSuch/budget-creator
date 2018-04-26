@@ -7,7 +7,6 @@ use AppBundle\Form\BudgetType;
 use AppBundle\Repository\BudgetRepository;
 use AppBundle\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -90,16 +89,13 @@ class BudgetController extends Controller
      */
     public function showAction(UserInterface $user, Budget $budget)
     {
-        $deleteForm = $this->createDeleteForm($budget);
         $budgetBalance = $this->transactionRepository->getBudgetBalance($budget);
-
         $transactions = $this->transactionRepository->getByBudget($budget);
 
         return $this->render('Budget/show.html.twig', [
             'transactions' => $transactions,
             'budget' => $budget,
             'budget_balance' => $budgetBalance,
-            'delete_form' => $deleteForm->createView(),
         ]);
     }
 
@@ -134,33 +130,14 @@ class BudgetController extends Controller
     /**
      * @Route("/{id}/delete", name="budget_delete")
      * @IsGranted("delete", subject="budget")
-     * @Method("DELETE")
      */
-    public function deleteAction(Request $request, Budget $budget)
+    public function deleteAction(Budget $budget)
     {
-        $form = $this->createDeleteForm($budget);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->remove($budget);
-            $this->em->flush();
-        }
+        $this->em->remove($budget);
+        $this->em->flush();
 
         $this->addFlash('success', 'Budget deleted!');
 
         return $this->redirectToRoute('budget_index');
-    }
-
-    /**
-     * @param Budget $budget
-     * @return \Symfony\Component\Form\Form
-     */
-    private function createDeleteForm(Budget $budget)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('budget_delete', ['id' => $budget->getId()]))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

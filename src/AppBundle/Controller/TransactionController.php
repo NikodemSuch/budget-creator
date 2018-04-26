@@ -11,7 +11,6 @@ use AppBundle\Repository\AccountRepository;
 use AppBundle\Repository\BudgetRepository;
 use AppBundle\Service\NotificationManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -123,11 +122,8 @@ class TransactionController extends Controller
      */
     public function showAction(Transaction $transaction)
     {
-        $deleteForm = $this->createDeleteForm($transaction);
-
         return $this->render('Transaction/show.html.twig', [
             'transaction' => $transaction,
-            'delete_form' => $deleteForm->createView(),
         ]);
     }
 
@@ -182,31 +178,12 @@ class TransactionController extends Controller
     /**
      * @Route("/{id}/delete", name="transaction_delete")
      * @IsGranted("delete", subject="transaction")
-     * @Method("DELETE")
      */
     public function deleteAction(Request $request, Transaction $transaction)
     {
-        $form = $this->createDeleteForm($transaction);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->remove($transaction);
-            $this->em->flush();
-        }
+        $this->em->remove($transaction);
+        $this->em->flush();
 
         return $this->redirectToRoute('transaction_index');
-    }
-
-    /**
-     * @param Transaction $transaction
-     * @return \Symfony\Component\Form\Form
-     */
-    private function createDeleteForm(Transaction $transaction)
-    {
-        return $this->createFormBuilder()
-        ->setAction($this->generateUrl('transaction_delete', ['id' => $transaction->getId()]))
-        ->setMethod('DELETE')
-        ->getForm()
-        ;
     }
 }

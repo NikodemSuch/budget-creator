@@ -8,7 +8,6 @@ use AppBundle\Form\CategoryGroupType;
 use AppBundle\Repository\CategoryRepository;
 use AppBundle\Repository\CategoryGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -81,13 +80,11 @@ class CategoryGroupController extends Controller
      */
     public function showAction(CategoryGroup $categoryGroup)
     {
-        $deleteForm = $this->createDeleteForm($categoryGroup);
         $categories = $this->categoryRepository->getByGroup($categoryGroup);
 
         return $this->render('CategoryGroup/show.html.twig', [
             'categories' => $categories,
             'category_group' => $categoryGroup,
-            'delete_form' => $deleteForm->createView(),
         ]);
     }
 
@@ -115,41 +112,22 @@ class CategoryGroupController extends Controller
 
     /**
      * @Route("/{id}/delete", name="category-group_delete")
-     * @Method("DELETE")
      */
-    public function deleteAction(Request $request, CategoryGroup $categoryGroup)
+    public function deleteAction(CategoryGroup $categoryGroup)
     {
-        $form = $this->createDeleteForm($categoryGroup);
-        $form->handleRequest($request);
+        $categoriesCount = $this->categoryRepository->getCountByGroup($categoryGroup);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $categoriesCount = $this->categoryRepository->getCountByGroup($categoryGroup);
+        if ($categoriesCount > 1) {
+            $this->addFlash('danger', 'This group still contains some categories.');
 
-            if ($categoriesCount > 1) {
-                $this->addFlash('danger', 'This group still contains some categories.');
+            return $this->redirectToRoute('category-group_show', ['id' => $categoryGroup->getId()]);
+        }
 
-                return $this->redirectToRoute('category-group_show', ['id' => $categoryGroup->getId()]);
-            }
-
-            else {
-                $this->em->remove($categoryGroup);
-                $this->em->flush();
-            }
+        else {
+            $this->em->remove($categoryGroup);
+            $this->em->flush();
         }
 
         return $this->redirectToRoute('category-group_index');
-    }
-
-    /**
-     * @param CategoryGroup $categoryGroup
-     * @return \Symfony\Component\Form\Form
-     */
-    private function createDeleteForm(CategoryGroup $categoryGroup)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('category-group_delete', ['id' => $categoryGroup->getId()]))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

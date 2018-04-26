@@ -5,6 +5,13 @@
   <div class="container">
     <div class="row">
       <div class="page-section">
+
+        <div class="row">
+          <div class="error-container-secondary col-sm-6">
+            {% include 'Default/flashes.html.twig' %}
+          </div>
+        </div>
+
         <h1>List of your accounts:</h1>
 
         {% for account_data in accounts_data %}
