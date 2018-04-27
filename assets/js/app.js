@@ -1,4 +1,25 @@
-require('bootstrap-sass/assets/javascripts/bootstrap/tooltip');
+// confirmation modals
+
+$('.delete-url').confirm({
+    title: 'Confirm Delete',
+    content: 'Are you sure?',
+    buttons: {
+        cancel: {
+            text: 'Cancel',
+            action: function () {}
+        },
+        confirm: {
+            text: 'Confirm',
+            btnClass: 'btn-blue',
+            keys: ['enter'],
+            action: function () {
+                location.href = this.$target.attr('href');
+            }
+        }
+    }
+});
+
+// Enable tooltips
 
 $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();

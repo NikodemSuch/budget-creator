@@ -5,8 +5,7 @@ Encore
     .setOutputPath('web/build/')
     .setPublicPath('/build')
 
-    .addEntry('jsDependencies', './assets/js/jsDependencies.js')
-    .addEntry('appScripts', './assets/js/global.js')
+    .addEntry('main', './assets/js/main.js')
     .addStyleEntry('cssDependencies', './assets/css/cssDependencies.scss')
     .addStyleEntry('appStylesheets', './assets/css/global.scss')
 
