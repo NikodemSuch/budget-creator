@@ -1,7 +1,5 @@
 // confirmation modals
 
-require('jquery-confirm/js/jquery-confirm');
-
 $('.delete-url').confirm({
     title: 'Confirm Delete',
     content: 'Are you sure?',
@@ -22,8 +20,6 @@ $('.delete-url').confirm({
 });
 
 // Enable tooltips
-
-require('bootstrap-sass/assets/javascripts/bootstrap/tooltip');
 
 $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
