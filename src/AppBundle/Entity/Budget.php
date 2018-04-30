@@ -89,7 +89,8 @@ class Budget implements Owned
         return $this->archived;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->name;
     }
 }

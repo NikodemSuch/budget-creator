@@ -171,7 +171,8 @@ class UserGroup
         return $this->isDefaultGroup;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->name;
     }
 }
