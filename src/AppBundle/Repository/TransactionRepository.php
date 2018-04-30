@@ -37,6 +37,31 @@ class TransactionRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
+    public function getByBudgetOnInterval($budget, $start, $end)
+    {
+        return $this->createQueryBuilder('transaction')
+            ->where('transaction.budget = :budget')
+            ->andWhere('transaction.createdOn > :start')
+            ->andWhere('transaction.createdOn < :end')
+            ->setParameter('budget', $budget)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getBudgetBalanceToDate($budget, $date)
+    {
+        return $this->createQueryBuilder('transaction')
+            ->where('transaction.budget = :budget')
+            ->andWhere('transaction.createdOn < :date')
+            ->setParameter('budget', $budget)
+            ->setParameter('date', $date)
+            ->select('SUM(transaction.amount) as budgetBalance')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function getByAccount($account)
     {
         return $this->createQueryBuilder('transaction')

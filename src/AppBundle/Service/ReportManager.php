@@ -1,0 +1,164 @@
+<?php
+
+namespace AppBundle\Service;
+
+use AppBundle\Entity\Budget;
+use AppBundle\Enum\ReportDetail;
+use AppBundle\Report\Report;
+use AppBundle\Report\Year;
+use AppBundle\Report\Month;
+use AppBundle\Report\Day;
+use AppBundle\Report\Delta;
+use AppBundle\Repository\TransactionRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
+
+class ReportManager
+{
+    private $em;
+    private $transactionRepository;
+    private $reportDetail;
+    private $reportEndDate;
+    private $budgets;
+
+    public function __construct(EntityManagerInterface $em, TransactionRepository $transactionRepository)
+    {
+        $this->em = $em;
+        $this->transactionRepository = $transactionRepository;
+    }
+
+    public function addDeltasToInterval($interval, $currentDateImmutable)
+    {
+        foreach ($this->budgets as $budget) {
+
+            $delta = new Delta();
+            $delta->setTitle("Balance for budget $budget for ".$interval->getTitle());
+            $delta->setInitialAmount($this->transactionRepository->getBudgetBalanceToDate($budget, $currentDateImmutable));
+
+            if ($interval instanceof Year) {
+
+                $delta->setFinalAmount($this->transactionRepository->getBudgetBalanceToDate($budget,
+                    $currentDateImmutable->modify('1st January Next Year') > $this->reportEndDate ? $currentDateImmutable->modify('1st January Next Year') : $this->reportEndDate
+                ));
+
+            } elseif ($interval instanceof Month) {
+
+                $delta->setFinalAmount($this->transactionRepository->getBudgetBalanceToDate($budget,
+                    $currentDateImmutable->modify('first day of next month') > $this->reportEndDate ? $currentDateImmutable->modify('first day of next month') : $this->reportEndDate
+                ));
+
+            } elseif ($interval instanceof Day) {
+
+                $delta->setFinalAmount($this->transactionRepository->getBudgetBalanceToDate($budget, $currentDateImmutable->modify('+1 day')));
+
+            }
+
+            $interval->addDelta($delta);
+        }
+
+        return $interval;
+    }
+
+    public function addDeltasToDay(Day $day, $currentDateImmutable)
+    {
+        foreach ($this->budgets as $budget) {
+
+            $deltas = [];
+            $transactions = $this->transactionRepository->getByBudgetOnInterval(
+                $budget, $currentDateImmutable, $currentDateImmutable->modify('+1 day')
+            );
+
+            foreach ($transactions as $transaction) {
+
+                $initialAmount = $this->transactionRepository->getBudgetBalanceToDate($budget, $transaction->getCreatedOn());
+                $finalAmount = $initialAmount + $transaction->getAmount();
+
+                $delta = new Delta();
+                $delta->setTitle("Balance for transaction ".$transaction->getTitle());
+                $delta->setInitialAmount($initialAmount);
+                $delta->setFinalAmount($finalAmount);
+
+                array_push($deltas, $delta);
+            }
+
+            $day->addTransactions($deltas, $budget);
+        }
+
+        return $day;
+    }
+
+    public function createReport(Report $report)
+    {
+        $currentDate = $report->getStartDate();
+        $this->reportEndDate = $report->getEndDate();
+        $this->reportDetail = $report->getDetail();
+        $this->budgets = $report->getBudgets();
+
+        $yearsUntilEnd = $currentDate->diff($this->reportEndDate)->y;
+
+        for ($y = 0; $y <= $yearsUntilEnd ; $y++) {
+
+            if ($currentDate > $this->reportEndDate) {
+                break;
+            }
+
+            $currentDateImmutable = \DateTimeImmutable::createFromMutable($currentDate);
+            $year = new Year("Year ".$currentDate->format('Y'));
+            $year = $this->addDeltasToInterval($year, $currentDateImmutable);
+
+            if ($report->getDetail() == ReportDetail::YEAR()) {
+                $report->addYear($year);
+                $currentDate->modify('1st January Next Year');
+
+                continue;
+            }
+
+            $monthsUntilNextYear = $currentDateImmutable->diff($currentDateImmutable->modify('last day of december this year'))->m;
+
+            for ($m = 0; $m <= $monthsUntilNextYear ; $m++) {
+
+                if ($currentDate > $this->reportEndDate) {
+                    break;
+                }
+
+                $currentDateImmutable = \DateTimeImmutable::createFromMutable($currentDate);
+                $month = new Month($currentDate->format('F Y'));
+                $month = $this->addDeltasToInterval($month, $currentDateImmutable);
+
+                if ($report->getDetail() == ReportDetail::MONTH()) {
+                    $year->addMonth($month);
+                    $currentDate->modify('first day of next month');
+
+                    continue;
+                }
+
+                $daysUntilNextMonth = $currentDateImmutable->diff($currentDateImmutable->modify('last day of this month'))->days;
+
+                for ($d = 0; $d <= $daysUntilNextMonth ; $d++) {
+
+                    if ($currentDate > $this->reportEndDate) {
+                        break;
+                    }
+
+                    $currentDateImmutable = \DateTimeImmutable::createFromMutable($currentDate);
+                    $day = new Day($currentDate->format('Y-m-d'));
+                    $day = $this->addDeltasToInterval($day, $currentDateImmutable);
+
+                    if ($report->getDetail() == ReportDetail::TRANSACTION()) {
+                        $day = $this->addDeltasToDay($day, $currentDateImmutable);
+                    }
+
+                    $currentDate->modify('+1 day');
+                    $month->addDay($day);
+                }
+
+                $year->addMonth($month);
+            }
+
+            $report->addYear($year);
+        }
+
+        return $report;
+    }
+
+}
