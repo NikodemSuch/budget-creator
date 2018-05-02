@@ -206,4 +206,9 @@ class Transaction implements Owned
     {
         return $this->getAccount()->getOwner();
     }
+
+    public function isArchived(): bool
+    {
+        return ($this->getAccount()->isArchived() && $this->getBudget()->isArchived());
+    }
 }

@@ -40,6 +40,7 @@ class AccountController extends Controller
         $userGroups = $user->getUserGroups()->toArray();
         $accounts = $this->accountRepository->findBy([
             'owner' => $userGroups,
+            'archived' => false,
         ]);
         $accountsBalances = array();
 
@@ -92,6 +93,10 @@ class AccountController extends Controller
      */
     public function showAction(UserInterface $user, Account $account)
     {
+        if ($account->isArchived()) {
+            throw $this->createNotFoundException();
+        }
+
         $accountBalance = $this->transactionRepository->getAccountBalance($account);
         $transactions = $this->transactionRepository->getByAccount($account);
 
@@ -109,6 +114,10 @@ class AccountController extends Controller
      */
     public function editAction(Request $request, Account $account, UserInterface $user)
     {
+        if ($account->isArchived()) {
+            throw $this->createNotFoundException();
+        }
+
         $editForm = $this->createForm(AccountType::class, $account, [
             'user' => $user,
         ]);
@@ -136,7 +145,12 @@ class AccountController extends Controller
      */
     public function deleteAction(Account $account)
     {
-        $this->em->remove($account);
+        if ($account->isArchived()) {
+            throw $this->createNotFoundException();
+        }
+
+        $account->setArchived(true);
+        $this->em->persist($account);
         $this->em->flush();
 
         $this->addFlash('success', 'Account deleted!');

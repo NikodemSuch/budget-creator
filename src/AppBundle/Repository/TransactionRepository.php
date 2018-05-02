@@ -17,7 +17,10 @@ class TransactionRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('transaction')
             ->innerJoin('transaction.account', 'account')
+            ->innerJoin('transaction.budget', 'budget')
             ->where('account.owner IN (:userGroup)')
+            ->andWhere('account.archived = :archived OR budget.archived = :archived')
+            ->setParameter('archived', false)
             ->setParameter('userGroup', $userGroups)
             ->getQuery()
             ->getResult();

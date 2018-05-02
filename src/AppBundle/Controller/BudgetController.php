@@ -39,6 +39,7 @@ class BudgetController extends Controller
         $userGroups = $user->getUserGroups()->toArray();
         $budgets = $this->budgetRepository->findBy([
             'owner' => $userGroups,
+            'archived' => false,
         ]);
         $budgetsBalances = array();
 
@@ -89,6 +90,10 @@ class BudgetController extends Controller
      */
     public function showAction(UserInterface $user, Budget $budget)
     {
+        if ($budget->isArchived()) {
+            throw $this->createNotFoundException();
+        }
+
         $budgetBalance = $this->transactionRepository->getBudgetBalance($budget);
         $transactions = $this->transactionRepository->getByBudget($budget);
 
@@ -106,6 +111,10 @@ class BudgetController extends Controller
      */
     public function editAction(Request $request, Budget $budget, UserInterface $user)
     {
+        if ($budget->isArchived()) {
+            throw $this->createNotFoundException();
+        }
+
         $editForm = $this->createForm(BudgetType::class, $budget, [
             'user' => $user,
         ]);
@@ -133,7 +142,12 @@ class BudgetController extends Controller
      */
     public function deleteAction(Budget $budget)
     {
-        $this->em->remove($budget);
+        if ($budget->isArchived()) {
+            throw $this->createNotFoundException();
+        }
+        
+        $budget->setArchived(true);
+        $this->em->persist($budget);
         $this->em->flush();
 
         $this->addFlash('success', 'Budget deleted!');
