@@ -132,9 +132,7 @@ class AccountController extends Controller
         }
 
         $owner = $account->getOwner();
-        $hasTransactions = !empty($this->transactionRepository->findBy([
-            'account' => $account,
-        ]));
+        $hasTransactions = (bool) $account->countTransactions();
 
         $editForm = $this->createForm(AccountType::class, $account, [
             'user' => $user,

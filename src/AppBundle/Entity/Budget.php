@@ -35,12 +35,18 @@ class Budget implements Owned
     private $currency;
 
     /**
+     * @ORM\OneToMany(targetEntity="Transaction", mappedBy="budget", fetch="EXTRA_LAZY")
+     */
+    private $transactions;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $archived;
 
     public function __construct()
     {
+        $this->transactions = new ArrayCollection();
         $this->archived = false;
     }
 
@@ -77,6 +83,16 @@ class Budget implements Owned
     public function getCurrency(): ?string
     {
         return $this->currency;
+    }
+
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+    public function countTransactions()
+    {
+        return $this->transactions->count();
     }
 
     public function setArchived(bool $archived)

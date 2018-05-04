@@ -127,9 +127,7 @@ class BudgetController extends Controller
         }
 
         $owner = $budget->getOwner();
-        $hasTransactions = !empty($this->transactionRepository->findBy([
-            'budget' => $budget,
-        ]));
+        $hasTransactions = (bool) $budget->countTransactions();
 
         $editForm = $this->createForm(BudgetType::class, $budget, [
             'user' => $user,

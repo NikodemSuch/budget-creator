@@ -24,13 +24,13 @@ class Transaction implements Owned
     private $creator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Account")
+     * @ORM\ManyToOne(targetEntity="Account", inversedBy="transactions")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $account;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Budget")
+     * @ORM\ManyToOne(targetEntity="Budget", inversedBy="transactions")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $budget;
