@@ -17,6 +17,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 class DataFixture extends Fixture
 {
     private $userManager;
+    private $admin;
+    private $defaultUserGroup;
+    private $defaultCategory;
 
     public function __construct(UserManager $userManager)
     {
@@ -25,28 +28,106 @@ class DataFixture extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        // Default Category and Category Group //
+        $this->createAdmin($manager);
+        $this->createDefaultUserGroup();
+        $this->createDefaultCategory($manager);
 
-        $categoryGroup = new CategoryGroup();
-        $categoryGroup->setName("Default Category Group");
+        for ($groupNum = 1; $groupNum <= 5; $groupNum++) {
 
-        $category = new Category();
-        $category->setName("Default Category");
-        $category->setGroup($categoryGroup);
+            $userGroup = $this->createUserGroup($groupNum, $manager);
+            $account = $this->createAccount($userGroup, $groupNum, $manager);
+            $budget = $this->createBudget($userGroup, $groupNum, $manager);
+            // Seed the mt_rand function for deterministic value
+            mt_srand(1000);
 
-        $categoryGroup->setDefaultCategory($category);
+            for ($transactionNum = 1; $transactionNum <= 4000; $transactionNum++) {
+                $transaction = $this->createTransaction($account, $budget, $transactionNum, $manager);
+            }
+        }
 
-        $manager->persist($category);
-        $manager->persist($categoryGroup);
+        $manager->persist($this->defaultUserGroup);
+        $manager->flush();
+    }
 
-        // Default Category and Category Group END //
+    public function createUserGroup(int $groupNum, ObjectManager $manager)
+    {
+        $userGroup = new UserGroup();
+        $userGroup->setName("Test Group $groupNum");
+        $userGroup->setIsDefaultGroup(false);
 
-        // Admin and Default User Group //
+        for ($groupUserNum = 1; $groupUserNum <= 4 ; $groupUserNum++) {
+            $userNum = ($groupNum-1)*4 + $groupUserNum;
+            $user = $this->createUser($userNum, $manager);
+            $userGroup->addUser($user);
+        }
 
-        $defaultUserGroup = new UserGroup();
-        $defaultUserGroup->setName("Default Group");
-        $defaultUserGroup->setIsDefaultGroup(false);
+        $userGroup->setOwner($user);
+        $userGroup->addUser($this->admin);
+        $manager->persist($userGroup);
 
+        return $userGroup;
+    }
+
+    public function createUser(int $userNum, ObjectManager $manager)
+    {
+        $user = new User();
+        $user->setUsername("TestUser$userNum");
+        $user->setEmail("testuser$userNum@gmail.com");
+        $user->setPlainPassword("user$userNum");
+
+        $this->userManager->persistUserWithCredentials($user);
+        $this->defaultUserGroup->addUser($user);
+
+        $manager->persist($user);
+
+        return $user;
+    }
+
+    public function createAccount(UserGroup $userGroup, int $groupNum, ObjectManager $manager)
+    {
+        $account = new Account();
+        $account->setOwner($userGroup);
+        $account->setName("Test Account $groupNum");
+        $account->setCurrency("PLN");
+        $manager->persist($account);
+
+        return $account;
+    }
+
+    public function createBudget(UserGroup $userGroup, int $groupNum, ObjectManager $manager)
+    {
+        $budget = new Budget();
+        $budget->setOwner($userGroup);
+        $budget->setName("Test Budget $groupNum");
+        $budget->setCurrency("PLN");
+        $manager->persist($budget);
+
+        return $budget;
+    }
+
+    public function createTransaction(Account $account, Budget $budget, int $transactionNum, ObjectManager $manager)
+    {
+        $transaction = new Transaction();
+        $transaction->setCreator($this->admin);
+        $transaction->setCategory($this->defaultCategory);
+        $transaction->setAccount($account);
+        $transaction->setBudget($budget);
+        $transaction->setTitle("Test Transaction $transactionNum");
+        $transaction->setAmount(rand(0, 10000));
+
+        $start = new \DateTime('1st Jan 2012');
+        $end = new \DateTime('1st Jan 2018');
+        $random = new \DateTime('@' . mt_rand($start->getTimestamp(), $end->getTimestamp()));
+
+        $transaction->setCreatedOn($random);
+
+        $manager->persist($transaction);
+
+        return $transaction;
+    }
+
+    public function createAdmin(ObjectManager $manager)
+    {
         $admin = new User();
         $admin->setUsername("admin");
         $admin->setEmail("admin@gmail.com");
@@ -54,77 +135,47 @@ class DataFixture extends Fixture
         $admin->setRole(UserRole::ADMIN());
 
         $this->userManager->persistUserWithCredentials($admin);
+        $this->admin = $admin;
+        $this->createAdminUserGroup($manager);
 
+        $manager->persist($admin);
+    }
+
+    public function createAdminUserGroup(ObjectManager $manager)
+    {
         $adminUserGroup = new UserGroup();
         $adminUserGroup->setName("Admin Group");
         $adminUserGroup->setIsDefaultGroup(false);
-        $adminUserGroup->addUser($admin);
-        $adminUserGroup->setOwner($admin);
+        $adminUserGroup->addUser($this->admin);
+        $adminUserGroup->setOwner($this->admin);
 
-        $defaultUserGroup->addUser($admin);
-        $defaultUserGroup->setOwner($admin);
-        $manager->persist($admin);
         $manager->persist($adminUserGroup);
+    }
 
-        // Admin and Default User Group END //
+    public function createDefaultUserGroup()
+    {
+        $defaultUserGroup = new UserGroup();
+        $defaultUserGroup->setName("Default Group");
+        $defaultUserGroup->setIsDefaultGroup(false);
+        $defaultUserGroup->addUser($this->admin);
+        $defaultUserGroup->setOwner($this->admin);
 
-        for ($i = 1; $i <= 5; $i++) {
+        $this->defaultUserGroup = $defaultUserGroup;
+    }
 
-            $userGroup = new UserGroup();
-            $userGroup->setName("Test Group $i");
-            $userGroup->setIsDefaultGroup(false);
+    public function createDefaultCategory(ObjectManager $manager)
+    {
+        $categoryGroup = new CategoryGroup();
+        $categoryGroup->setName("Default Category Group");
 
-            for ($j = 1; $j <= 4 ; $j++) {
-                $userNum = ($i-1)*4+$j;
-                $user = new User();
-                $user->setUsername("TestUser$userNum");
-                $user->setEmail("testuser$userNum@gmail.com");
-                $user->setPlainPassword("user$userNum");
+        $category = new Category();
+        $category->setName("Default Category");
+        $category->setGroup($categoryGroup);
+        $categoryGroup->setDefaultCategory($category);
 
-                $this->userManager->persistUserWithCredentials($user);
+        $this->defaultCategory = $category;
 
-                $defaultUserGroup->addUser($user);
-                $userGroup->addUser($user);
-                $manager->persist($user);
-            }
-
-            $userGroup->setOwner($user);
-            $userGroup->addUser($admin);
-            $manager->persist($userGroup);
-
-            $account = new Account();
-            $account->setOwner($userGroup);
-            $account->setName("Test Account $i");
-            $account->setCurrency("PLN");
-            $manager->persist($account);
-
-            $budget = new Budget();
-            $budget->setOwner($userGroup);
-            $budget->setName("Test Budget $i");
-            $budget->setCurrency("PLN");
-            $manager->persist($budget);
-
-            for ($k = 1; $k <= 4000; $k++) {
-
-                $transaction = new Transaction();
-                $transaction->setCreator($admin);
-                $transaction->setAccount($account);
-                $transaction->setBudget($budget);
-                $transaction->setCategory($category);
-                $transaction->setTitle("Test Transaction $k");
-                $transaction->setAmount(rand(0, 10000));
-
-                $start = new \Datetime('1st Jan 2012');
-                $end = new \Datetime('1st Jan 2018');
-                $random = new \DateTime('@' . mt_rand($start->getTimestamp(), $end->getTimestamp()));
-
-                $transaction->setCreatedOn($random);
-
-                $manager->persist($transaction);
-            }
-        }
-
-        $manager->persist($defaultUserGroup);
-        $manager->flush();
+        $manager->persist($category);
+        $manager->persist($categoryGroup);
     }
 }
