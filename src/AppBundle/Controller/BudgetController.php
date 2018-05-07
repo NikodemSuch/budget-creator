@@ -7,6 +7,9 @@ use AppBundle\Form\BudgetType;
 use AppBundle\Repository\BudgetRepository;
 use AppBundle\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -88,19 +91,27 @@ class BudgetController extends Controller
      * @Route("/{id}", name="budget_show")
      * @IsGranted("view", subject="budget")
      */
-    public function showAction(UserInterface $user, Budget $budget)
+    public function showAction(Request $request, UserInterface $user, Budget $budget)
     {
         if ($budget->isArchived()) {
             throw $this->createNotFoundException();
         }
 
-        $budgetBalance = $this->transactionRepository->getBudgetBalance($budget);
-        $transactions = $this->transactionRepository->getByBudget($budget);
+        $page = $request->query->get('page') ?: 1;
+        $resultsPerPage = $request->query->get('results') ?: 10;
+
+        $userGroups = $user->getUserGroups()->toArray();
+        $query = $this->transactionRepository->getByGroupsQuery($userGroups);
+        $adapter = new DoctrineORMAdapter($query);
+
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage($resultsPerPage);
+        $pagerfanta->setCurrentPage($page);
 
         return $this->render('Budget/show.html.twig', [
-            'transactions' => $transactions,
+            'transaction_pager' => $pagerfanta,
             'budget' => $budget,
-            'budget_balance' => $budgetBalance,
+            'budget_balance' => $this->transactionRepository->getBudgetBalance($budget),
         ]);
     }
 
@@ -145,7 +156,7 @@ class BudgetController extends Controller
         if ($budget->isArchived()) {
             throw $this->createNotFoundException();
         }
-        
+
         $budget->setArchived(true);
         $this->em->persist($budget);
         $this->em->flush();

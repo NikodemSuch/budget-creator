@@ -8,6 +8,9 @@ use AppBundle\Form\AccountType;
 use AppBundle\Repository\AccountRepository;
 use AppBundle\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -91,19 +94,27 @@ class AccountController extends Controller
      * @Route("/{id}", name="account_show")
      * @IsGranted("view", subject="account")
      */
-    public function showAction(UserInterface $user, Account $account)
+    public function showAction(Request $request, UserInterface $user, Account $account)
     {
         if ($account->isArchived()) {
             throw $this->createNotFoundException();
         }
 
-        $accountBalance = $this->transactionRepository->getAccountBalance($account);
-        $transactions = $this->transactionRepository->getByAccount($account);
+        $page = $request->query->get('page') ?: 1;
+        $resultsPerPage = $request->query->get('results') ?: 10;
+
+        $userGroups = $user->getUserGroups()->toArray();
+        $query = $this->transactionRepository->getByGroupsQuery($userGroups);
+        $adapter = new DoctrineORMAdapter($query);
+
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage($resultsPerPage);
+        $pagerfanta->setCurrentPage($page);
 
         return $this->render('Account/show.html.twig', [
-            'transactions' => $transactions,
+            'transaction_pager' => $pagerfanta,
             'account' => $account,
-            'account_balance' => $accountBalance,
+            'account_balance' => $this->transactionRepository->getAccountBalance($account),
         ]);
     }
 

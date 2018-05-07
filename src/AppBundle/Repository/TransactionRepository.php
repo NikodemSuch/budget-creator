@@ -22,8 +22,19 @@ class TransactionRepository extends ServiceEntityRepository
             ->andWhere('account.archived = :archived OR budget.archived = :archived')
             ->setParameter('archived', false)
             ->setParameter('userGroup', $userGroups)
+            ->orderBy('transaction.createdOn', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function getByGroupsQuery($userGroups)
+    {
+        return $this->createQueryBuilder('transaction')
+            ->innerJoin('transaction.account', 'account')
+            ->where('account.owner IN (:userGroup)')
+            ->setParameter('userGroup', $userGroups)
+            ->orderBy('transaction.createdOn', 'DESC')
+            ->getQuery();
     }
 
     public function getByAccount($account)
@@ -31,6 +42,7 @@ class TransactionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('transaction')
             ->where('transaction.account = :account')
             ->setParameter('account', $account)
+            ->orderBy('transaction.createdOn', 'DESC')
             ->getQuery()
             ->getResult();
     }
@@ -40,6 +52,7 @@ class TransactionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('transaction')
             ->where('transaction.budget = :budget')
             ->setParameter('budget', $budget)
+            ->orderBy('transaction.createdOn', 'DESC')
             ->getQuery()
             ->getResult();
     }

@@ -1,6 +1,19 @@
 <div class="row">
   <div class="page-section">
-    <h2>List of your Transactions:</h2>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <h1>List of your Transactions:</h1>
+      </div>
+
+      <ul class="col-sm-6 list-inline results-number">
+        <li><b>Display:</b><li>
+        <li><a class="btn btn-default btn-sm" href="{{ path('transaction_index', { 'results': 10, 'page': transaction_pager.currentPage }) }} ">10</a></li>
+        <li><a class="btn btn-default btn-sm" href="{{ path('transaction_index', { 'results': 25, 'page': transaction_pager.currentPage }) }}">25</a></li>
+        <li><a class="btn btn-default btn-sm" href="{{ path('transaction_index', { 'results': 50, 'page': transaction_pager.currentPage }) }}">50</a></li>
+        <li><a class="btn btn-default btn-sm" href="{{ path('transaction_index', { 'results': 100, 'page': transaction_pager.currentPage }) }}">100</a></li>
+      </ul>
+    </div>
 
     <table class="table">
       <thead>
@@ -13,7 +26,7 @@
         </tr>
       </thead>
       <tbody>
-      {% for transaction in transactions %}
+      {% for transaction in transaction_pager.currentPageResults %}
         <tr>
           <td>{{ transaction.title }}</td>
           <td>{{ transaction.creator }}</td>
@@ -38,5 +51,8 @@
       <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('transaction_new') }}">Create a new transaction</a>
     {% endif %}
 
+    <div class="pagerfanta">
+      {{ pagerfanta(transaction_pager, 'twitter_bootstrap3') }}
+    </div>
   </div>
 </div>

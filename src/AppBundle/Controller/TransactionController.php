@@ -11,6 +11,9 @@ use AppBundle\Repository\AccountRepository;
 use AppBundle\Repository\BudgetRepository;
 use AppBundle\Service\NotificationManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -47,14 +50,21 @@ class TransactionController extends Controller
      * @param User $user
      * @Route("/", name="transaction_index")
      */
-    public function indexAction(UserInterface $user)
+    public function indexAction(Request $request, UserInterface $user)
     {
-        $userGroups = $user->getUserGroups()->toArray();
+        $page = $request->query->get('page') ?: 1;
+        $resultsPerPage = $request->query->get('results') ?: 10;
 
-        $transactions = $this->transactionRepository->getByGroups($userGroups);
+        $userGroups = $user->getUserGroups()->toArray();
+        $query = $this->transactionRepository->getByGroupsQuery($userGroups);
+        $adapter = new DoctrineORMAdapter($query);
+
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage($resultsPerPage);
+        $pagerfanta->setCurrentPage($page);
 
         return $this->render('Transaction/index.html.twig', [
-            'transactions' => $transactions,
+            'transaction_pager' => $pagerfanta,
         ]);
     }
 
