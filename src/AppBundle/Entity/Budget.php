@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -88,11 +89,6 @@ class Budget implements Owned
     public function getTransactions()
     {
         return $this->transactions;
-    }
-
-    public function countTransactions()
-    {
-        return $this->transactions->count();
     }
 
     public function setArchived(bool $archived)

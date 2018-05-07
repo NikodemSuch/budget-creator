@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class AddOwnerFieldListener implements EventSubscriberInterface
+class DisableOwnerFieldSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {

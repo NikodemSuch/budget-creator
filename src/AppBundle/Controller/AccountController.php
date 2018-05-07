@@ -132,7 +132,7 @@ class AccountController extends Controller
         }
 
         $owner = $account->getOwner();
-        $hasTransactions = (bool) $account->countTransactions();
+        $hasTransactions = (bool) $account->getTransactions()->count();
 
         $editForm = $this->createForm(AccountType::class, $account, [
             'user' => $user,

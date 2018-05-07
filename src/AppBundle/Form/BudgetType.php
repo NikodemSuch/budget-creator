@@ -3,7 +3,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Budget;
-use AppBundle\Form\EventListener\AddOwnerFieldListener;
+use AppBundle\Form\EventListener\DisableOwnerFieldSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -25,7 +25,7 @@ class BudgetType extends AbstractType
                 'class' => 'AppBundle:UserGroup',
                 'choices' => $user->getUserGroups(),
             ])
-            ->addEventSubscriber(new AddOwnerFieldListener())
+            ->addEventSubscriber(new DisableOwnerFieldSubscriber())
         ;
     }
 
