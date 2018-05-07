@@ -32,17 +32,30 @@ class DataFixture extends Fixture
         $this->createDefaultUserGroup();
         $this->createDefaultCategory($manager);
 
+        // Seed the mt_rand function for deterministic value
+        mt_srand(1000);
+
+        $accounts = [];
+        $budgets = [];
+
         for ($groupNum = 1; $groupNum <= 5; $groupNum++) {
 
             $userGroup = $this->createUserGroup($groupNum, $manager);
             $account = $this->createAccount($userGroup, $groupNum, $manager);
             $budget = $this->createBudget($userGroup, $groupNum, $manager);
-            // Seed the mt_rand function for deterministic value
-            mt_srand(1000);
 
-            for ($transactionNum = 1; $transactionNum <= 4000; $transactionNum++) {
-                $transaction = $this->createTransaction($account, $budget, $transactionNum, $manager);
-            }
+            array_push($accounts, $account);
+            array_push($budgets, $budget);
+
+        }
+
+        for ($transactionNum = 1; $transactionNum <= 10000; $transactionNum++) {
+            $transaction = $this->createTransaction(
+                $accounts[array_rand($accounts)],
+                $budgets[array_rand($budgets)],
+                $transactionNum,
+                $manager
+            );
         }
 
         $manager->persist($this->defaultUserGroup);
