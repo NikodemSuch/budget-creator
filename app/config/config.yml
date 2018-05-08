@@ -70,6 +70,12 @@ swiftmailer:
     password: '%mailer_password%'
     spool: { type: memory }
 
+knp_snappy:
+    temporary_folder: "%kernel.cache_dir%/snappy"
+    pdf:
+        enabled:  true
+        binary: '%path_to_wkhtmltopdf%'
+
 app:
     invitation_expiration_time: '%invitation_expiration_time%'
     notification_visibility_time: '%notification_visibility_time%'

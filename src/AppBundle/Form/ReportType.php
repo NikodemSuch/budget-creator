@@ -79,6 +79,10 @@ class ReportType extends AbstractType
                 'label' => 'Create new Report',
                 'attr' => ['class' => 'form-button btn btn-primary btn-lg btn-block'],
             ])
+            ->add('generatePdf', SubmitType::class, [
+                'label' => 'Generate Pdf File',
+                'attr' => ['class' => 'form-button btn btn-primary btn-lg btn-block'],
+            ])
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
                 $data = $event->getData();
                 $form = $event->getForm();
