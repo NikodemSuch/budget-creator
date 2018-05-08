@@ -89,8 +89,14 @@ class UserGroupController extends Controller
      * @Route("/{id}", name="user-group_show")
      * @IsGranted("view", subject="userGroup")
      */
-    public function showAction(UserInterface $user, UserGroup $userGroup)
+    public function showAction(UserInterface $user, UserGroup $userGroup = null)
     {
+        if ($userGroup == null) {
+            return $this->render('UserGroup/show.html.twig', [
+                'user_group_exists' => false,
+            ]);
+        }
+
         if ($userGroup->getOwner() == $user) {
 
             $invitations = $this->groupInvitationRepository->findBy([

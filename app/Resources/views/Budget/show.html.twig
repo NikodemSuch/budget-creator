@@ -7,44 +7,56 @@
       <div class="col-sm-6 col-sm-offset-3">
         <div class="page-section">
 
-          <h2>Budget Data</h2>
+          {% if budget_exists is defined and budget_exists == false %}
+            <div class="error-container">
+              <div class="alert alert-info" role="alert">
+                <p class="text-highlight">Budget no longer exists.</p>
+              </div>
+            </div>
+          {% else %}
 
-          <table class="table">
-            <tbody>
-              <tr>
-                <th>Id:</th>
-                <td>{{ budget.id }}</td>
-              </tr>
-              <tr>
-                <th>Name:</th>
-                <td>{{ budget.name }}</td>
-              </tr>
-              <tr>
-                <th>Balance:</th>
-                <td>{{ budget_balance|money }}</td>
-              </tr>
-              <tr>
-                <th>Currency:</th>
-                <td>{{ budget.currency }}</td>
-              </tr>
-              <tr>
-                <th>Owner</th>
-                <td>{{ budget.owner }}</td>
-              </tr>
-            </tbody>
-          </table>
+            <h2>Budget Data</h2>
 
-          {% include 'Default/flashes.html.twig' %}
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th>Id:</th>
+                  <td>{{ budget.id }}</td>
+                </tr>
+                <tr>
+                  <th>Name:</th>
+                  <td>{{ budget.name }}</td>
+                </tr>
+                <tr>
+                  <th>Balance:</th>
+                  <td>{{ budget_balance|money }}</td>
+                </tr>
+                <tr>
+                  <th>Currency:</th>
+                  <td>{{ budget.currency }}</td>
+                </tr>
+                <tr>
+                  <th>Owner</th>
+                  <td>{{ budget.owner }}</td>
+                </tr>
+              </tbody>
+            </table>
 
-          <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('budget_edit', { 'id': budget.id }) }}">Edit</a>
-          <a class="form-button btn btn-primary btn-lg btn-block delete-url" href="{{ path('budget_delete', { 'id': budget.id }) }}">Delete</a>
-          <a href="{{ path('budget_index') }}">Back to the list</a>
+            {% include 'Default/flashes.html.twig' %}
+
+            <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('budget_edit', { 'id': budget.id }) }}">Edit</a>
+            <a class="form-button btn btn-primary btn-lg btn-block delete-url" href="{{ path('budget_delete', { 'id': budget.id }) }}">Delete</a>
+            <a href="{{ path('budget_index') }}">Back to the list</a>
+
+          {% endif %}
 
         </div>
       </div>
     </div>
 
-    {% include 'Transaction/list.html.twig' %}
+    {% if budget_exists is not defined or budget_exists == true %}
+      {% include 'Transaction/list.html.twig' %}
+    {% endif %}
 
   </div>
 

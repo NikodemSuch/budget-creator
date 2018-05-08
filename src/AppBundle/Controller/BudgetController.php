@@ -92,10 +92,12 @@ class BudgetController extends Controller
      * @Route("/{id}", name="budget_show")
      * @IsGranted("view", subject="budget")
      */
-    public function showAction(Request $request, UserInterface $user, Budget $budget)
+    public function showAction(Request $request, UserInterface $user, Budget $budget = null)
     {
-        if ($budget->isArchived()) {
-            throw $this->createNotFoundException();
+        if ($budget->isArchived() || $budget == null) {
+            return $this->render('Budget/show.html.twig', [
+                'budget_exists' => false,
+            ]);
         }
 
         $page = $request->query->get('page') ?: 1;
@@ -135,7 +137,7 @@ class BudgetController extends Controller
             'owner' => $owner,
             'has_transactions' => $hasTransactions,
         ]);
-        
+
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
