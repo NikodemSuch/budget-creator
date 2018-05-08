@@ -68,6 +68,7 @@ class BudgetController extends Controller
         $form = $this->createForm(BudgetType::class, $budget, [
             'user' => $user,
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -134,7 +135,7 @@ class BudgetController extends Controller
             'owner' => $owner,
             'has_transactions' => $hasTransactions,
         ]);
-
+        
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
