@@ -103,8 +103,7 @@ class BudgetController extends Controller
         $page = $request->query->get('page') ?: 1;
         $resultsPerPage = $request->query->get('results') ?: 10;
 
-        $userGroups = $user->getUserGroups()->toArray();
-        $query = $this->transactionRepository->getByGroupsQuery($userGroups);
+        $query = $this->transactionRepository->getByBudgetQuery($budget);
         $adapter = new DoctrineORMAdapter($query);
 
         $pagerfanta = new Pagerfanta($adapter);
