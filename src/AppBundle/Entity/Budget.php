@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -35,12 +36,18 @@ class Budget implements Owned
     private $currency;
 
     /**
+     * @ORM\OneToMany(targetEntity="Transaction", mappedBy="budget", fetch="EXTRA_LAZY")
+     */
+    private $transactions;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $archived;
 
     public function __construct()
     {
+        $this->transactions = new ArrayCollection();
         $this->archived = false;
     }
 
@@ -77,6 +84,11 @@ class Budget implements Owned
     public function getCurrency(): ?string
     {
         return $this->currency;
+    }
+
+    public function getTransactions()
+    {
+        return $this->transactions;
     }
 
     public function setArchived(bool $archived)
