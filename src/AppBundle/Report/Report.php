@@ -3,6 +3,9 @@
 namespace AppBundle\Report;
 
 use AppBundle\Enum\ReportDetail;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class Report
 {
@@ -11,8 +14,18 @@ class Report
     private $startDate;
     private $endDate;
     private $detail;
-    private $budgets;
+    private $reportables;
     private $years;
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ($this->getStartDate() >= $this->getEndDate()) {
+            $context->buildViolation("This value is not valid.")->addViolation();
+        }
+    }
 
     public function __construct()
     {
@@ -40,7 +53,7 @@ class Report
         $this->createdOn = EntityHelper::SetCreatedOn($createdOn);
     }
 
-    public function getStartDate(): \DateTime
+    public function getStartDate(): ?\DateTime
     {
         return $this->startDate;
     }
@@ -50,7 +63,7 @@ class Report
         $this->startDate = $startDate;
     }
 
-     public function getEndDate(): \DateTime
+     public function getEndDate(): ?\DateTime
     {
         return $this->endDate;
     }
@@ -60,24 +73,24 @@ class Report
         $this->endDate = $endDate;
     }
 
-    public function getDetail(): ReportDetail
+    public function getDetail(): ?string
     {
         return $this->detail;
     }
 
-    public function setDetail(ReportDetail $detail)
+    public function setDetail(String $detail)
     {
         $this->detail = $detail;
     }
 
-    public function getBudgets(): array
+    public function getReportables(): ?ArrayCollection
     {
-        return $this->budgets;
+        return $this->reportables;
     }
 
-    public function setBudgets(array $budgets)
+    public function setReportables(ArrayCollection $reportables)
     {
-        $this->budgets = $budgets;
+        $this->reportables = $reportables;
     }
 
     public function getYears(): array

@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Account;
 use AppBundle\Entity\Budget;
+use AppBundle\Report\Report;
 use AppBundle\Enum\ReportDetail;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,49 +17,102 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-
 class ReportType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $reportType = $options['report_type'];
+        $accounts = $options['accounts'];
         $budgets = $options['budgets'];
+
         $now = new \DateTimeImmutable();
 
         $builder
             ->add('title', TextType::class)
-            ->add('details', ChoiceType::class, [
-                'choices' => [
-                    'Year' => ReportDetail::YEAR(),
-                    'Month' => ReportDetail::MONTH(),
-                    'Day' => ReportDetail::DAY(),
-                    'Show all transactions' => ReportDetail::TRANSACTION(),
-                ],
+            ->add('detail', ChoiceType::class, [
+                'choices' => array_combine(ReportDetail::toArray(), ReportDetail::toArray()),
                 'data' => ReportDetail::DAY(),
-
             ])
-            ->add('start', DateType::Class, [
-                'label' => 'Report start date:',
+            ->add('startDate', DateType::Class, [
+                // 'label' => 'Report start date:',
                 'label_attr' => ['class' => 'form-control-label'],
                 'data' => $now->sub(new \DateInterval('P1M')),
             ])
-            ->add('end', DateType::Class, [
-                'label' => 'Report end date:',
+            ->add('endDate', DateType::Class, [
+                // 'label' => 'Report end date:',
                 'label_attr' => ['class' => 'form-control-label'],
                 'data' => $now,
-            ])
-            ->add('budgets', EntityType::class, [
-                'label' => 'Include budgets:',
-                'label_attr' => ['class' => 'form-control-label'],
-                'class' => Budget::class,
-                'choices'  => $budgets,
-                'expanded' => true,
-                'multiple' => true,
-            ])
-            ->getForm();
+            ]);
+
+        if ($reportType == 'accounts') {
+
+            $builder
+                ->add('reportables', EntityType::class, [
+                    'label' => 'Include accounts:',
+                    'class' => Account::class,
+                    'choices'  => $accounts,
+                    // 'choice_attr' => function($val, $key, $index) {
+                    //     return ['class' => 'form-checkbox-label'];
+                    // },
+                    'expanded' => true,
+                    'multiple' => true,
+                ])
+                ->getForm();
+        }
+
+        elseif ($reportType == 'budgets') {
+
+            $builder
+                ->add('reportables', EntityType::class, [
+                    'label' => 'Include budgets:',
+                    'class' => Budget::class,
+                    'choices'  => $budgets,
+                    // 'choice_attr' => function($val, $key, $index) {
+                    //     return ['class' => 'form-checkbox-label'];
+                    // },
+                    'expanded' => true,
+                    'multiple' => true,
+                ])
+                ->getForm();
+        }
+
+        // ->add('reportables', ChoiceType::class, [
+        //     'choices' => [
+        //         'accounts' => true,
+        //         'budgets' => false,
+        //     ],
+        // ])
+        // ->add('accounts', EntityType::class, [
+        //     // 'label' => 'Include budgets:',
+        //     'class' => Account::class,
+        //     'choices'  => $accounts,
+        //     // 'choice_attr' => function($val, $key, $index) {
+        //     //     return ['class' => 'form-checkbox-label'];
+        //     // },
+        //     'expanded' => true,
+        //     'multiple' => true,
+        //     'mapped' => false,
+        // ])
+        // ->add('budgets', EntityType::class, [
+        //     // 'label' => 'Include budgets:',
+        //     'class' => Budget::class,
+        //     'choices'  => $budgets,
+        //     // 'choice_attr' => function($val, $key, $index) {
+        //     //     return ['class' => 'form-checkbox-label'];
+        //     // },
+        //     'expanded' => true,
+        //     'multiple' => true,
+        //     'mapped' => false,
+        // ])
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver->setDefined('accounts');
         $resolver->setDefined('budgets');
+        $resolver->setRequired('report_type');
+        $resolver->setDefaults([
+            'data_class' => Report::class,
+        ]);
     }
 }

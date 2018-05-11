@@ -49,9 +49,9 @@ class TransactionType extends AbstractType
         $resolver->setRequired('user');
         $resolver->setRequired('accounts');
         $resolver->setRequired('budgets');
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Transaction'
-        ));
+        $resolver->setDefaults([
+            'data_class' => Transaction::class,
+        ]);
     }
 
     public function getBlockPrefix()

@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AccountRepository")
  */
-class Account implements Owned
+class Account implements Owned, Reportable
 {
     /**
      * @ORM\Column(type="integer")

@@ -6,8 +6,8 @@ use MyCLabs\Enum\Enum;
 
 class ReportDetail extends Enum
 {
-    const YEAR          = 'YEAR';
-    const MONTH         = 'MONTH';
-    const DAY           = 'DAY';
-    const TRANSACTION   = 'TRANSACTIONS';
+    const YEAR          = 'Year';
+    const MONTH         = 'Month';
+    const DAY           = 'Day';
+    const TRANSACTION   = 'All transactions';
 }
