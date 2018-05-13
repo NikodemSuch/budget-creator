@@ -7,58 +7,48 @@
       <div class="col-sm-6 col-sm-offset-3">
         <div class="page-section">
 
-          {% if user_group_exists is defined and user_group_exists == false %}
-            <div class="error-container">
-              <div class="alert alert-info" role="alert">
-                <p class="text-highlight">User Group no longer exists.</p>
-              </div>
-            </div>
-          {% else %}
+          <h2>User Group Data</h2>
 
-            <h2>User Group Data</h2>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th>Id:</th>
+                <td>{{ user_group.id }}</td>
+              </tr>
+              <tr>
+                <th>Name:</th>
+                <td>{{ user_group.name }}</td>
+              </tr>
+              <tr>
+                <th>Group Owner:</th>
+                <td>{{ user_group.owner.username }}</td>
+              </tr>
 
-            <table class="table">
-              <tbody>
+              {% for member in user_group.users %}
                 <tr>
-                  <th>Id:</th>
-                  <td>{{ user_group.id }}</td>
+                  <th>Member {{ loop.index }}:</th>
+                  <td>{{ member.username }}</td>
                 </tr>
+              {% endfor %}
+
+              {% for invitation in invitations %}
                 <tr>
-                  <th>Name:</th>
-                  <td>{{ user_group.name }}</td>
+                  <th>Invitation sent to:</th>
+                  <td>{{ invitation.user }}</td>
                 </tr>
-                <tr>
-                  <th>Group Owner:</th>
-                  <td>{{ user_group.owner.username }}</td>
-                </tr>
+              {% endfor %}
 
-                {% for member in user_group.users %}
-                  <tr>
-                    <th>Member {{ loop.index }}:</th>
-                    <td>{{ member.username }}</td>
-                  </tr>
-                {% endfor %}
+            </tbody>
+          </table>
 
-                {% for invitation in invitations %}
-                  <tr>
-                    <th>Invitation sent to:</th>
-                    <td>{{ invitation.user }}</td>
-                  </tr>
-                {% endfor %}
+          {% include 'Default/flashes.html.twig' %}
 
-              </tbody>
-            </table>
-
-            {% include 'Default/flashes.html.twig' %}
-
-            {% if app.user.id == user_group.owner.id %}
-              <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('user-group_edit', { 'id': user_group.id }) }}">Edit</a>
-              <a class="form-button btn btn-primary btn-lg btn-block delete-url" href="{{ path('user-group_delete', { 'id': user_group.id }) }}">Delete</a>
-            {% endif %}
-
-            <a href="{{ path('user-group_index') }}">Back to the list</a>
-            
+          {% if app.user.id == user_group.owner.id %}
+            <a class="form-button btn btn-primary btn-lg btn-block" href="{{ path('user-group_edit', { 'id': user_group.id }) }}">Edit</a>
+            <a class="form-button btn btn-primary btn-lg btn-block delete-url" href="{{ path('user-group_delete', { 'id': user_group.id }) }}">Delete</a>
           {% endif %}
+
+          <a href="{{ path('user-group_index') }}">Back to the list</a>
 
         </div>
       </div>

@@ -89,12 +89,12 @@ class UserGroupController extends Controller
      * @Route("/{id}", name="user-group_show")
      * @IsGranted("view", subject="userGroup")
      */
-    public function showAction(UserInterface $user, UserGroup $userGroup = null)
+    public function showAction(UserInterface $user, ?UserGroup $userGroup)
     {
         if ($userGroup == null) {
-            return $this->render('UserGroup/show.html.twig', [
-                'user_group_exists' => false,
-            ]);
+            $this->addFlash('info', 'User Group no longer exists.');
+
+            return $this->redirectToRoute('homepage');
         }
 
         if ($userGroup->getOwner() == $user) {

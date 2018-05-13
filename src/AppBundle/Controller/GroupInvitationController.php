@@ -29,12 +29,12 @@ class GroupInvitationController extends Controller
     /**
      * @Route("/{id}", name="group-invitation_show")
      */
-    public function showAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation = null)
+    public function showAction(Request $request, UserInterface $user, ?GroupInvitation $groupInvitation)
     {
         if ($groupInvitation == null) {
-            return $this->render('UserGroup/invitation.html.twig', [
-                'invitation_exists' => false,
-            ]);
+            $this->addFlash('info', 'Invitation is no longer valid.');
+
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('UserGroup/invitation.html.twig', [
