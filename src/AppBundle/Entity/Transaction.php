@@ -90,6 +90,8 @@ class Transaction implements Owned
         if ($accountCurrency != $budgetCurrency) {
             $context->buildViolation("Currency of budget ($budgetCurrency) is not the same as currency of account ($accountCurrency).")
                 ->addViolation();
+
+            return;
         }
 
         $accountOwner = $this->getAccount()->getOwner();

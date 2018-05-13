@@ -16,7 +16,7 @@ class ReportHelper extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
-    public function getByReportableInDateRange(Reportable $reportable, $start,  $end)
+    public function getTransactionsInDateRange(Reportable $reportable, $start,  $end)
     {
         $qb = $this->createQueryBuilder('transaction');
         $qb->andWhere('transaction.createdOn > :start')
@@ -38,7 +38,7 @@ class ReportHelper extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getByReportableOnInterval(Reportable $reportable, $date)
+    public function getBalanceByReportableOnInterval(Reportable $reportable, $date)
     {
         $qb = $this->createQueryBuilder('transaction');
 

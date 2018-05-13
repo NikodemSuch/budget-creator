@@ -119,3 +119,35 @@ $(document).ready(function () {
     // END UserGroup dynamic form
 
 });
+
+// Report form
+
+$("#report_type").val('choose');
+
+$("#report_type").on('change', function () {
+
+    if ($(this).val() == 'accounts') {
+
+        $('.report-budgets-container').hide();
+        $('.report-accounts-container').slideDown(300);
+        $('.report-budgets-container :checkbox').prop("disabled", true);
+        $('.report-accounts-container :checkbox').prop("disabled", false);
+
+    } else if ($(this).val() == 'budgets') {
+
+        $('.report-budgets-container').slideDown(300);
+        $('.report-accounts-container').hide();
+        $('.report-budgets-container :checkbox').prop("disabled", false);
+        $('.report-accounts-container :checkbox').prop("disabled", true);
+
+    } else {
+
+        $('.report-budgets-container').hide(300);
+        $('.report-accounts-container').hide(300);
+        $('.report-budgets-container :checkbox').prop("disabled", true);
+        $('.report-accounts-container :checkbox').prop("disabled", true);
+    }
+
+});
+
+// END Report form

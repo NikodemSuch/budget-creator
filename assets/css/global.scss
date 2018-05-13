@@ -7,6 +7,10 @@ body {
   margin-bottom: 5px;
 }
 
+.alert .badge, .form-control-label .badge {
+  display: none;
+}
+
 // NAVBAR
 
 .navbar-toggle {
@@ -322,6 +326,11 @@ body {
 .pagerfanta {
   display: flex;
   justify-content: center;
+}
+
+.reportables {
+  display: none;
+  padding: 12px 12px 0 12px;
 }
 
 @media (max-width: 768px) {

@@ -10,29 +10,11 @@
           <h2 class="form-title">Report creation</h2>
         </div>
 
+         {% include 'Default/flashes.html.twig' %}
+
         {{ form_start(form) }}
-
-          {{ form_errors(form) }}
-
-          {% include 'Default/flashes.html.twig' %}
-
-          {# {{ form_label(form.title) }}
-          {{ form_widget(form.title) }}
-
-          {{ form_label(form.details) }}
-          {{ form_widget(form.details) }}
-
-          {{ form_label(form.start) }}
-          {{ form_widget(form.start) }}
-
-          {{ form_label(form.end) }}
           {{ form_widget(form) }}
-
-          {{ form_label(form.reportables, null, {'label_attr': {'class': 'form-control-label'}}) }}
-          {{ form_widget(form.reportables) }} #}
-
-          {{ form_widget(form) }}
-
+          
           <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Create New</button>
         {{ form_end(form) }}
 

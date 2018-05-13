@@ -33,23 +33,24 @@ class ReportManager
 
             $delta = new Delta();
             $delta->setTitle("Balance for $reportable for " . $interval->getTitle());
-            $delta->setInitialAmount($this->reportHelper->getByReportableOnInterval($reportable, $currentDateImmutable));
+            $delta->setCurrency($reportable->getCurrency());
+            $delta->setInitialAmount($this->reportHelper->getBalanceByReportableOnInterval($reportable, $currentDateImmutable));
 
             if ($interval instanceof Year) {
 
-                $delta->setFinalAmount($this->reportHelper->getByReportableOnInterval($reportable,
+                $delta->setFinalAmount($this->reportHelper->getBalanceByReportableOnInterval($reportable,
                     $currentDateImmutable->modify('1st January Next Year') > $this->reportEndDate ? $currentDateImmutable->modify('1st January Next Year') : $this->reportEndDate
                 ));
 
             } elseif ($interval instanceof Month) {
 
-                $delta->setFinalAmount($this->reportHelper->getByReportableOnInterval($reportable,
+                $delta->setFinalAmount($this->reportHelper->getBalanceByReportableOnInterval($reportable,
                     $currentDateImmutable->modify('first day of next month') > $this->reportEndDate ? $currentDateImmutable->modify('first day of next month') : $this->reportEndDate
                 ));
 
             } elseif ($interval instanceof Day) {
 
-                $delta->setFinalAmount($this->reportHelper->getByReportableOnInterval($reportable, $currentDateImmutable->modify('+1 day')));
+                $delta->setFinalAmount($this->reportHelper->getBalanceByReportableOnInterval($reportable, $currentDateImmutable->modify('+1 day')));
             }
 
             $interval->addDelta($delta);
@@ -64,8 +65,8 @@ class ReportManager
 
             $deltas = [];
 
-            $initialAmount = $this->reportHelper->getByReportableOnInterval($reportable, $currentDateImmutable);
-            $transactions = $this->reportHelper->getByReportableInDateRange(
+            $initialAmount = $this->reportHelper->getBalanceByReportableOnInterval($reportable, $currentDateImmutable);
+            $transactions = $this->reportHelper->getTransactionsInDateRange(
                 $reportable, $currentDateImmutable, $currentDateImmutable->modify('+1 day')
             );
 
@@ -74,6 +75,7 @@ class ReportManager
                 $finalAmount = $initialAmount + $transaction->getAmount();
                 $delta = new Delta();
                 $delta->setTitle("Balance for transaction " . $transaction->getTitle());
+                $delta->setCurrency($reportable->getCurrency());
                 $delta->setInitialAmount($initialAmount);
                 $delta->setFinalAmount($finalAmount);
                 $initialAmount = $finalAmount;

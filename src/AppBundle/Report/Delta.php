@@ -7,13 +7,7 @@ class Delta
     private $title;
     private $initialAmount;
     private $finalAmount;
-
-    public function __construct($title = null, $initialAmount = null, $finalAmount = null)
-    {
-        $this->title = $title;
-        $this->initialAmount = $initialAmount;
-        $this->finalAmount = $finalAmount;
-    }
+    private $currency;
 
     public function getTitle(): ?string
     {
@@ -25,23 +19,33 @@ class Delta
         $this->title = $title;
     }
 
-    public function getInitialAmount(): string
+    public function getInitialAmount(): ?string
     {
         return $this->initialAmount;
     }
 
-    public function setInitialAmount(string $initialAmount)
+    public function setInitialAmount(?string $initialAmount)
     {
         $this->initialAmount = $initialAmount;
     }
 
-    public function getFinalAmount(): string
+    public function getFinalAmount(): ?string
     {
         return $this->finalAmount;
     }
 
-    public function setFinalAmount(string $finalAmount)
+    public function setFinalAmount(?string $finalAmount)
     {
         $this->finalAmount = $finalAmount;
+    }
+
+    public function setCurrency(string $currency)
+    {
+        $this->currency = $currency;
+    }
+
+    public function getCurrency(): ?string
+    {
+        return $this->currency;
     }
 }
