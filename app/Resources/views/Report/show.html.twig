@@ -4,12 +4,99 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-sm-6 col-sm-offset-3">
+      <div class="col-sm-8 col-sm-offset-2">
         <div class="page-section">
 
-          {{ dump(report) }}
-
           {% include 'Default/flashes.html.twig' %}
+
+
+          <table class="table">
+            <tbody>
+              <tr>
+                <th>Title</th>
+                <td>{{ report.title }}</td>
+              </tr>
+              <tr>
+                <th>Created On</th>
+                <td>{{ report.createdOn|localizeddate }}</td>
+              </tr>
+              <tr>
+                <th>Start Date</th>
+                <td>{{ report.startDate|localizeddate }}</td>
+              </tr>
+              <tr>
+                <th>End Date</th>
+                <td>{{ report.endDate|localizeddate }}</td>
+              </tr>
+              <tr>
+                <th>Detail</th>
+                <td>{{ report.detail }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          {% for year in report.years %}
+
+            <ul class="report-interval-header">
+              <li class="report-interval-title">{{ year.title }}<li>
+              <li><button class="btn btn-default report-show" data-interval-container="#{{ year.title|replace({' ' : '-'}) }}">Show months</button></li>
+            </ul>
+
+            {% for delta in year.deltas %}
+              {% include 'Report/delta.html.twig' %}
+            {% endfor %}
+
+            <div class="report-interval-container" id="{{ year.title|replace({' ' : '-'}) }}">
+
+              {% for month in year.months %}
+
+                <ul class="report-interval-header">
+                  <li class="report-interval-title">{{ month.title }}<li>
+                  <li><button class="btn btn-default report-show" data-interval-container="#{{ month.title|replace({' ' : '-'}) }}">Show days</button></li>
+                </ul>
+
+                {% for delta in month.deltas %}
+                  {% include 'Report/delta.html.twig' %}
+                {% endfor %}
+
+                <div class="report-interval-container" id="{{ month.title|replace({' ' : '-'}) }}">
+
+                  {% for day in month.days %}
+
+                    <ul class="report-interval-header">
+                      <li class="report-interval-title">{{ day.title }}<li>
+                      <li><button class="btn btn-default report-show" data-interval-container="#{{ day.title|replace({' ' : '-'}) }}">Show transactions</button></li>
+                    </ul>
+
+                    {% for delta in day.deltas %}
+                      {% include 'Report/delta.html.twig' %}
+                    {% endfor %}
+
+                    <div class="report-interval-container" id="{{ day.title|replace({' ' : '-'}) }}">
+
+                      {% for reportable, deltas in day.transactions if deltas is not empty %}
+
+                        <ul class="report-interval-header">
+                          <li class="report-interval-title">{{ reportable }}<li>
+                        </ul>
+
+                        {% for delta in deltas %}
+                          {% include 'Report/delta.html.twig' %}
+                        {% endfor %}
+
+                      {% endfor %}
+
+                    </div>
+
+                  {% endfor %}
+
+                </div>
+
+              {% endfor %}
+
+            </div>
+
+          {% endfor %}
 
         </div>
       </div>

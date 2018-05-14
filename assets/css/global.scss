@@ -252,17 +252,21 @@ body {
 
 // FORMS
 
+.form-group {
+  margin: 0;
+}
+
+form .form-group:first-of-type {
+  margin-top: 15px;
+}
+
 .form-container {
   min-height: 800px;
   padding: 50px;
 }
 
 .form-header {
-  margin-bottom: 15px;
-}
-
-.form-group {
-  margin: 0;
+  margin-bottom: 25px;
 }
 
 .form-button {
@@ -328,10 +332,53 @@ body {
   justify-content: center;
 }
 
+// Report
+
 .reportables {
   display: none;
   padding: 12px 12px 0 12px;
 }
+
+.report-interval-header {
+  display: flex;
+  list-style: none;
+  justify-content: space-around;
+  align-items: center;
+  padding-right: 25px;
+  margin: 20px 0 0 0;
+}
+
+.report-interval-title {
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.report-interval-container {
+  padding: 10px 0 0 50px;
+}
+
+.report-delta {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.delta-row {
+  display: flex;
+  border-top: 1px solid lightgrey;
+  padding: 3px 0 3px 10px;
+}
+
+.delta-title {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.delta-row-title {
+  font-weight: bold;
+  width: 150px;
+}
+
+// END Report
 
 @media (max-width: 768px) {
 

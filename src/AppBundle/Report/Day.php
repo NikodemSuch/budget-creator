@@ -27,12 +27,12 @@ class Day
 
     public function getDeltas(): array
     {
-        return $this->title;
+        return $this->deltas;
     }
 
     public function setDeltas(array $title)
     {
-        $this->title = $title;
+        $this->deltas = $deltas;
     }
 
     public function addDelta(Delta $delta)

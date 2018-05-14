@@ -96,7 +96,8 @@ class ReportManager
         $this->reportDetail = $report->getDetail();
         $this->reportables = $report->getReportables()->toArray();
 
-        $currentDate = $this->reportStartDate;
+        $currentDate = new \DateTime();
+        $currentDate->setTimestamp($this->reportStartDate->getTimestamp());
         $yearsUntilEnd = $currentDate->diff($this->reportEndDate)->y;
 
         for ($y = 0; $y <= $yearsUntilEnd ; $y++) {

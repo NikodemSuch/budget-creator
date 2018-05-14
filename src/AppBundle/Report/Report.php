@@ -3,6 +3,7 @@
 namespace AppBundle\Report;
 
 use AppBundle\Enum\ReportDetail;
+use AppBundle\Utils\EntityHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -29,7 +30,6 @@ class Report
 
     public function __construct()
     {
-        $this->createdOn = new \DateTimeImmutable();
         $this->years = [];
     }
 
@@ -43,7 +43,7 @@ class Report
         $this->title = $title;
     }
 
-    public function getCreatedOn(): \DateTimeImmutable
+    public function getCreatedOn(): ?\DateTimeImmutable
     {
         return $this->createdOn;
     }
@@ -53,24 +53,24 @@ class Report
         $this->createdOn = EntityHelper::SetCreatedOn($createdOn);
     }
 
-    public function getStartDate(): ?\DateTime
+    public function getStartDate(): ?\DateTimeImmutable
     {
         return $this->startDate;
     }
 
     public function setStartDate(\DateTime $startDate)
     {
-        $this->startDate = $startDate;
+        $this->startDate = EntityHelper::SetCreatedOn($startDate);
     }
 
-     public function getEndDate(): ?\DateTime
+     public function getEndDate(): ?\DateTimeImmutable
     {
         return $this->endDate;
     }
 
     public function setEndDate(\DateTime $endDate)
     {
-        $this->endDate = $endDate;
+        $this->endDate = EntityHelper::SetCreatedOn($endDate);
     }
 
     public function getDetail(): ?string

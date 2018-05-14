@@ -123,6 +123,7 @@ $(document).ready(function () {
 // Report form
 
 $("#report_type").val('choose');
+$('#report_reportables').hide();
 
 $("#report_type").on('change', function () {
 
@@ -151,3 +152,17 @@ $("#report_type").on('change', function () {
 });
 
 // END Report form
+
+// Report view
+
+$(".report-interval-container").hide();
+
+$(document).ready(function () {
+
+    $(".report-show").click(function () {
+        $($(this).attr('data-interval-container')).toggle(300);
+    });
+
+});
+
+// END Report view

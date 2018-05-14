@@ -27,12 +27,12 @@ class Month
 
     public function getDeltas(): array
     {
-        return $this->title;
+        return $this->deltas;
     }
 
-    public function setDeltas(array $title)
+    public function setDeltas(array $deltas)
     {
-        $this->title = $title;
+        $this->deltas = $deltas;
     }
 
     public function addDelta(Delta $delta)

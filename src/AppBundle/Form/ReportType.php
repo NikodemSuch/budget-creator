@@ -80,6 +80,7 @@ class ReportType extends AbstractType
 
                     $data['reportables'] = $data['accounts'];
                     $form->add('reportables', EntityType::class, [
+                        'label' => false,
                         'class' => Account::class,
                         'multiple' => true,
                     ]);
@@ -88,6 +89,7 @@ class ReportType extends AbstractType
 
                     $data['reportables'] = $data['budgets'];
                     $form->add('reportables', EntityType::class, [
+                        'label' => false,
                         'class' => Budget::class,
                         'multiple' => true,
                     ]);
