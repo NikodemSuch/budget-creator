@@ -256,7 +256,7 @@ body {
   margin: 0;
 }
 
-form .form-group:first-of-type {
+form div.form-group:first-of-type {
   margin-top: 15px;
 }
 
@@ -339,22 +339,40 @@ form .form-group:first-of-type {
   padding: 12px 12px 0 12px;
 }
 
-.report-interval-header {
-  display: flex;
+.report-header {
   list-style: none;
-  justify-content: space-around;
-  align-items: center;
-  padding-right: 25px;
-  margin: 20px 0 0 0;
+  padding: 8px 15%;
+  background-color: #f1f1f1;
+  border: 2px solid #eaeaea;
+  color: #555;
 }
 
-.report-interval-title {
-  font-weight: bold;
+.report-header li {
+  display: inline-block;
+}
+
+.report-button {
+  float: right;
+}
+
+.main-header {
+  background-color: #555;
+  color: #f1f1f1;
+}
+
+.report-title {
+  text-align: center;
+  font-family: Impact, Charcoal, sans-serif;
   font-size: 24px;
+  letter-spacing: 2px;
 }
 
-.report-interval-container {
-  padding: 10px 0 0 50px;
+.report-intervals-container {
+  padding-left: 50px;
+}
+
+.report-interval {
+  padding: 20px 10px;
 }
 
 .report-delta {
@@ -363,9 +381,12 @@ form .form-group:first-of-type {
 }
 
 .delta-row {
-  display: flex;
   border-top: 1px solid lightgrey;
   padding: 3px 0 3px 10px;
+}
+
+.delta-row span {
+  display: inline-block;
 }
 
 .delta-title {

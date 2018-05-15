@@ -24,7 +24,7 @@ class Report
     public function validate(ExecutionContextInterface $context, $payload)
     {
         if ($this->getStartDate() >= $this->getEndDate()) {
-            $context->buildViolation("This value is not valid.")->addViolation();
+            $context->buildViolation("Start date must be earlier than the end date.")->addViolation();
         }
     }
 

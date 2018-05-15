@@ -98,7 +98,7 @@ class ReportManager
 
         $currentDate = new \DateTime();
         $currentDate->setTimestamp($this->reportStartDate->getTimestamp());
-        $yearsUntilEnd = $currentDate->diff($this->reportEndDate)->y;
+        $yearsUntilEnd = ($this->reportStartDate->diff($this->reportEndDate)->y)+1;
 
         for ($y = 0; $y <= $yearsUntilEnd ; $y++) {
 
@@ -145,7 +145,7 @@ class ReportManager
                     }
 
                     $currentDateImmutable = \DateTimeImmutable::createFromMutable($currentDate);
-                    $day = new Day($currentDate->format('Y-m-d'));
+                    $day = new Day($currentDate->format('d M Y'));
                     $day = $this->addDeltasToInterval($day, $currentDateImmutable);
 
                     if ($report->getDetail() == ReportDetail::TRANSACTION()) {

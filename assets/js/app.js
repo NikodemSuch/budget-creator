@@ -155,7 +155,7 @@ $("#report_type").on('change', function () {
 
 // Report view
 
-$(".report-interval-container").hide();
+$(".report-intervals-container").hide();
 
 $(document).ready(function () {
 
