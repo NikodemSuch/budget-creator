@@ -2,56 +2,15 @@
 
 namespace AppBundle\Report;
 
-class Day
+class Day extends AbstractInterval
 {
-    private $title;
-    private $deltas;
-    private $transactions;
-
-    public function __construct($title = null)
+    public function __construct($name = null)
     {
-        $this->title = $title;
-        $this->deltas = [];
-        $this->transactions = [];
+        parent::__construct($name);
     }
 
-    public function getTitle(): ?string
+    public function addInterval(array $deltas, $target)
     {
-        return $this->title;
-    }
-
-    public function setTitle(string $title)
-    {
-        $this->title = $title;
-    }
-
-    public function getDeltas(): array
-    {
-        return $this->deltas;
-    }
-
-    public function setDeltas(array $title)
-    {
-        $this->deltas = $deltas;
-    }
-
-    public function addDelta(Delta $delta)
-    {
-        array_push($this->deltas, $delta);
-    }
-
-    public function getTransactions(): array
-    {
-        return $this->transactions;
-    }
-
-    public function setTransactions(array $transactions)
-    {
-        $this->transactions = $transactions;
-    }
-
-    public function addTransactions(array $deltas, $target)
-    {
-        $this->transactions[$target->getName()] = $deltas;
+        $this->intervals[$target->getName()] = $deltas;
     }
 }

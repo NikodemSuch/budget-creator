@@ -16,7 +16,7 @@ class Report
     private $endDate;
     private $detail;
     private $reportables;
-    private $years;
+    private $intervals;
 
     /**
      * @Assert\Callback
@@ -30,7 +30,7 @@ class Report
 
     public function __construct()
     {
-        $this->years = [];
+        $this->intervals = [];
     }
 
     public function getTitle(): ?string
@@ -93,18 +93,18 @@ class Report
         $this->reportables = $reportables;
     }
 
-    public function getYears(): array
+    public function getIntervals(): array
     {
-        return $this->years;
+        return $this->intervals;
     }
 
-    public function setYears(array $years)
+    public function setIntervals(array $intervals)
     {
-        $this->years = $years;
+        $this->intervals = $intervals;
     }
 
-    public function addYear(Year $year)
+    public function addInterval(Year $interval)
     {
-        array_push($this->years, $year);
+        array_push($this->intervals, $interval);
     }
 }

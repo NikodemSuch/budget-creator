@@ -29,65 +29,69 @@
     </tbody>
   </table>
 
-  {% for year in report.years %}
+  {% set const_day = constant('AppBundle\\Enum\\ReportDetail::DAY') %}
+  {% set const_month = constant('AppBundle\\Enum\\ReportDetail::MONTH') %}
+  {% set const_transaction = constant('AppBundle\\Enum\\ReportDetail::TRANSACTION') %}
+
+  {% for year in report.intervals %}
 
     <div class="report-year report-interval">
       <ul class="report-header">
-        <li class="report-title">{{ year.title }}<li>
-        {% if report.detail in ["All transactions", "Month", "Day"] %}
-          <li class="report-button"><button class="btn btn-default report-show" data-interval-container="#{{ year.title|replace({' ' : '-'}) }}">Show months</button></li>
+        <li class="report-title">{{ year.name }}<li>
+        {% if report.detail in [const_transaction, const_day, const_month] %}
+          <li class="report-button"><button class="btn btn-default report-show" data-interval-container="#{{ year.slug }}">Show months</button></li>
         {% endif %}
       </ul>
 
       {% for delta in year.deltas %}
-        {% include 'Report/delta.html.twig' %}
+        {% include 'Report/delta.html.twig' with {'delta': delta} only %}
       {% endfor %}
     </div>
 
-    <div class="report-intervals-container" id="{{ year.title|replace({' ' : '-'}) }}">
+    <div class="report-intervals-container" id="{{ year.slug }}">
 
-      {% for month in year.months %}
+      {% for month in year.intervals %}
 
         <div class="report-month report-interval">
           <ul class="report-header">
-            <li class="report-title">{{ month.title }}<li>
-            {% if report.detail in ["All transactions", "Day"] %}
-              <li class="report-button"><button class="btn btn-default report-show" data-interval-container="#{{ month.title|replace({' ' : '-'}) }}">Show days</button></li>
+            <li class="report-title">{{ month.name }}<li>
+            {% if report.detail in [const_transaction, const_day] %}
+              <li class="report-button"><button class="btn btn-default report-show" data-interval-container="#{{ month.slug }}">Show days</button></li>
             {% endif %}
           </ul>
 
           {% for delta in month.deltas %}
-            {% include 'Report/delta.html.twig' %}
+            {% include 'Report/delta.html.twig' with {'delta': delta} only %}
           {% endfor %}
         </div>
 
-        <div class="report-intervals-container" id="{{ month.title|replace({' ' : '-'}) }}">
+        <div class="report-intervals-container" id="{{ month.slug }}">
 
-          {% for day in month.days %}
+          {% for day in month.intervals %}
 
             <div class="report-day report-interval">
               <ul class="report-header">
-                <li class="report-title">{{ day.title }}<li>
-                {% if report.detail == "All transactions" and day.transactions is not empty %}
-                  <li class="report-button"><button class="btn btn-default report-show" data-interval-container="#{{ day.title|replace({' ' : '-'}) }}">Show transactions</button></li>
+                <li class="report-title">{{ day.name }}<li>
+                {% if report.detail == const_transaction and day.intervals is not empty %}
+                  <li class="report-button"><button class="btn btn-default report-show" data-interval-container="#{{ day.slug }}">Show transactions</button></li>
                 {% endif %}
               </ul>
 
               {% for delta in day.deltas %}
-                {% include 'Report/delta.html.twig' %}
+                {% include 'Report/delta.html.twig' with {'delta': delta} only %}
               {% endfor %}
             </div>
 
-            <div class="report-intervals-container" id="{{ day.title|replace({' ' : '-'}) }}">
+            <div class="report-intervals-container" id="{{ day.slug }}">
 
               {% set day_has_transactions = false %}
 
-              {% for deltas in day.transactions if deltas is not empty %}
+              {% for deltas in day.intervals if deltas is not empty %}
                 {% set day_has_transactions = true %}
               {% endfor %}
 
               {% if day_has_transactions %}
-                {% for reportable, deltas in day.transactions if deltas is not empty %}
+                {% for reportable, deltas in day.intervals if deltas is not empty %}
 
                   <div class="report-transaction report-interval">
                     <ul class="report-header">
@@ -95,7 +99,7 @@
                     </ul>
 
                     {% for delta in deltas %}
-                      {% include 'Report/delta.html.twig' %}
+                      {% include 'Report/delta.html.twig' with {'delta': delta} only %}
                     {% endfor %}
                   </div>
 
@@ -107,7 +111,7 @@
                 </div>
               {% endif %}
             </div>
-            
+
           {% endfor %} {# Day loop end #}
         </div>
       {% endfor %} {# Month loop end #}

@@ -7,7 +7,7 @@ body {
   margin-bottom: 5px;
 }
 
-.alert .badge, .form-control-label .badge {
+.alert .badge {
   display: none;
 }
 
@@ -256,17 +256,13 @@ body {
   margin: 0;
 }
 
-form div.form-group:first-of-type {
-  margin-top: 15px;
-}
-
 .form-container {
   min-height: 800px;
   padding: 50px;
 }
 
 .form-header {
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 .form-button {
@@ -283,6 +279,14 @@ form div.form-group:first-of-type {
   margin: 10px 0 5px;
   font-size: 20px;
   font-weight: bold;
+}
+
+form .alert {
+  display: block;
+}
+
+.form-control-label .badge {
+  display: none;
 }
 
 #user-fields-list {

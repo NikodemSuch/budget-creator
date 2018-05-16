@@ -14,6 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
@@ -72,6 +73,10 @@ class ReportType extends AbstractType
                 'disabled' => true,
                 'mapped' => false,
             ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Create new Report',
+                'attr' => ['class' => 'form-button btn btn-primary btn-lg btn-block'],
+            ])
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
                 $data = $event->getData();
                 $form = $event->getForm();
@@ -96,7 +101,8 @@ class ReportType extends AbstractType
                 }
 
                 $event->setData($data);
-            });
+            })
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -11,11 +11,8 @@
         </div>
 
         {{ form_start(edit_form) }}
-
-          {% include 'Default/flashes.html.twig' %}
-
-          {{ form_widget(edit_form) }}
-          <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Save changes</button>
+        {{ form_widget(edit_form) }}
+        <button class="form-button btn btn-primary btn-lg btn-block" type="submit">Save changes</button>
         {{ form_end(edit_form) }}
 
         <div class="form-footer">

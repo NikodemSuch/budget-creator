@@ -2,56 +2,15 @@
 
 namespace AppBundle\Report;
 
-class Month
+class Month extends AbstractInterval
 {
-    private $title;
-    private $deltas;
-    private $days;
-
-    public function __construct($title = null)
+    public function __construct($name = null)
     {
-        $this->title = $title;
-        $this->deltas = [];
-        $this->days = [];
+        parent::__construct($name);
     }
 
-    public function getTitle(): ?string
+    public function addInterval(Day $interval)
     {
-        return $this->title;
-    }
-
-    public function setTitle(string $title)
-    {
-        $this->title = $title;
-    }
-
-    public function getDeltas(): array
-    {
-        return $this->deltas;
-    }
-
-    public function setDeltas(array $deltas)
-    {
-        $this->deltas = $deltas;
-    }
-
-    public function addDelta(Delta $delta)
-    {
-        array_push($this->deltas, $delta);
-    }
-
-    public function getDays(): array
-    {
-        return $this->days;
-    }
-
-    public function setDays(array $days)
-    {
-        $this->days = $days;
-    }
-
-    public function addDay(Day $day)
-    {
-        array_push($this->days, $day);
+        array_push($this->intervals, $interval);
     }
 }

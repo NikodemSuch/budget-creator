@@ -38,7 +38,7 @@ class ReportHelper extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getBalanceByReportableOnInterval(Reportable $reportable, $date)
+    public function getBalanceOnInterval(Reportable $reportable, $date)
     {
         $qb = $this->createQueryBuilder('transaction');
 

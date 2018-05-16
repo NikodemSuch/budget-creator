@@ -54,13 +54,8 @@ class ReportController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            foreach ($report->getReportables()->toArray() as $reportable) {
-
-                if (!in_array($reportable->getOwner(), $userGroups)) {
-                    throw new BadRequestHttpException();
-                }
-            }
-            $report = $this->reportManager->createReport($report);
+            $this->denyAccessUnlessGranted('create', $report);
+            $report = $this->reportManager->createReport($report, $request->getLocale());
 
             return $this->render('Report/show.html.twig', [
                 'report' => $report,
