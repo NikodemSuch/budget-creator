@@ -11,10 +11,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_ADMIN")
@@ -41,18 +42,16 @@ class CategoryController extends Controller
 
     /**
      * @Route("/", name="category_index")
+     * @Template("Category/index.html.twig")
      */
     public function indexAction()
     {
-        $categories = $this->categoryRepository->findAll();
-
-        return $this->render('Category/index.html.twig', [
-            'categories' => $categories,
-        ]);
+        return ['categories' => $this->categoryRepository->findAll()];
     }
 
     /**
      * @Route("/new", name="category_new")
+     * @Template("Category/new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -70,33 +69,33 @@ class CategoryController extends Controller
             $this->em->persist($category);
             $this->em->flush();
 
-            return $this->redirectToRoute('category_show', [
-                'id' => $category->getId()
-            ]);
+            return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
         }
 
-        return $this->render('Category/new.html.twig', [
+        return [
             'category' => $category,
             'form' => $form->createView(),
-        ]);
+        ];
     }
 
     /**
      * @Route("/{id}", name="category_show")
+     * @Template("Category/show.html.twig")
      */
     public function showAction(Category $category)
     {
         $transactionsCount = $this->transactionRepository->getCountByCategory($category);
         $displayDeleteButton = $transactionsCount == 0;
 
-        return $this->render('Category/show.html.twig', [
+        return [
             'category' => $category,
             'display_delete_button' => $displayDeleteButton,
-        ]);
+        ];
     }
 
     /**
      * @Route("/{id}/edit", name="category_edit")
+     * @Template("Category/edit.html.twig")
      */
     public function editAction(Request $request, Category $category)
     {
@@ -106,15 +105,13 @@ class CategoryController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('category_show', [
-                'id' => $category->getId()
-            ]);
+            return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
         }
 
-        return $this->render('Category/edit.html.twig', [
+        return [
             'category' => $category,
             'edit_form' => $editForm->createView(),
-        ]);
+        ];
     }
 
     /**

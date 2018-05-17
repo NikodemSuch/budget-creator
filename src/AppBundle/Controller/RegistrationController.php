@@ -7,9 +7,10 @@ use AppBundle\Entity\User;
 use AppBundle\Service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends Controller
 {
@@ -22,6 +23,7 @@ class RegistrationController extends Controller
 
     /**
      * @Route("/register", name="user_registration")
+     * @Template("User/register.html.twig")
      */
     public function registerAction(Request $request)
     {
@@ -36,18 +38,12 @@ class RegistrationController extends Controller
             } catch (UniqueConstraintViolationException $e) {
                 $this->addFlash('danger', 'Username already taken.');
 
-                return $this->render(
-                    'User/register.html.twig',
-                    ['form' => $form->createView()]
-                );
+                return ['form' => $form->createView()];
             }
 
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render(
-            'User/register.html.twig',
-            ['form' => $form->createView()]
-        );
+        return ['form' => $form->createView()];
     }
 }

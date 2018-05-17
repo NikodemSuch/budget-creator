@@ -10,9 +10,10 @@ use AppBundle\Repository\GroupInvitationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -40,19 +41,17 @@ class UserGroupController extends Controller
     /**
      * @param User $user
      * @Route("/", name="user-group_index")
+     * @Template("UserGroup/index.html.twig")
      */
     public function indexAction(UserInterface $user)
     {
-        $userGroups = $user->getUserGroups();
-
-        return $this->render('UserGroup/index.html.twig', [
-            'user_groups' => $userGroups,
-        ]);
+        return ['user_groups' => $user->getUserGroups()];
     }
 
     /**
      * @param User $user
      * @Route("/new", name="user-group_new")
+     * @Template("UserGroup/new.html.twig")
      */
     public function newAction(Request $request, UserInterface $user)
     {
@@ -73,21 +72,20 @@ class UserGroupController extends Controller
             $this->em->persist($userGroup);
             $this->em->flush();
 
-            return $this->redirectToRoute('user-group_show', [
-                'id' => $userGroup->getId()
-            ]);
+            return $this->redirectToRoute('user-group_show', ['id' => $userGroup->getId()]);
         }
 
-        return $this->render('UserGroup/new.html.twig', [
+        return [
             'user_group' => $userGroup,
             'form' => $form->createView(),
-        ]);
+        ];
     }
 
     /**
      * @param User $user
      * @Route("/{id}", name="user-group_show")
      * @IsGranted("view", subject="userGroup")
+     * @Template("UserGroup/show.html.twig")
      */
     public function showAction(UserInterface $user, ?UserGroup $userGroup)
     {
@@ -105,20 +103,17 @@ class UserGroupController extends Controller
             ]);
         }
 
-        else {
-            $invitations = [];
-        }
-
-        return $this->render('UserGroup/show.html.twig', [
+        return [
             'user_group' => $userGroup,
-            'invitations' => $invitations,
-        ]);
+            'invitations' => $invitations ?? [],
+        ];
     }
 
     /**
      * @param User $user
      * @Route("/{id}/edit", name="user-group_edit")
      * @IsGranted("edit", subject="userGroup")
+     * @Template("UserGroup/edit.html.twig")
      */
     public function editAction(Request $request, UserGroup $userGroup, UserInterface $user)
     {
@@ -143,15 +138,13 @@ class UserGroupController extends Controller
             $this->em->persist($userGroup);
             $this->em->flush();
 
-            return $this->redirectToRoute('user-group_show', [
-                'id' => $userGroup->getId()
-            ]);
+            return $this->redirectToRoute('user-group_show', ['id' => $userGroup->getId()]);
         }
 
-        return $this->render('UserGroup/edit.html.twig', [
+        return [
             'user_group' => $userGroup,
             'edit_form' => $editForm->createView(),
-        ]);
+        ];
     }
 
     /**

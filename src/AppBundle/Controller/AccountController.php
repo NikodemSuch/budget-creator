@@ -13,10 +13,11 @@ use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -28,7 +29,10 @@ class AccountController extends Controller
     private $accountRepository;
     private $transactionRepository;
 
-    public function __construct(EntityManagerInterface $em, AccountRepository $accountRepository, TransactionRepository $transactionRepository)
+    public function __construct(
+        EntityManagerInterface $em,
+        AccountRepository $accountRepository,
+        TransactionRepository $transactionRepository)
     {
         $this->em = $em;
         $this->accountRepository = $accountRepository;
@@ -38,6 +42,7 @@ class AccountController extends Controller
     /**
      * @param User $user
      * @Route("/", name="account_index")
+     * @Template("Account/index.html.twig")
      */
     public function indexAction(UserInterface $user, GroupInvitationManager $groupInvitationManager)
     {
@@ -55,14 +60,13 @@ class AccountController extends Controller
 
         $accountsData = array_map(null, $accounts, $accountsBalances);
 
-        return $this->render('Account/index.html.twig', [
-            'accounts_data' => $accountsData,
-        ]);
+        return ['accounts_data' => $accountsData];
     }
 
     /**
      * @param User $user
      * @Route("/new", name="account_new")
+     * @Template("Account/new.html.twig")
      */
     public function newAction(Request $request, UserInterface $user)
     {
@@ -80,21 +84,20 @@ class AccountController extends Controller
 
             $this->addFlash('success', 'Account created!');
 
-            return $this->redirectToRoute('account_show', [
-                'id' => $account->getId()
-            ]);
+            return $this->redirectToRoute('account_show', ['id' => $account->getId()]);
         }
 
-        return $this->render('Account/new.html.twig', [
+        return [
             'account' => $account,
             'form' => $form->createView(),
-        ]);
+        ];
     }
 
     /**
      * @param User $user
      * @Route("/{id}", name="account_show")
      * @IsGranted("view", subject="account")
+     * @Template("Account/show.html.twig")
      */
     public function showAction(Request $request, UserInterface $user, Account $account)
     {
@@ -112,17 +115,18 @@ class AccountController extends Controller
         $pagerfanta->setMaxPerPage($resultsPerPage);
         $pagerfanta->setCurrentPage($page);
 
-        return $this->render('Account/show.html.twig', [
+        return [
             'transaction_pager' => $pagerfanta,
             'account' => $account,
             'account_balance' => $this->transactionRepository->getAccountBalance($account),
-        ]);
+        ];
     }
 
     /**
      * @param User $user
      * @Route("/{id}/edit", name="account_edit")
      * @IsGranted("edit", subject="account")
+     * @Template("Account/edit.html.twig")
      */
     public function editAction(Request $request, Account $account, UserInterface $user)
     {
@@ -148,18 +152,15 @@ class AccountController extends Controller
             }
 
             $this->em->flush();
-
             $this->addFlash('success', 'Account updated!');
 
-            return $this->redirectToRoute('account_show', [
-                'id' => $account->getId()
-            ]);
+            return $this->redirectToRoute('account_show', ['id' => $account->getId()]);
         }
 
-        return $this->render('Account/edit.html.twig', [
+        return [
             'account' => $account,
             'edit_form' => $editForm->createView(),
-        ]);
+        ];
     }
 
     /**

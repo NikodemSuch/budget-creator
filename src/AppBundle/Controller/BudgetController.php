@@ -12,9 +12,10 @@ use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -26,7 +27,10 @@ class BudgetController extends Controller
     private $budgetRepository;
     private $transactionRepository;
 
-    public function __construct(EntityManagerInterface $em, BudgetRepository $budgetRepository, TransactionRepository $transactionRepository)
+    public function __construct(
+        EntityManagerInterface $em,
+        BudgetRepository $budgetRepository,
+        TransactionRepository $transactionRepository)
     {
         $this->em = $em;
         $this->budgetRepository = $budgetRepository;
@@ -36,6 +40,7 @@ class BudgetController extends Controller
     /**
      * @param User $user
      * @Route("/", name="budget_index")
+     * @Template("Budget/index.html.twig")
      */
     public function indexAction(UserInterface $user)
     {
@@ -53,14 +58,13 @@ class BudgetController extends Controller
 
         $budgetsData = array_map(null, $budgets, $budgetsBalances);
 
-        return $this->render('Budget/index.html.twig', [
-            'budgets_data' => $budgetsData,
-        ]);
+        return ['budgets_data' => $budgetsData];
     }
 
     /**
      * @param User $user
      * @Route("/new", name="budget_new")
+     * @Template("Budget/new.html.twig")
      */
     public function newAction(Request $request, UserInterface $user)
     {
@@ -77,20 +81,19 @@ class BudgetController extends Controller
 
             $this->addFlash('success', 'Budget created!');
 
-            return $this->redirectToRoute('budget_show', [
-                'id' => $budget->getId()
-            ]);
+            return $this->redirectToRoute('budget_show', ['id' => $budget->getId()]);
         }
 
-        return $this->render('Budget/new.html.twig', [
+        return [
             'budget' => $budget,
             'form' => $form->createView(),
-        ]);
+        ];
     }
 
     /**
      * @Route("/{id}", name="budget_show")
      * @IsGranted("view", subject="budget")
+     * @Template("Budget/show.html.twig")
      */
     public function showAction(Request $request, UserInterface $user, ?Budget $budget)
     {
@@ -110,17 +113,18 @@ class BudgetController extends Controller
         $pagerfanta->setMaxPerPage($resultsPerPage);
         $pagerfanta->setCurrentPage($page);
 
-        return $this->render('Budget/show.html.twig', [
+        return [
             'transaction_pager' => $pagerfanta,
             'budget' => $budget,
             'budget_balance' => $this->transactionRepository->getBudgetBalance($budget),
-        ]);
+        ];
     }
 
     /**
      * @param User $user
      * @Route("/{id}/edit", name="budget_edit")
      * @IsGranted("edit", subject="budget")
+     * @Template("Budget/edit.html.twig")
      */
     public function editAction(Request $request, Budget $budget, UserInterface $user)
     {
@@ -146,18 +150,15 @@ class BudgetController extends Controller
             }
 
             $this->em->flush();
-
             $this->addFlash('success', 'Budget updated!');
 
-            return $this->redirectToRoute('budget_show', [
-                'id' => $budget->getId()
-            ]);
+            return $this->redirectToRoute('budget_show', ['id' => $budget->getId()]);
         }
 
-        return $this->render('Budget/edit.html.twig', [
+        return [
             'budget' => $budget,
             'edit_form' => $editForm->createView(),
-        ]);
+        ];
     }
 
     /**

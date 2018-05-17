@@ -16,9 +16,10 @@ use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -49,6 +50,7 @@ class TransactionController extends Controller
     /**
      * @param User $user
      * @Route("/", name="transaction_index")
+     * @Template("Transaction/index.html.twig")
      */
     public function indexAction(Request $request, UserInterface $user)
     {
@@ -63,14 +65,13 @@ class TransactionController extends Controller
         $pagerfanta->setMaxPerPage($resultsPerPage);
         $pagerfanta->setCurrentPage($page);
 
-        return $this->render('Transaction/index.html.twig', [
-            'transaction_pager' => $pagerfanta,
-        ]);
+        return ['transaction_pager' => $pagerfanta];
     }
 
     /**
      * @param User $user
      * @Route("/new", name="transaction_new")
+     * @Template("Transaction/new.html.twig")
      */
     public function newAction(Request $request, UserInterface $user)
     {
@@ -87,13 +88,8 @@ class TransactionController extends Controller
             $transaction->setBudget($budget);
         }
 
-        $accounts = $this->accountRepository->findBy([
-            'owner' => $userGroups
-        ]);
-
-        $budgets = $this->budgetRepository->findBy([
-            'owner' => $userGroups
-        ]);
+        $accounts = $this->accountRepository->findBy(['owner' => $userGroups]);
+        $budgets = $this->budgetRepository->findBy(['owner' => $userGroups]);
 
         $form = $this->createForm(TransactionType::class, $transaction, [
             'user' => $user,
@@ -120,15 +116,16 @@ class TransactionController extends Controller
             return $this->redirectToRoute('transaction_show', ['id' => $transaction->getId()]);
         }
 
-        return $this->render('Transaction/new.html.twig', [
+        return [
             'transaction' => $transaction,
             'form' => $form->createView(),
-        ]);
+        ];
     }
 
     /**
      * @Route("/{id}", name="transaction_show")
      * @IsGranted("view", subject="transaction")
+     * @Template("Transaction/show.html.twig")
      */
     public function showAction(Transaction $transaction)
     {
@@ -136,15 +133,14 @@ class TransactionController extends Controller
             throw $this->createNotFoundException();
         }
 
-        return $this->render('Transaction/show.html.twig', [
-            'transaction' => $transaction,
-        ]);
+        return ['transaction' => $transaction];
     }
 
     /**
      * @param User $user
      * @Route("/{id}/edit", name="transaction_edit")
      * @IsGranted("edit", subject="transaction")
+     * @Template("Transaction/edit.html.twig")
      */
     public function editAction(Request $request, Transaction $transaction, UserInterface $user)
     {
@@ -154,13 +150,8 @@ class TransactionController extends Controller
 
         $userGroups = $user->getUserGroups()->toArray();
 
-        $accounts = $this->accountRepository->findBy([
-            'owner' => $userGroups
-        ]);
-
-        $budgets = $this->budgetRepository->findBy([
-            'owner' => $userGroups
-        ]);
+        $accounts = $this->accountRepository->findBy(['owner' => $userGroups]);
+        $budgets = $this->budgetRepository->findBy(['owner' => $userGroups]);
 
         $editForm = $this->createForm(TransactionType::class, $transaction, [
             'user' => $user,
@@ -182,15 +173,13 @@ class TransactionController extends Controller
                     'budget_show', ['id' => $transaction->getBudget()->getId()]);
             }
 
-            return $this->redirectToRoute('transaction_show', [
-                'id' => $transaction->getId()
-            ]);
+            return $this->redirectToRoute('transaction_show', ['id' => $transaction->getId()]);
         }
 
-        return $this->render('Transaction/edit.html.twig', [
+        return [
             'transaction' => $transaction,
             'edit_form' => $editForm->createView(),
-        ]);
+        ];
     }
 
     /**
