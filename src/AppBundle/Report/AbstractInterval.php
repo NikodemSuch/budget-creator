@@ -8,7 +8,7 @@ abstract class AbstractInterval
     protected $deltas;
     protected $intervals;
 
-    public function __construct($name = null)
+    public function __construct($name)
     {
         $this->name = $name;
         $this->deltas = [];

@@ -37,13 +37,13 @@ class ReportManager
             if ($interval instanceof Year) {
 
                 $delta->setFinalAmount($this->reportHelper->getBalanceOnInterval($reportable,
-                    $currentDateImmutable->modify('1st January Next Year') > $this->reportEndDate ? $currentDateImmutable->modify('1st January Next Year') : $this->reportEndDate
+                    $currentDateImmutable->modify('1st January Next Year') < $this->reportEndDate ? $currentDateImmutable->modify('1st January Next Year') : $this->reportEndDate
                 ));
 
             } elseif ($interval instanceof Month) {
 
                 $delta->setFinalAmount($this->reportHelper->getBalanceOnInterval($reportable,
-                    $currentDateImmutable->modify('first day of next month') > $this->reportEndDate ? $currentDateImmutable->modify('first day of next month') : $this->reportEndDate
+                    $currentDateImmutable->modify('first day of next month') < $this->reportEndDate ? $currentDateImmutable->modify('first day of next month') : $this->reportEndDate
                 ));
 
             } elseif ($interval instanceof Day) {

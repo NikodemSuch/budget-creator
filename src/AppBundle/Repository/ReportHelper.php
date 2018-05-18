@@ -18,46 +18,31 @@ class ReportHelper extends ServiceEntityRepository
 
     public function getTransactionsInDateRange(Reportable $reportable, $start,  $end)
     {
-        $qb = $this->createQueryBuilder('transaction');
-        $qb->andWhere('transaction.createdOn > :start')
-           ->andWhere('transaction.createdOn < :end')
-           ->setParameter('start', $start)
-           ->setParameter('end', $end);
+        $reportableProperty = $reportable->getPropertyName();
 
-        if ($reportable instanceof Account) {
+        return $this->createQueryBuilder('transaction')
+            ->andWhere('transaction.createdOn > :start')
+            ->andWhere('transaction.createdOn < :end')
+            ->andWhere("transaction.$reportableProperty = :reportable")
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('reportable', $reportable)
+            ->getQuery()
+            ->getResult();
 
-            $qb->andWhere('transaction.account = :account')
-               ->setParameter('account', $reportable);
-
-        } elseif ($reportable instanceof Budget) {
-
-            $qb->andWhere('transaction.budget = :budget')
-               ->setParameter('budget', $reportable);
-        }
-
-        return $qb->getQuery()->getResult();
     }
 
     public function getBalanceOnInterval(Reportable $reportable, $date)
     {
-        $qb = $this->createQueryBuilder('transaction');
+        $reportableProperty = $reportable->getPropertyName();
 
-        $qb->andWhere('transaction.createdOn < :date')
-           ->setParameter('date', $date);
-
-        if ($reportable instanceof Account) {
-
-            $qb->andWhere('transaction.account = :account')
-               ->setParameter('account', $reportable)
-               ->select('SUM(transaction.amount) as accountBalance');
-
-        } elseif ($reportable instanceof Budget) {
-
-            $qb->andWhere('transaction.budget = :budget')
-               ->setParameter('budget', $reportable)
-               ->select('SUM(transaction.amount) as budgetBalance');
-        }
-
-        return $qb->getQuery()->getSingleScalarResult();
+        return $this->createQueryBuilder('transaction')
+            ->andWhere('transaction.createdOn < :date')
+            ->andWhere("transaction.$reportableProperty = :reportable")
+            ->setParameter('date', $date)
+            ->setParameter('reportable', $reportable)
+            ->select('SUM(transaction.amount) as reportableBalance')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

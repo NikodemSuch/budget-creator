@@ -4,7 +4,7 @@ namespace AppBundle\Report;
 
 class Year extends AbstractInterval
 {
-    public function __construct($name = null)
+    public function __construct($name)
     {
         parent::__construct($name);
     }
