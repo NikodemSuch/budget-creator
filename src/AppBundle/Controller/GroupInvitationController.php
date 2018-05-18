@@ -29,8 +29,14 @@ class GroupInvitationController extends Controller
     /**
      * @Route("/{id}", name="group-invitation_show")
      */
-    public function showAction(Request $request, UserInterface $user, GroupInvitation $groupInvitation)
+    public function showAction(Request $request, UserInterface $user, ?GroupInvitation $groupInvitation)
     {
+        if ($groupInvitation == null) {
+            $this->addFlash('info', 'Invitation is no longer valid.');
+
+            return $this->redirectToRoute('homepage');
+        }
+
         return $this->render('UserGroup/invitation.html.twig', [
             'expiration_date' => $this->groupInvitationManager->getExpirationDate($groupInvitation),
             'invitation_expired' => $this->groupInvitationManager->hasExpired($groupInvitation),

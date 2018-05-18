@@ -92,17 +92,18 @@ class BudgetController extends Controller
      * @Route("/{id}", name="budget_show")
      * @IsGranted("view", subject="budget")
      */
-    public function showAction(Request $request, UserInterface $user, Budget $budget)
+    public function showAction(Request $request, UserInterface $user, ?Budget $budget)
     {
-        if ($budget->isArchived()) {
-            throw $this->createNotFoundException();
+        if ($budget->isArchived() || $budget == null) {
+            $this->addFlash('info', 'Budget no longer exists.');
+
+            return $this->redirectToRoute('homepage');
         }
 
         $page = $request->query->get('page') ?: 1;
         $resultsPerPage = $request->query->get('results') ?: 10;
 
-        $userGroups = $user->getUserGroups()->toArray();
-        $query = $this->transactionRepository->getByGroupsQuery($userGroups);
+        $query = $this->transactionRepository->getByBudgetQuery($budget);
         $adapter = new DoctrineORMAdapter($query);
 
         $pagerfanta = new Pagerfanta($adapter);
@@ -135,7 +136,7 @@ class BudgetController extends Controller
             'owner' => $owner,
             'has_transactions' => $hasTransactions,
         ]);
-        
+
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

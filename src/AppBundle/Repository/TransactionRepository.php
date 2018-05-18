@@ -37,24 +37,22 @@ class TransactionRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
-    public function getByAccount($account)
+    public function getByAccountQuery($account)
     {
         return $this->createQueryBuilder('transaction')
             ->where('transaction.account = :account')
             ->setParameter('account', $account)
             ->orderBy('transaction.createdOn', 'DESC')
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
     }
 
-    public function getByBudget($budget)
+    public function getByBudgetQuery($budget)
     {
         return $this->createQueryBuilder('transaction')
             ->where('transaction.budget = :budget')
             ->setParameter('budget', $budget)
             ->orderBy('transaction.createdOn', 'DESC')
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
     }
 
     public function getCountByCategory($category): int

@@ -89,8 +89,14 @@ class UserGroupController extends Controller
      * @Route("/{id}", name="user-group_show")
      * @IsGranted("view", subject="userGroup")
      */
-    public function showAction(UserInterface $user, UserGroup $userGroup)
+    public function showAction(UserInterface $user, ?UserGroup $userGroup)
     {
+        if ($userGroup == null) {
+            $this->addFlash('info', 'User Group no longer exists.');
+
+            return $this->redirectToRoute('homepage');
+        }
+
         if ($userGroup->getOwner() == $user) {
 
             $invitations = $this->groupInvitationRepository->findBy([
