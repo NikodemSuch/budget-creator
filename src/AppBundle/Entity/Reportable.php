@@ -2,11 +2,14 @@
 
 namespace AppBundle\Entity;
 
-abstract class Reportable {
+abstract class Reportable
+{
 
-    public function getPropertyName() {
+    public function getPropertyName()
+    {
         $fqcn = get_class($this);
-        $className = basename($fqcn);
+        $className = preg_split("/\\\\/", $fqcn);
+        $className = end($className);
 
         return strtolower($className);
     }

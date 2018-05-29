@@ -50,6 +50,24 @@ class ReportController extends Controller
             'accounts' => $accounts,
             'budgets' => $budgets,
         ]);
+
+        $reportData = $request->request->get('report');
+
+        if ($reportData) {
+
+            if ($reportData['type'] == 'accounts') {
+                $accounts = $this->accountRepository->findById($reportData['accounts']);
+                $form->get('accounts')->setData($accounts);
+                $form->get('type')->setData($reportData['type']);
+            }
+
+            elseif ($reportData['type'] == 'budgets') {
+                $budgets = $this->budgetRepository->findById($reportData['budgets']);
+                $form->get('budgets')->setData($budgets);
+                $form->get('type')->setData($reportData['type']);
+            }
+        }
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -18,16 +18,6 @@ class Report
     private $reportables;
     private $intervals;
 
-    /**
-     * @Assert\Callback
-     */
-    public function validate(ExecutionContextInterface $context, $payload)
-    {
-        if ($this->getStartDate() >= $this->getEndDate()) {
-            $context->buildViolation("Start date must be earlier than the end date.")->addViolation();
-        }
-    }
-
     public function __construct()
     {
         $this->intervals = [];

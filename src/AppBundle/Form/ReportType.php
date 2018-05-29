@@ -16,6 +16,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class ReportType extends AbstractType
@@ -111,6 +113,19 @@ class ReportType extends AbstractType
         $resolver->setDefined('budgets');
         $resolver->setDefaults([
             'data_class' => Report::class,
+            'constraints' => [
+                new Callback([
+                    'callback' => [$this, 'checkEndDate'],
+                ]),
+            ],
         ]);
     }
+
+    public function checkEndDate($data, ExecutionContextInterface $context)
+    {
+        if ($data->getStartDate() >= $data->getEndDate()) {
+            $context->buildViolation("Start date must be earlier than the end date.")->addViolation();
+        }
+    }
+
 }
