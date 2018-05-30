@@ -21,3 +21,10 @@ parameters:
 
     invitation_expiration_time: 7 days
     notification_visibility_time: 30 days
+
+    # Depending on the type of system you work on, uncomment one of the below lines with path
+
+    # Linux
+    #path_to_wkhtmltopdf: '%kernel.project_dir%/vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64'
+    # Windows
+    path_to_wkhtmltopdf: '%kernel.project_dir%/vendor/wemersonjanuario/wkhtmltopdf-windows/bin/32bit/wkhtmltopdf.exe'
