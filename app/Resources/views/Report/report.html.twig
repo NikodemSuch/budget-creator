@@ -32,6 +32,15 @@
           </tbody>
         </table>
 
+        {% if form is defined %}
+          {{ form_start(form) }}
+          {{ form_row(form.generatePdf, {'attr': {'class': 'btn btn-default btn-lg btn-block'}}) }}
+          <div class="hidden">
+            {{ form_widget(form) }}
+          </div>
+          {{ form_end(form) }}
+        {% endif %}
+
         {% set const_day = constant('AppBundle\\Enum\\ReportDetail::DAY') %}
         {% set const_month = constant('AppBundle\\Enum\\ReportDetail::MONTH') %}
         {% set const_transaction = constant('AppBundle\\Enum\\ReportDetail::TRANSACTION') %}

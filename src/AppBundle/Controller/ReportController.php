@@ -85,6 +85,7 @@ class ReportController extends Controller
 
             return $this->render('Report/show.html.twig', [
                 'report' => $report,
+                'form' => $form->createView(),
             ]);
         }
 
