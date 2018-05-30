@@ -1,0 +1,18 @@
+<div class="report-delta">
+  <div class="delta-title">
+    <p>{{ delta.title }}</p>
+  </div>
+  <div class="delta-row">
+    <span class="delta-row-title">Initial Amount:</span>
+    <span>{{ delta.initialAmount|money }} {{ delta.currency }}</span>
+  </div>
+  <div class="delta-row">
+    <span class="delta-row-title">Final Amount:</span>
+    <span>{{ delta.finalAmount|money }} {{ delta.currency }}</span>
+  </div>
+  <div class="delta-row">
+    <span class="delta-row-title">Balance:</span>
+    <span>{{ (delta.finalAmount - delta.initialAmount)|money }} {{ delta.currency }}</span>
+  </div>
+</div>
+

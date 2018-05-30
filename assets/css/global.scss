@@ -7,6 +7,10 @@ body {
   margin-bottom: 5px;
 }
 
+.alert .badge {
+  display: none;
+}
+
 // NAVBAR
 
 .navbar-toggle {
@@ -248,6 +252,10 @@ body {
 
 // FORMS
 
+.form-group {
+  margin: 0;
+}
+
 .form-container {
   min-height: 800px;
   padding: 50px;
@@ -255,10 +263,6 @@ body {
 
 .form-header {
   margin-bottom: 15px;
-}
-
-.form-group {
-  margin: 0;
 }
 
 .form-button {
@@ -275,6 +279,14 @@ body {
   margin: 10px 0 5px;
   font-size: 20px;
   font-weight: bold;
+}
+
+form .alert {
+  display: block;
+}
+
+.form-control-label .badge {
+  display: none;
 }
 
 #user-fields-list {
@@ -323,6 +335,75 @@ body {
   display: flex;
   justify-content: center;
 }
+
+// Report
+
+.reportables {
+  display: none;
+  padding: 12px 12px 0 12px;
+}
+
+.report-header {
+  list-style: none;
+  padding: 8px 15%;
+  background-color: #f1f1f1;
+  border: 2px solid #eaeaea;
+  color: #555;
+}
+
+.report-header li {
+  display: inline-block;
+}
+
+.report-button {
+  float: right;
+}
+
+.main-header {
+  background-color: #555;
+  color: #f1f1f1;
+}
+
+.report-title {
+  text-align: center;
+  font-family: Impact, Charcoal, sans-serif;
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+
+.report-intervals-container {
+  padding-left: 50px;
+}
+
+.report-interval {
+  padding: 20px 10px;
+}
+
+.report-delta {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.delta-row {
+  border-top: 1px solid lightgrey;
+  padding: 3px 0 3px 10px;
+}
+
+.delta-row span {
+  display: inline-block;
+}
+
+.delta-title {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.delta-row-title {
+  font-weight: bold;
+  width: 150px;
+}
+
+// END Report
 
 @media (max-width: 768px) {
 

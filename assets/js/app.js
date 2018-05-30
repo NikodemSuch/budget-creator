@@ -1,4 +1,4 @@
-// confirmation modals
+// Confirmation modals
 
 $('.delete-url').confirm({
     title: 'Confirm Delete',
@@ -44,8 +44,6 @@ $("#notifications-container .notification-unread :checkbox").prop("checked", tru
 $("#notifications-container .notification-read :checkbox").prop("checked", false);
 $('#notifications-container :checkbox').prop("disabled", true);
 
-// END Notification dropdown
-
 function setUnreadStatus(unread, notificationId) {
 
     var url = unread ? "/notification/mark-as-unread" : "/notification/mark-as-read";
@@ -85,8 +83,6 @@ $(document).ready(function () {
 
     });
 
-    // END Notification box
-
     // UserGroup dynamic form
 
     const removeIcon = '<a href="#" class="removeUserInput"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
@@ -116,6 +112,59 @@ $(document).ready(function () {
         $(this).parent().remove();
     });
 
-    // END UserGroup dynamic form
+});
+
+// Report form
+
+$('#report_reportables').hide();
+
+if ($("#report_type").val() == 'accounts') {
+    showAccountsContainer();
+} else if ($("#report_type").val() == 'budgets') {
+    showBudgetsContainer();
+}
+
+$("#report_type").on('change', function () {
+
+    if ($(this).val() == 'accounts') {
+        showAccountsContainer();
+    } else if ($(this).val() == 'budgets') {
+        showBudgetsContainer();
+    } else {
+        hideReportablesContainers();
+    }
+});
+
+function showAccountsContainer() {
+    $('.report-budgets-container').hide();
+    $('.report-accounts-container').slideDown(300);
+    $('.report-budgets-container :checkbox').prop("disabled", true);
+    $('.report-accounts-container :checkbox').prop("disabled", false);
+}
+
+function showBudgetsContainer() {
+    $('.report-budgets-container').slideDown(300);
+    $('.report-accounts-container').hide();
+    $('.report-budgets-container :checkbox').prop("disabled", false);
+    $('.report-accounts-container :checkbox').prop("disabled", true);
+}
+
+function hideReportablesContainers() {
+    $('.report-budgets-container').hide(300);
+    $('.report-accounts-container').hide(300);
+    $('.report-budgets-container :checkbox').prop("disabled", true);
+    $('.report-accounts-container :checkbox').prop("disabled", true);
+}
+
+// Report view
+
+$(".report-intervals-container").hide();
+
+$(document).ready(function () {
+
+    $(".report-show").click(function () {
+        $($(this).attr('data-interval-container')).toggle(300);
+    });
 
 });
+
