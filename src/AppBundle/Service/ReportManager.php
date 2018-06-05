@@ -7,6 +7,7 @@ use AppBundle\Report\Report;
 use AppBundle\Report\Year;
 use AppBundle\Report\Month;
 use AppBundle\Report\Day;
+use AppBundle\Report\AbstractInterval;
 use AppBundle\Report\Delta;
 use AppBundle\Repository\ReportHelper;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ class ReportManager
         $this->reportHelper = $reportHelper;
     }
 
-    public function addDeltasToInterval($interval, $currentDateImmutable)
+    public function addDeltasToInterval(AbstractInterval $interval, \DateTimeImmutable $currentDateImmutable)
     {
         foreach ($this->reportables as $reportable) {
 
@@ -33,23 +34,12 @@ class ReportManager
             $delta->setTitle("Balance for $reportable for " . $interval->getName());
             $delta->setCurrency($reportable->getCurrency());
             $delta->setInitialAmount($this->reportHelper->getBalanceOnInterval($reportable, $currentDateImmutable));
-
-            if ($interval instanceof Year) {
-
-                $delta->setFinalAmount($this->reportHelper->getBalanceOnInterval($reportable,
-                    $currentDateImmutable->modify('1st January Next Year') < $this->reportEndDate ? $currentDateImmutable->modify('1st January Next Year') : $this->reportEndDate
-                ));
-
-            } elseif ($interval instanceof Month) {
-
-                $delta->setFinalAmount($this->reportHelper->getBalanceOnInterval($reportable,
-                    $currentDateImmutable->modify('first day of next month') < $this->reportEndDate ? $currentDateImmutable->modify('first day of next month') : $this->reportEndDate
-                ));
-
-            } elseif ($interval instanceof Day) {
-
-                $delta->setFinalAmount($this->reportHelper->getBalanceOnInterval($reportable, $currentDateImmutable->modify('+1 day')));
-            }
+            $delta->setFinalAmount(
+                $this->reportHelper->getBalanceOnInterval(
+                    $reportable,
+                    $interval->getEndingDate($currentDateImmutable, $this->reportEndDate)
+                )
+            );
 
             $interval->addDelta($delta);
         }
@@ -57,7 +47,7 @@ class ReportManager
         return $interval;
     }
 
-    public function addDeltasToDay(Day $day, $currentDateImmutable)
+    public function addDeltasToDay(Day $day, \DateTimeImmutable $currentDateImmutable)
     {
         foreach ($this->reportables as $reportable) {
 

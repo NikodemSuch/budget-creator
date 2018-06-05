@@ -16,7 +16,7 @@ class ReportHelper extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
-    public function getTransactionsInDateRange(Reportable $reportable, $start,  $end)
+    public function getTransactionsInDateRange(Reportable $reportable, $start, $end)
     {
         $reportableProperty = $reportable->getPropertyName();
 
