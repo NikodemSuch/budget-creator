@@ -2,9 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Report\Report;
+use AppBundle\Factory\ReportGeneratorFactory;
 use AppBundle\Form\ReportType;
-use AppBundle\Service\ReportManager;
+use AppBundle\Report\Report;
 use AppBundle\Repository\AccountRepository;
 use AppBundle\Repository\BudgetRepository;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -26,16 +26,16 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ReportController extends Controller
 {
-    private $reportManager;
+    private $reportGeneratorFactory;
     private $accountRepository;
     private $budgetRepository;
 
     public function __construct(
-        ReportManager $reportManager,
+        ReportGeneratorFactory $reportGeneratorFactory,
         AccountRepository $accountRepository,
         BudgetRepository $budgetRepository)
     {
-        $this->reportManager = $reportManager;
+        $this->reportGeneratorFactory = $reportGeneratorFactory;
         $this->accountRepository = $accountRepository;
         $this->budgetRepository = $budgetRepository;
     }
@@ -67,7 +67,8 @@ class ReportController extends Controller
             $generatePdf = $form->get('generatePdf')->isClicked();
 
             if ($generatePdf) {
-                $report = $this->reportManager->createReport($report, $request->getLocale());
+                $reportGenerator = $this->reportGeneratorFactory->createInstance($report);
+                $report = $reportGenerator->createReport($request->getLocale());
                 return $this->generatePdf($user, $report);
             }
 
@@ -95,7 +96,9 @@ class ReportController extends Controller
 
             $this->denyAccessUnlessGranted('create', $report);
             $generatePdf = $form->get('generatePdf')->isClicked();
-            $report = $this->reportManager->createReport($report, $request->getLocale());
+
+            $reportGenerator = $this->reportGeneratorFactory->createInstance($report);
+            $report = $reportGenerator->createReport($request->getLocale());
 
             if ($generatePdf) {
                 return $this->generatePdf($user, $report);

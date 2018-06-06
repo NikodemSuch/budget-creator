@@ -1,26 +1,24 @@
 <?php
 
-namespace AppBundle\Repository;
+namespace AppBundle\Service;
 
-use AppBundle\Entity\Account;
-use AppBundle\Entity\Budget;
 use AppBundle\Entity\Reportable;
-use AppBundle\Entity\Transaction;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use AppBundle\Repository\TransactionRepository;
 
-class ReportHelper extends ServiceEntityRepository
+class ReportHelper
 {
-    public function __construct(ManagerRegistry $registry)
+    private $transactionRepository;
+
+    public function __construct(TransactionRepository $transactionRepository)
     {
-        parent::__construct($registry, Transaction::class);
+        $this->transactionRepository = $transactionRepository;
     }
 
     public function getTransactionsInDateRange(Reportable $reportable, $start, $end)
     {
         $reportableProperty = $reportable->getPropertyName();
 
-        return $this->createQueryBuilder('transaction')
+        return $this->transactionRepository->createQueryBuilder('transaction')
             ->andWhere('transaction.createdOn > :start')
             ->andWhere('transaction.createdOn < :end')
             ->andWhere("transaction.$reportableProperty = :reportable")
@@ -36,7 +34,7 @@ class ReportHelper extends ServiceEntityRepository
     {
         $reportableProperty = $reportable->getPropertyName();
 
-        return $this->createQueryBuilder('transaction')
+        return $this->transactionRepository->createQueryBuilder('transaction')
             ->andWhere('transaction.createdOn < :date')
             ->andWhere("transaction.$reportableProperty = :reportable")
             ->setParameter('date', $date)

@@ -73,12 +73,12 @@ class Report
         $this->detail = $detail;
     }
 
-    public function getReportables(): ?ArrayCollection
+    public function getReportables()
     {
         return $this->reportables;
     }
 
-    public function setReportables(ArrayCollection $reportables)
+    public function setReportables($reportables)
     {
         $this->reportables = $reportables;
     }
