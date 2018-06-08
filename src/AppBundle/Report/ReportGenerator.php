@@ -63,7 +63,7 @@ class ReportGenerator
                 array_push($deltas, $delta);
             }
 
-            $day->addInterval($deltas, $reportable);
+            empty($deltas) ?: $day->addInterval($deltas, $reportable);
         }
 
         return $day;

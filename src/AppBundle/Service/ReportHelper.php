@@ -14,7 +14,10 @@ class ReportHelper
         $this->transactionRepository = $transactionRepository;
     }
 
-    public function getTransactionsInDateRange(Reportable $reportable, $start, $end)
+    public function getTransactionsInDateRange(
+        Reportable $reportable,
+        \DateTimeImmutable $start,
+        \DateTimeImmutable $end)
     {
         $reportableProperty = $reportable->getPropertyName();
 
@@ -30,11 +33,11 @@ class ReportHelper
 
     }
 
-    public function getBalanceOnInterval(Reportable $reportable, $date)
+    public function getBalanceOnInterval(Reportable $reportable, \DateTimeImmutable $date)
     {
         $reportableProperty = $reportable->getPropertyName();
 
-        return $this->transactionRepository->createQueryBuilder('transaction')
+        $balance = $this->transactionRepository->createQueryBuilder('transaction')
             ->andWhere('transaction.createdOn < :date')
             ->andWhere("transaction.$reportableProperty = :reportable")
             ->setParameter('date', $date)
@@ -42,5 +45,7 @@ class ReportHelper
             ->select('SUM(transaction.amount) as reportableBalance')
             ->getQuery()
             ->getSingleScalarResult();
+
+        return $balance ?? 0;
     }
 }
