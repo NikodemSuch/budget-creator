@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Reportable;
+use AppBundle\Report\Delta;
 use AppBundle\Repository\TransactionRepository;
 
 class ReportHelper
@@ -47,5 +48,16 @@ class ReportHelper
             ->getSingleScalarResult();
 
         return $balance ?? 0;
+    }
+
+    public function createDelta(array $deltaData)
+    {
+        $delta = new Delta();
+        $delta->setTitle($deltaData['title']);
+        $delta->setCurrency($deltaData['currency']);
+        $delta->setInitialAmount($deltaData['initialAmount']);
+        $delta->setFinalAmount($deltaData['finalAmount']);
+
+        return $delta;
     }
 }

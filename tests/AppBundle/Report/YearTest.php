@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class YearTest extends TestCase
 {
     /**
-     * @dataProvider getEndingDateProvider
+     * @dataProvider endingDateProvider
      */
     public function testGetEndingDate($initialDate, $reportEndDate, $expectedDate)
     {
@@ -18,7 +18,7 @@ class YearTest extends TestCase
         $this->assertEquals($expectedDate, $resultDate);
     }
 
-    public function getEndingDateProvider()
+    public function endingDateProvider()
     {
         return [
             'return year later'  => [

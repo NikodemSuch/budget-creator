@@ -22,16 +22,22 @@ class ReportGenerator
     {
         foreach ($this->reportData->getReportables() as $reportable) {
 
-            $delta = new Delta();
-            $delta->setTitle("Balance for $reportable for " . $interval->getName());
-            $delta->setCurrency($reportable->getCurrency());
-            $delta->setInitialAmount($this->reportHelper->getBalanceOnInterval($reportable, $currentDateImmutable));
-            $delta->setFinalAmount(
-                $this->reportHelper->getBalanceOnInterval(
-                    $reportable,
-                    $interval->getEndingDate($currentDateImmutable, $this->reportData->getEndDate())
-                )
+            // $delta = new TransactionDelta(
+            //     $reportable,
+            //     $interval,
+            //     $initialAmount,
+            //     $finalAmount,
+            // );
+
+            $deltaData['title'] = "Balance for $reportable for " . $interval->getName();
+            $deltaData['currency'] = $reportable->getCurrency();
+            $deltaData['initialAmount'] = $this->reportHelper->getBalanceOnInterval($reportable, $currentDateImmutable);
+            $deltaData['finalAmount'] = $this->reportHelper->getBalanceOnInterval(
+                $reportable,
+                $interval->getEndingDate($currentDateImmutable, $this->reportData->getEndDate())
             );
+
+            $delta = $this->reportHelper->createDelta($deltaData);
 
             $interval->addDelta($delta);
         }
@@ -52,18 +58,21 @@ class ReportGenerator
 
             foreach ($transactions as $transaction) {
 
-                $finalAmount = $initialAmount + $transaction->getAmount();
-                $delta = new Delta();
-                $delta->setTitle("Balance for transaction " . $transaction->getTitle());
-                $delta->setCurrency($reportable->getCurrency());
-                $delta->setInitialAmount($initialAmount);
-                $delta->setFinalAmount($finalAmount);
-                $initialAmount = $finalAmount;
+                $deltaData['title'] = "Balance for transaction " . $transaction->getTitle();
+                $deltaData['currency'] = $reportable->getCurrency();
+                $deltaData['initialAmount'] = $initialAmount;
+                $deltaData['finalAmount'] = $initialAmount + $transaction->getAmount();
+
+                $delta = $this->reportHelper->createDelta($deltaData);
+
+                $initialAmount = $deltaData['finalAmount'];
 
                 array_push($deltas, $delta);
             }
 
-            empty($deltas) ?: $day->addInterval($deltas, $reportable);
+            if (!empty($deltas)) {
+                $day->addInterval($deltas, $reportable);
+            }
         }
 
         return $day;

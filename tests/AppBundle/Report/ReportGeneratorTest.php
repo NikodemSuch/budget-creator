@@ -17,15 +17,17 @@ use PHPUnit\Framework\TestCase;
 class ReportGeneratorTest extends TestCase
 {
     private $reportHelper;
+    private $reportGenerator;
 
     protected function setUp()
     {
-        $mock = $this->createMock(ReportHelper::class);
+        $reportHelper = $this->createMock(ReportHelper::class);
 
-        $this->reportHelper = $mock;
+        $this->reportHelper = $reportHelper;
 
         parent::setUp();
     }
+
 
     /**
      * @dataProvider addDeltasToIntervalProvider
@@ -35,14 +37,27 @@ class ReportGeneratorTest extends TestCase
         \DateTimeImmutable $currentDate,
         string $mockMethodReturnData)
     {
-        $this->reportHelper->expects($this->exactly(4))
+
+        $this->reportHelper->expects($this->exactly(2*$this->getNumOfCalls()))
             ->method('getBalanceOnInterval')
             ->willReturn($mockMethodReturnData);
+
+        // See if tested method uses getBalanceOnInterval methods
+        $this->reportHelper->expects($this->exactly($this->getNumOfCalls()))
+            ->method('createDelta')
+            ->with(
+                $this->callback(function($subject) use ($mockMethodReturnData) {
+                    return $subject['initialAmount'] == $mockMethodReturnData &&
+                    $subject['finalAmount'] == $mockMethodReturnData;
+                })
+            )
+            ->willReturn($this->getDeltaData());
+
 
         $reportGenerator = new ReportGenerator($this->reportHelper, $this->getReportData());
 
         $resultInterval = $reportGenerator->addDeltasToInterval($interval, $currentDate);
-        $expectedInterval = $this->getExpectedInterval($interval, $currentDate, $mockMethodReturnData);
+        $expectedInterval = $this->getExpectedInterval($interval);
 
         $this->assertEquals($expectedInterval, $resultInterval);
     }
@@ -76,18 +91,29 @@ class ReportGeneratorTest extends TestCase
         \DateTimeImmutable $currentDate,
         array $mockMethodReturnData)
     {
-        $this->reportHelper->expects($this->exactly(2))
+        $this->reportHelper->expects($this->exactly($this->getNumOfCalls()))
             ->method('getBalanceOnInterval')
             ->willReturn($mockMethodReturnData[0]);
 
-        $this->reportHelper->expects($this->exactly(2))
+        $this->reportHelper->expects($this->exactly($this->getNumOfCalls()))
             ->method('getTransactionsInDateRange')
             ->willReturn($mockMethodReturnData[1]);
+
+        // See if tested method uses getBalanceOnInterval methods
+        $this->reportHelper->expects($this->exactly($this->getNumOfCalls()*count($mockMethodReturnData[1])))
+            ->method('createDelta')
+            ->with(
+                $this->callback(function($subject) use ($mockMethodReturnData) {
+                    return $subject['initialAmount'] == $mockMethodReturnData[0] &&
+                    $subject['finalAmount'] == $mockMethodReturnData[0];
+                })
+            )
+            ->willReturn($this->getDeltaData());
 
         $reportGenerator = new ReportGenerator($this->reportHelper, $this->getReportData());
 
         $resultDay = $reportGenerator->addDeltasToDay(new Day($intervalName), $currentDate);
-        $expectedDay = $this->getExpectedDay($intervalName, $currentDate, $mockMethodReturnData);
+        $expectedDay = $this->getExpectedDay($intervalName, $mockMethodReturnData[1]);
 
         $this->assertEquals($expectedDay, $resultDay);
     }
@@ -98,14 +124,19 @@ class ReportGeneratorTest extends TestCase
             'add delta to month'  => [
                 "Day 1",
                 new \DateTimeImmutable('2010-06-03'),
-                ['521', array()]
+                ['521', []]
             ],
             'add delta to year' => [
                 "Day 2",
                 new \DateTimeImmutable('2018-02-08'),
-                ['0', array(new Transaction(), new Transaction())]
+                ['0', [new Transaction(), new Transaction()]]
             ]
         ];
+    }
+
+    public function getNumOfCalls()
+    {
+        return count($this->getReportData()->getReportables());
     }
 
     public function getReportData()
@@ -118,50 +149,41 @@ class ReportGeneratorTest extends TestCase
         return $report;
     }
 
-    public function getExpectedInterval(
-        AbstractInterval $interval,
-        \DateTimeImmutable $currentDate,
-        ?string $mockMethodReturnData)
+    public function getDeltaData()
     {
-        foreach ($this->getReportData()->getReportables() as $reportable) {
-            $delta = new Delta();
-            $delta->setTitle("Balance for $reportable for " . $interval->getName());
-            $delta->setInitialAmount($mockMethodReturnData);
-            $delta->setFinalAmount($mockMethodReturnData);
+        $delta = new Delta();
+        $delta->setTitle("Balance for x for y");
+        $delta->setInitialAmount("30");
+        $delta->setFinalAmount("80");
 
-            $interval->addDelta($delta);
+        return $delta;
+    }
+
+    public function getExpectedInterval(AbstractInterval $interval)
+    {
+        for ($i = 0; $i < $this->getNumOfCalls(); $i++) {
+            $interval->addDelta($this->getDeltaData());
         }
 
         return $interval;
     }
 
-    public function getExpectedDay(
-        string $intervalName,
-        \DateTimeImmutable $currentDate,
-        array $mockMethodReturnData)
+    public function getExpectedDay(string $intervalName, array $transactions)
     {
         $day = new Day($intervalName);
 
-        foreach ($this->getReportData()->getReportables() as $reportable) {
+        for ($i = 0; $i < $this->getNumOfCalls(); $i++) {
 
             $deltas = [];
 
-            $initialAmount = $mockMethodReturnData[0];
-            $transactions = $mockMethodReturnData[1];
-
             foreach ($transactions as $transaction) {
-
-                $finalAmount = $initialAmount + $transaction->getAmount();
-                $delta = new Delta();
-                $delta->setTitle("Balance for transaction " . $transaction->getTitle());
-                $delta->setInitialAmount($initialAmount);
-                $delta->setFinalAmount($finalAmount);
-                $initialAmount = $finalAmount;
-
+                $delta = $this->getDeltaData();
                 array_push($deltas, $delta);
             }
 
-            empty($deltas) ?: $day->addInterval($deltas, $reportable);
+            if (!empty($deltas)) {
+                $day->addInterval($deltas, new Account());
+            }
         }
 
         return $day;

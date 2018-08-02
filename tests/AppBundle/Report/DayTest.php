@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class DayTest extends TestCase
 {
     /**
-     * @dataProvider getEndingDateProvider
+     * @dataProvider endingDateProvider
      */
     public function testGetEndingDate($initialDate, $reportEndDate, $expectedDate)
     {
@@ -18,7 +18,7 @@ class DayTest extends TestCase
         $this->assertEquals($expectedDate, $resultDate);
     }
 
-    public function getEndingDateProvider()
+    public function endingDateProvider()
     {
         return [
             'return next day'  => [
