@@ -2,20 +2,23 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Report\Report;
+use AppBundle\Factory\ReportGeneratorFactory;
 use AppBundle\Form\ReportType;
-use AppBundle\Service\ReportManager;
+use AppBundle\Report\Report;
 use AppBundle\Repository\AccountRepository;
 use AppBundle\Repository\BudgetRepository;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 
 /**
  * @IsGranted("ROLE_USER")
@@ -23,25 +26,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class ReportController extends Controller
 {
-    private $reportManager;
+    private $reportGeneratorFactory;
     private $accountRepository;
     private $budgetRepository;
 
     public function __construct(
-        ReportManager $reportManager,
+        ReportGeneratorFactory $reportGeneratorFactory,
         AccountRepository $accountRepository,
         BudgetRepository $budgetRepository)
     {
-        $this->reportManager = $reportManager;
+        $this->reportGeneratorFactory = $reportGeneratorFactory;
         $this->accountRepository = $accountRepository;
         $this->budgetRepository = $budgetRepository;
     }
 
     /**
      * @param User $user
-     * @Route("/", name="report")
+     * @Route("/new", name="report_new")
+     * @Template("Report/new.html.twig")
      */
-    public function reportAction(Request $request, UserInterface $user)
+    public function newAction(Request $request, UserInterface $user)
     {
         $report = new Report();
         $userGroups = $user->getUserGroups()->toArray();
@@ -54,6 +58,61 @@ class ReportController extends Controller
             'budgets' => $budgets,
         ]);
 
+        $form = $this->setFormReportables($request, $form);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->denyAccessUnlessGranted('create', $report);
+            $generatePdf = $form->get('generatePdf')->isClicked();
+
+            if ($generatePdf) {
+                $reportGenerator = $this->reportGeneratorFactory->createInstance($report);
+                $report = $reportGenerator->createReport($request->getLocale());
+                return $this->generatePdf($user, $report);
+            }
+
+            return $this->redirectToRoute('report_show', [
+                'request' => $request
+            ], 307);
+        }
+
+        return ['form' => $form->createView()];
+    }
+
+    /**
+     * @param User $user
+     * @Route("/", name="report_show")
+     * @Template("Report/show.html.twig")
+     */
+    public function showAction(Request $request, UserInterface $user)
+    {
+        $report = new Report();
+        $form = $this->createForm(ReportType::class, $report);
+        $form = $this->setFormReportables($request, $form);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->denyAccessUnlessGranted('create', $report);
+            $generatePdf = $form->get('generatePdf')->isClicked();
+
+            $reportGenerator = $this->reportGeneratorFactory->createInstance($report);
+            $report = $reportGenerator->createReport($request->getLocale());
+
+            if ($generatePdf) {
+                return $this->generatePdf($user, $report);
+            }
+        }
+
+        return [
+            'report' => $report,
+            'form' => $form->createView(),
+        ];
+    }
+
+    public function setFormReportables(Request $request, FormInterface $form)
+    {
         $reportData = $request->request->get('report');
 
         if ($reportData) {
@@ -71,27 +130,7 @@ class ReportController extends Controller
             }
         }
 
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $this->denyAccessUnlessGranted('create', $report);
-            $report = $this->reportManager->createReport($report, $request->getLocale());
-            $generatePdf = $form->get('generatePdf')->isClicked();
-
-            if ($generatePdf) {
-                return $this->generatePdf($user, $report);
-            }
-
-            return $this->render('Report/show.html.twig', [
-                'report' => $report,
-                'form' => $form->createView(),
-            ]);
-        }
-
-        return $this->render('Report/new.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $form;
     }
 
     public function generatePdf(UserInterface $user, Report $report)

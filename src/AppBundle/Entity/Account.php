@@ -50,6 +50,7 @@ class Account extends Reportable implements Owned
     {
         $this->transactions = new ArrayCollection();
         $this->archived = false;
+        $this->name = "unknown";
     }
 
     public function getId(): int

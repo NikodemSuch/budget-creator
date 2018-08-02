@@ -10,9 +10,10 @@ use AppBundle\Repository\CategoryGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_ADMIN")
@@ -36,18 +37,16 @@ class CategoryGroupController extends Controller
 
     /**
      * @Route("/", name="category-group_index")
+     * @Template("CategoryGroup/index.html.twig")
      */
     public function indexAction()
     {
-        $categoryGroups = $this->categoryGroupRepository->findAll();
-
-        return $this->render('CategoryGroup/index.html.twig', [
-            'category_groups' => $categoryGroups,
-        ]);
+        return ['category_groups' => $this->categoryGroupRepository->findAll()];
     }
 
     /**
      * @Route("/new", name="category-group_new")
+     * @Template("CategoryGroup/new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -64,32 +63,30 @@ class CategoryGroupController extends Controller
             $this->em->persist($categoryGroup);
             $this->em->flush();
 
-            return $this->redirectToRoute('category-group_show', [
-                'id' => $categoryGroup->getId()
-            ]);
+            return $this->redirectToRoute('category-group_show', ['id' => $categoryGroup->getId()]);
         }
 
-        return $this->render('CategoryGroup/new.html.twig', [
+        return [
             'category_group' => $categoryGroup,
             'form' => $form->createView(),
-        ]);
+        ];
     }
 
     /**
      * @Route("/{id}", name="category-group_show")
+     * @Template("CategoryGroup/show.html.twig")
      */
     public function showAction(CategoryGroup $categoryGroup)
     {
-        $categories = $this->categoryRepository->getByGroup($categoryGroup);
-
-        return $this->render('CategoryGroup/show.html.twig', [
-            'categories' => $categories,
+        return [
+            'categories' => $this->categoryRepository->getByGroup($categoryGroup),
             'category_group' => $categoryGroup,
-        ]);
+        ];
     }
 
     /**
      * @Route("/{id}/edit", name="category-group_edit")
+     * @Template("CategoryGroup/edit.html.twig")
      */
     public function editAction(Request $request, CategoryGroup $categoryGroup)
     {
@@ -99,15 +96,13 @@ class CategoryGroupController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('category-group_show', [
-                'id' => $categoryGroup->getId()
-            ]);
+            return $this->redirectToRoute('category-group_show', ['id' => $categoryGroup->getId()]);
         }
 
-        return $this->render('CategoryGroup/edit.html.twig', [
+        return [
             'category_group' => $categoryGroup,
             'edit_form' => $editForm->createView(),
-        ]);
+        ];
     }
 
     /**

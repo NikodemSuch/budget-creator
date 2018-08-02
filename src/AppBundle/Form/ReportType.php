@@ -24,8 +24,8 @@ class ReportType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $accounts = $options['accounts'];
-        $budgets = $options['budgets'];
+        $accounts = $options['accounts'] ?? null;
+        $budgets = $options['budgets'] ?? null;
 
         $now = new \DateTimeImmutable();
 

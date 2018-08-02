@@ -7,9 +7,10 @@ use AppBundle\Service\NotificationManager;
 use AppBundle\Service\GroupInvitationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -28,6 +29,7 @@ class GroupInvitationController extends Controller
 
     /**
      * @Route("/{id}", name="group-invitation_show")
+     * @Template("UserGroup/invitation.html.twig")
      */
     public function showAction(Request $request, UserInterface $user, ?GroupInvitation $groupInvitation)
     {
@@ -37,11 +39,11 @@ class GroupInvitationController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('UserGroup/invitation.html.twig', [
+        return [
             'expiration_date' => $this->groupInvitationManager->getExpirationDate($groupInvitation),
             'invitation_expired' => $this->groupInvitationManager->hasExpired($groupInvitation),
             'group_invitation' => $groupInvitation,
-        ]);
+        ];
     }
 
     /**

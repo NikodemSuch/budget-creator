@@ -8,7 +8,7 @@ abstract class AbstractInterval
     protected $deltas;
     protected $intervals;
 
-    public function __construct($name)
+    public function __construct($name = null)
     {
         $this->name = $name;
         $this->deltas = [];
@@ -54,4 +54,8 @@ abstract class AbstractInterval
     {
         $this->intervals = $intervals;
     }
+
+    public abstract function getEndingDate(
+        \DateTimeImmutable $currentDateImmutable,
+        \DateTimeImmutable $reportEndDate): \DateTimeImmutable;
 }

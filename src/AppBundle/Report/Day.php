@@ -8,4 +8,11 @@ class Day extends AbstractInterval
     {
         $this->intervals[$target->getName()] = $deltas;
     }
+
+    public function getEndingDate(
+        \DateTimeImmutable $currentDateImmutable,
+        \DateTimeImmutable $reportEndDate): \DateTimeImmutable
+    {
+        return $currentDateImmutable->modify('+1 day');
+    }
 }

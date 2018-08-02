@@ -39,7 +39,7 @@ class Delta
         $this->finalAmount = $finalAmount;
     }
 
-    public function setCurrency(string $currency)
+    public function setCurrency(?string $currency)
     {
         $this->currency = $currency;
     }

@@ -1,55 +1,43 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Report;
 
 use AppBundle\Enum\ReportDetail;
-use AppBundle\Report\Report;
-use AppBundle\Report\Year;
-use AppBundle\Report\Month;
-use AppBundle\Report\Day;
-use AppBundle\Report\Delta;
-use AppBundle\Repository\ReportHelper;
+use AppBundle\Service\ReportHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ReportManager
+class ReportGenerator
 {
     private $reportHelper;
-    private $reportDetail;
-    private $reportStartDate;
-    private $reportEndDate;
-    private $reportables;
+    private $reportData;
 
-    public function __construct(ReportHelper $reportHelper)
+    public function __construct(ReportHelper $reportHelper, Report $reportData)
     {
         $this->reportHelper = $reportHelper;
+        $this->reportData = $reportData;
     }
 
-    public function addDeltasToInterval($interval, $currentDateImmutable)
+    public function addDeltasToInterval(AbstractInterval $interval, \DateTimeImmutable $currentDateImmutable)
     {
-        foreach ($this->reportables as $reportable) {
+        foreach ($this->reportData->getReportables() as $reportable) {
 
-            $delta = new Delta();
-            $delta->setTitle("Balance for $reportable for " . $interval->getName());
-            $delta->setCurrency($reportable->getCurrency());
-            $delta->setInitialAmount($this->reportHelper->getBalanceOnInterval($reportable, $currentDateImmutable));
+            // $delta = new TransactionDelta(
+            //     $reportable,
+            //     $interval,
+            //     $initialAmount,
+            //     $finalAmount,
+            // );
 
-            if ($interval instanceof Year) {
+            $deltaData['title'] = "Balance for $reportable for " . $interval->getName();
+            $deltaData['currency'] = $reportable->getCurrency();
+            $deltaData['initialAmount'] = $this->reportHelper->getBalanceOnInterval($reportable, $currentDateImmutable);
+            $deltaData['finalAmount'] = $this->reportHelper->getBalanceOnInterval(
+                $reportable,
+                $interval->getEndingDate($currentDateImmutable, $this->reportData->getEndDate())
+            );
 
-                $delta->setFinalAmount($this->reportHelper->getBalanceOnInterval($reportable,
-                    $currentDateImmutable->modify('1st January Next Year') < $this->reportEndDate ? $currentDateImmutable->modify('1st January Next Year') : $this->reportEndDate
-                ));
-
-            } elseif ($interval instanceof Month) {
-
-                $delta->setFinalAmount($this->reportHelper->getBalanceOnInterval($reportable,
-                    $currentDateImmutable->modify('first day of next month') < $this->reportEndDate ? $currentDateImmutable->modify('first day of next month') : $this->reportEndDate
-                ));
-
-            } elseif ($interval instanceof Day) {
-
-                $delta->setFinalAmount($this->reportHelper->getBalanceOnInterval($reportable, $currentDateImmutable->modify('+1 day')));
-            }
+            $delta = $this->reportHelper->createDelta($deltaData);
 
             $interval->addDelta($delta);
         }
@@ -57,9 +45,9 @@ class ReportManager
         return $interval;
     }
 
-    public function addDeltasToDay(Day $day, $currentDateImmutable)
+    public function addDeltasToDay(Day $day, \DateTimeImmutable $currentDateImmutable)
     {
-        foreach ($this->reportables as $reportable) {
+        foreach ($this->reportData->getReportables() as $reportable) {
 
             $deltas = [];
 
@@ -70,37 +58,36 @@ class ReportManager
 
             foreach ($transactions as $transaction) {
 
-                $finalAmount = $initialAmount + $transaction->getAmount();
-                $delta = new Delta();
-                $delta->setTitle("Balance for transaction " . $transaction->getTitle());
-                $delta->setCurrency($reportable->getCurrency());
-                $delta->setInitialAmount($initialAmount);
-                $delta->setFinalAmount($finalAmount);
-                $initialAmount = $finalAmount;
+                $deltaData['title'] = "Balance for transaction " . $transaction->getTitle();
+                $deltaData['currency'] = $reportable->getCurrency();
+                $deltaData['initialAmount'] = $initialAmount;
+                $deltaData['finalAmount'] = $initialAmount + $transaction->getAmount();
+
+                $delta = $this->reportHelper->createDelta($deltaData);
+
+                $initialAmount = $deltaData['finalAmount'];
 
                 array_push($deltas, $delta);
             }
 
-            $day->addInterval($deltas, $reportable);
+            if (!empty($deltas)) {
+                $day->addInterval($deltas, $reportable);
+            }
         }
 
         return $day;
     }
 
-    public function createReport(Report $report, $locale)
+    public function createReport($locale)
     {
-        $this->reportStartDate = $report->getStartDate();
-        $this->reportEndDate = $report->getEndDate();
-        $this->reportDetail = $report->getDetail();
-        $this->reportables = $report->getReportables()->toArray();
-
+        $report = $this->reportData;
         $currentDate = new \DateTime();
-        $currentDate->setTimestamp($this->reportStartDate->getTimestamp());
-        $yearsUntilEnd = ($this->reportStartDate->diff($this->reportEndDate)->y)+1;
+        $currentDate->setTimestamp($this->reportData->getStartDate()->getTimestamp());
+        $yearsUntilEnd = ($this->reportData->getStartDate()->diff($this->reportData->getEndDate())->y)+1;
 
         for ($y = 0; $y <= $yearsUntilEnd ; $y++) {
 
-            if ($currentDate > $this->reportEndDate) {
+            if ($currentDate > $this->reportData->getEndDate()) {
                 break;
             }
 
@@ -119,7 +106,7 @@ class ReportManager
 
             for ($m = 0; $m <= $monthsUntilNextYear ; $m++) {
 
-                if ($currentDate > $this->reportEndDate) {
+                if ($currentDate > $this->reportData->getEndDate()) {
                     break;
                 }
 
@@ -138,7 +125,7 @@ class ReportManager
 
                 for ($d = 0; $d <= $daysUntilNextMonth ; $d++) {
 
-                    if ($currentDate > $this->reportEndDate) {
+                    if ($currentDate > $this->reportData->getEndDate()) {
                         break;
                     }
 
