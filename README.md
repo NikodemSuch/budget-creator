@@ -1,6 +1,6 @@
 # Budget-Creator
 
-**Purpose of this app is to help with managing your finances.**
+**Purpose of this app is to help you with managing your finances.**
 
 ## Project setup
 
